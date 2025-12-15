@@ -58,6 +58,9 @@ watch(() => filters.skill, () => updateUrl())
 <template>
   <div class="annuaire">
     <header class="page-header">
+      <NuxtLink to="/" class="back-link">
+        ← Accueil
+      </NuxtLink>
       <div class="page-header-content">
         <span class="page-label">
           <span class="label-line"></span>
@@ -172,6 +175,21 @@ watch(() => filters.skill, () => updateUrl())
 .page-header {
   padding: 4rem 0;
   border-bottom: 1px solid var(--border);
+}
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  text-decoration: none;
+  margin-bottom: 1.5rem;
+  transition: color 0.2s;
+}
+
+.back-link:hover {
+  color: var(--text);
 }
 
 .page-label {
