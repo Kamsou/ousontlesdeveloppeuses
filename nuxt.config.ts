@@ -9,6 +9,7 @@ export default defineNuxtConfig({
     '@sidebase/nuxt-auth'
   ],
   auth: {
+    originEnvKey: 'AUTH_ORIGIN',
     baseURL: '/api/auth',
     provider: {
       type: 'authjs',
@@ -17,6 +18,9 @@ export default defineNuxtConfig({
     globalAppMiddleware: {
       isEnabled: false
     }
+  },
+  runtimeConfig: {
+    authOrigin: process.env.AUTH_ORIGIN
   },
   nitro: {
     preset: 'netlify',
