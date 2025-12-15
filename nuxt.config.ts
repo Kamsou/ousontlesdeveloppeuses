@@ -6,8 +6,12 @@ export default defineNuxtConfig({
     compatibilityVersion: 4
   },
   modules: [
+    '@nuxthub/core',
     '@sidebase/nuxt-auth'
   ],
+  hub: {
+    db: 'sqlite'
+  },
   auth: {
     baseURL: process.env.NUXT_PUBLIC_AUTH_BASE_URL || 'http://localhost:3000/api/auth',
     originEnvKey: 'NUXT_PUBLIC_AUTH_BASE_URL',
