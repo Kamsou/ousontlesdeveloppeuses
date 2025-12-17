@@ -4,3 +4,10 @@
 
 [build.environment]
   NODE_VERSION = "20"
+
+# Redirect Netlify subdomain to custom domain
+[[redirects]]
+  from = "https://ousontlesdeveloppeuses.netlify.app/*"
+  to = "https://ousontlesdeveloppeuses.fr/:splat"
+  status = 301
+  force = true
