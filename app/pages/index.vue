@@ -35,42 +35,41 @@ const stats = computed(() => {
     { value: devs, label: pluralize(devs, 'Développeuse', 'Développeuses') },
     { value: companies, label: pluralize(companies, 'Entreprise', 'Entreprises') },
     { value: locations, label: pluralize(locations, 'Ville', 'Villes') },
-    { value: speakers, label: pluralize(speakers, 'Speaker', 'Speakers') }
+    { value: speakers, label: pluralize(speakers, 'Speakeuse', 'Speakeuses') }
   ]
 })
 
 const openToTags = [
-  'Conference',
+  'Conférence',
   'Mentoring',
   'Freelance',
   'CDI',
   'Coffee chat',
   'Pair programming',
-  'Review CV'
+  'Relecture CV'
 ]
 
 const features = [
   {
     number: '01',
-    title: 'Speakers Bureau',
+    title: 'Speakeuses',
     description: 'Trouvez des speakeuses pour vos événements tech. Filtrez par sujet, disponibilité et localisation.'
   },
   {
     number: '02',
-    title: 'Open to...',
-    description: 'Chaque profil indique ses disponibilités : conference, mentoring, freelance, CDI, coffee chat, pair programming, review CV.'
+    title: 'Disponible pour...',
+    description: 'Chaque profil indique ses disponibilités : conférence, mentoring, freelance, CDI, coffee chat, pair programming, relecture CV.'
   },
   {
     number: '03',
-    title: 'Verified Inclusive',
-    description: 'Les entreprises avec 5+ avis positifs obtiennent le badge "Verified Inclusive". Transparence totale.'
+    title: 'Certifiée Inclusive',
+    description: 'Les entreprises avec 5+ avis positifs obtiennent le badge "Certifiée Inclusive". Transparence totale.'
   }
 ]
 </script>
 
 <template>
   <div class="page">
-    <!-- Hero Section -->
     <section class="hero">
       <div class="hero-content">
         <div class="hero-label">
@@ -113,7 +112,6 @@ const features = [
       </div>
     </section>
 
-    <!-- Open To Tags Preview -->
     <div class="tags-preview">
       <div class="tags-track">
         <span v-for="(tag, i) in [...openToTags, ...openToTags]" :key="i" class="tag-pill">
@@ -122,7 +120,6 @@ const features = [
       </div>
     </div>
 
-    <!-- Stats Section -->
     <section class="stats">
       <div class="stats-grid">
         <div v-for="(stat, index) in stats" :key="stat.label" class="stat-item">
@@ -135,7 +132,6 @@ const features = [
       </div>
     </section>
 
-    <!-- Features Section -->
     <section class="features">
       <div class="features-header">
         <span class="section-label">Fonctionnalités</span>
@@ -158,7 +154,6 @@ const features = [
       </div>
     </section>
 
-    <!-- Inclusive Badge Section -->
     <section class="badge-section">
       <div class="badge-content">
         <div class="badge-visual">
@@ -168,20 +163,19 @@ const features = [
               <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
             </svg>
           </div>
-          <span class="badge-label">Verified Inclusive</span>
+          <span class="badge-label">Certifiée Inclusive</span>
         </div>
         <div class="badge-text">
           <h3 class="badge-title">Entreprises certifiées</h3>
           <p class="badge-description">
             Les entreprises avec au moins 5 avis et une note moyenne de 4/5
-            obtiennent le badge Verified Inclusive. Basé sur les retours
+            obtiennent le badge Certifiée Inclusive. Basé sur les retours
             anonymes de la communauté.
           </p>
         </div>
       </div>
     </section>
 
-    <!-- CTA Section -->
     <section class="cta">
       <div class="cta-content">
         <span class="cta-label">Rejoindre</span>

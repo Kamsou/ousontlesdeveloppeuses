@@ -41,7 +41,6 @@ function clearFilters() {
 watch(() => filters.location, () => updateUrl())
 watch(() => filters.verified, () => updateUrl())
 
-// Modal state
 const showAddModal = ref(false)
 const showReviewModal = ref(false)
 const selectedCompany = ref<any>(null)
@@ -111,7 +110,7 @@ function openReviewModal(company: any) {
         <div class="page-header-content">
           <span class="page-label">
             <span class="label-line"></span>
-            Verified Inclusive
+            Certifiee Inclusive
           </span>
           <h1 class="page-title">Entreprises</h1>
           <p class="page-subtitle">
@@ -125,7 +124,6 @@ function openReviewModal(company: any) {
       </div>
     </header>
 
-    <!-- Filters -->
     <section class="filters">
       <div class="filters-row">
         <div class="filter-group">
@@ -140,7 +138,7 @@ function openReviewModal(company: any) {
 
         <label class="checkbox-label">
           <input type="checkbox" v-model="filters.verified" class="checkbox" />
-          <span class="checkbox-text">Verified Inclusive uniquement</span>
+          <span class="checkbox-text">Certifiées Inclusives uniquement</span>
         </label>
 
         <button v-if="filters.location || filters.verified" @click="clearFilters" class="btn-clear">
@@ -149,7 +147,6 @@ function openReviewModal(company: any) {
       </div>
     </section>
 
-    <!-- Badge info -->
     <section class="badge-info">
       <div class="badge-card">
         <span class="badge-icon">
@@ -158,13 +155,12 @@ function openReviewModal(company: any) {
           </svg>
         </span>
         <div class="badge-text">
-          <strong>Verified Inclusive</strong>
+          <strong>Certifiée Inclusive</strong>
           <span>5+ avis positifs avec une moyenne de 4/5 minimum</span>
         </div>
       </div>
     </section>
 
-    <!-- Results -->
     <section class="results">
       <div v-if="!companies?.length" class="empty-state">
         <p>Aucune entreprise trouvée</p>
@@ -187,7 +183,7 @@ function openReviewModal(company: any) {
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
                   </svg>
-                  Verified
+                  Certifiée
                 </span>
               </h3>
               <p v-if="company.location" class="card-location">{{ company.location }}</p>
@@ -223,7 +219,6 @@ function openReviewModal(company: any) {
       </div>
     </section>
 
-    <!-- Add Company Modal -->
     <div v-if="showAddModal" class="modal-overlay" @click.self="showAddModal = false">
       <div class="modal">
         <h2 class="modal-title">Ajouter une entreprise</h2>
@@ -255,7 +250,6 @@ function openReviewModal(company: any) {
       </div>
     </div>
 
-    <!-- Review Modal -->
     <div v-if="showReviewModal" class="modal-overlay" @click.self="showReviewModal = false">
       <div class="modal">
         <h2 class="modal-title">Avis sur {{ selectedCompany?.name }}</h2>

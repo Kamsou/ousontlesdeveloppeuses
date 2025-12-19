@@ -1,24 +1,44 @@
 <script setup lang="ts">
+interface Developer {
+  id: number
+  name: string
+  avatarUrl: string | null
+  bio: string | null
+  location: string | null
+  yearsExperience: number | null
+  website: string | null
+  githubUrl: string | null
+  linkedinUrl: string | null
+  twitterUrl: string | null
+  skills: string[]
+  openTo: string[]
+  speakerProfile: {
+    topics: string[]
+    available: boolean | null
+    remoteOk: boolean | null
+    travelWilling: boolean | null
+  } | null
+}
+
 const route = useRoute()
 const id = route.params.id
 
 const openToLabels: Record<string, string> = {
-  conference: 'Conference',
+  conference: 'Conférence',
   mentoring: 'Mentoring',
   freelance: 'Freelance',
   cdi: 'CDI',
   coffee_chat: 'Coffee chat',
   pair_programming: 'Pair programming',
-  cv_review: 'Review CV'
+  cv_review: 'Relecture CV'
 }
 
-const { data: developer, error } = await useFetch(`/api/developers/${id}`)
+const { data: developer, error } = await useFetch<Developer>(`/api/developers/${id}`)
 
 if (error.value) {
   throw createError({ statusCode: 404, message: 'Profil non trouvé' })
 }
 
-// Dynamic SEO meta based on developer data
 useSeoMeta({
   title: () => developer.value ? `${developer.value.name} - OSLD` : 'Profil - OSLD',
   ogTitle: () => developer.value ? `${developer.value.name} - OSLD` : 'Profil - OSLD',
@@ -32,7 +52,6 @@ useSeoMeta({
 <template>
   <div class="profil-page">
     <div v-if="developer" class="profil-content">
-      <!-- Header -->
       <header class="profil-header">
         <NuxtLink to="/annuaire" class="back-link">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -58,7 +77,6 @@ useSeoMeta({
           </div>
         </div>
 
-        <!-- Links -->
         <div class="links">
           <a v-if="developer.linkedinUrl" :href="developer.linkedinUrl" target="_blank" class="link-btn">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
@@ -82,13 +100,11 @@ useSeoMeta({
         </div>
       </header>
 
-      <!-- Bio -->
       <section v-if="developer.bio" class="section">
         <h2 class="section-title">Bio</h2>
         <p class="bio">{{ developer.bio }}</p>
       </section>
 
-      <!-- Skills -->
       <section v-if="developer.skills?.length" class="section">
         <h2 class="section-title">Technologies</h2>
         <div class="skills">
@@ -98,7 +114,6 @@ useSeoMeta({
         </div>
       </section>
 
-      <!-- Open To -->
       <section v-if="developer.openTo?.length" class="section">
         <h2 class="section-title">Disponible pour</h2>
         <div class="open-to">
@@ -108,7 +123,6 @@ useSeoMeta({
         </div>
       </section>
 
-      <!-- Speaker Info -->
       <section v-if="developer.speakerProfile" class="section speaker-section">
         <div class="speaker-badge-large">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -117,10 +131,10 @@ useSeoMeta({
             <line x1="12" y1="19" x2="12" y2="23"/>
             <line x1="8" y1="23" x2="16" y2="23"/>
           </svg>
-          Speaker
+          Speakeuse
         </div>
 
-        <h2 class="section-title">Speakers Bureau</h2>
+        <h2 class="section-title">Profil Speakeuse</h2>
 
         <div v-if="developer.speakerProfile.topics?.length" class="topics">
           <span class="topics-label">Sujets :</span>
@@ -130,7 +144,7 @@ useSeoMeta({
         </div>
 
         <div class="speaker-options">
-          <span v-if="developer.speakerProfile.remoteOk" class="option">Remote OK</span>
+          <span v-if="developer.speakerProfile.remoteOk" class="option">Remote possible</span>
           <span v-if="developer.speakerProfile.travelWilling" class="option">Se déplace</span>
         </div>
       </section>

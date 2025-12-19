@@ -1,28 +1,49 @@
 <script setup lang="ts">
+interface Profile {
+  id: number
+  name: string
+  email: string | null
+  avatarUrl: string | null
+  bio: string | null
+  location: string | null
+  yearsExperience: number | null
+  website: string | null
+  githubUrl: string | null
+  linkedinUrl: string | null
+  twitterUrl: string | null
+  skills: string[]
+  openTo: string[]
+  speakerProfile: {
+    topics: string[]
+    available: boolean | null
+    remoteOk: boolean | null
+    travelWilling: boolean | null
+  } | null
+}
+
 useSeoMeta({
   title: 'Mon Profil - OSLD',
-  robots: 'noindex, nofollow' // Page privée, ne pas indexer
+  robots: 'noindex, nofollow'
 })
 
 const { data: session, status } = useAuth()
 const router = useRouter()
 
-// Redirect if not authenticated
 if (status.value !== 'authenticated') {
   navigateTo('/')
 }
 
 const openToOptions = [
-  { value: 'conference', label: 'Conference' },
+  { value: 'conference', label: 'Conférence' },
   { value: 'mentoring', label: 'Mentoring' },
   { value: 'freelance', label: 'Freelance' },
   { value: 'cdi', label: 'CDI' },
   { value: 'coffee_chat', label: 'Coffee chat' },
   { value: 'pair_programming', label: 'Pair programming' },
-  { value: 'cv_review', label: 'Review CV' }
+  { value: 'cv_review', label: 'Relecture CV' }
 ]
 
-const { data: profile, refresh } = await useFetch('/api/developers/me')
+const { data: profile, refresh } = await useFetch<Profile | null>('/api/developers/me')
 
 const isNewProfile = computed(() => !profile.value)
 
@@ -45,8 +66,6 @@ const newSkill = ref('')
 const newTopic = ref('')
 const saving = ref(false)
 const error = ref('')
-
-// Populate form when profile loads
 watch(profile, (p) => {
   if (p) {
     form.name = p.name || ''
@@ -136,7 +155,6 @@ async function save() {
     <form @submit.prevent="save" class="form">
       <div v-if="error" class="error-message">{{ error }}</div>
 
-      <!-- Basic Info -->
       <section class="form-section">
         <h2 class="section-title">Informations</h2>
 
@@ -178,7 +196,6 @@ async function save() {
         </div>
       </section>
 
-      <!-- Skills -->
       <section class="form-section">
         <h2 class="section-title">Technologies</h2>
 
@@ -201,7 +218,6 @@ async function save() {
         </div>
       </section>
 
-      <!-- Open To -->
       <section class="form-section">
         <h2 class="section-title">Disponible pour</h2>
         <p class="section-description">Indiquez ce pour quoi vous êtes disponible</p>
@@ -219,9 +235,8 @@ async function save() {
         </div>
       </section>
 
-      <!-- Speaker Section -->
       <section v-if="form.openTo.includes('conference')" class="form-section">
-        <h2 class="section-title">Speakers Bureau</h2>
+        <h2 class="section-title">Profil Speakeuse</h2>
         <p class="section-description">Informations pour les organisateurs d'événements</p>
 
         <div class="form-group">
@@ -256,7 +271,6 @@ async function save() {
         </div>
       </section>
 
-      <!-- Actions -->
       <div class="form-actions">
         <NuxtLink to="/annuaire" class="btn-cancel">Annuler</NuxtLink>
         <button type="submit" :disabled="saving" class="btn-save">

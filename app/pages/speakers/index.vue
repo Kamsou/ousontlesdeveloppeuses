@@ -1,9 +1,9 @@
 <script setup lang="ts">
 useSeoMeta({
-  title: 'Speakers Bureau - OSLD',
-  ogTitle: 'Speakers Bureau - OSLD',
-  description: 'Trouvez des intervenantes tech pour vos conférences et événements. Speakers disponibles en remote ou en présentiel.',
-  ogDescription: 'Trouvez des intervenantes tech pour vos conférences et événements. Speakers disponibles en remote ou en présentiel.',
+  title: 'Speakeuses - OSLD',
+  ogTitle: 'Speakeuses - OSLD',
+  description: 'Trouvez des intervenantes tech pour vos conférences et événements. Speakeuses disponibles en remote ou en présentiel.',
+  ogDescription: 'Trouvez des intervenantes tech pour vos conférences et événements. Speakeuses disponibles en remote ou en présentiel.',
   ogImage: '/og-image.png',
   twitterCard: 'summary_large_image'
 })
@@ -73,16 +73,15 @@ watch(() => filters.travel, () => updateUrl())
       <div class="page-header-content">
         <span class="page-label">
           <span class="label-line"></span>
-          Speakers Bureau
+          Speakeuses
         </span>
-        <h1 class="page-title">Intervenantes</h1>
+        <h1 class="page-title">Speakeuses</h1>
         <p class="page-subtitle">
-          {{ speakers?.length || 0 }} speakers disponibles pour vos conférences
+          {{ speakers?.length || 0 }} speakeuses disponibles pour vos conférences
         </p>
       </div>
     </header>
 
-    <!-- Filters -->
     <section class="filters">
       <div class="filters-row">
         <div class="filter-group">
@@ -113,7 +112,7 @@ watch(() => filters.travel, () => updateUrl())
       <div class="options-row">
         <label class="checkbox-label">
           <input type="checkbox" v-model="filters.remote" class="checkbox" />
-          <span class="checkbox-text">Remote OK</span>
+          <span class="checkbox-text">Remote possible</span>
         </label>
 
         <label class="checkbox-label">
@@ -123,7 +122,6 @@ watch(() => filters.travel, () => updateUrl())
       </div>
     </section>
 
-    <!-- Results -->
     <section class="results">
       <div v-if="!speakers?.length" class="empty-state">
         <p>Aucune speaker trouvée</p>
@@ -161,7 +159,7 @@ watch(() => filters.travel, () => updateUrl())
           </div>
 
           <div class="card-options">
-            <span v-if="speaker.speakerProfile?.remoteOk" class="option-tag">Remote OK</span>
+            <span v-if="speaker.speakerProfile?.remoteOk" class="option-tag">Remote possible</span>
             <span v-if="speaker.speakerProfile?.travelWilling" class="option-tag">Se déplace</span>
           </div>
 
