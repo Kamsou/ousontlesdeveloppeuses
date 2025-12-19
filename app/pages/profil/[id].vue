@@ -1,102 +1,89 @@
 <script setup lang="ts">
+interface Developer {
+  id: number
+  name: string
+  avatarUrl: string | null
+  bio: string | null
+  location: string | null
+  yearsExperience: number | null
+  website: string | null
+  githubUrl: string | null
+  linkedinUrl: string | null
+  twitterUrl: string | null
+  skills: string[]
+  openTo: string[]
+  speakerProfile: {
+    topics: string[]
+    available: boolean | null
+    remoteOk: boolean | null
+    travelWilling: boolean | null
+  } | null
+}
+
 const route = useRoute()
 const id = route.params.id
 
 const openToLabels: Record<string, string> = {
-  conference: 'Conference',
+  conference: 'Conférence',
   mentoring: 'Mentoring',
   freelance: 'Freelance',
   cdi: 'CDI',
   coffee_chat: 'Coffee chat',
   pair_programming: 'Pair programming',
-  cv_review: 'Review CV'
+  cv_review: 'Relecture CV'
 }
 
-const { data: developer, error } = await useFetch(`/api/developers/${id}`)
+const { data: developer, error } = await useFetch<Developer>(`/api/developers/${id}`)
 
 if (error.value) {
   throw createError({ statusCode: 404, message: 'Profil non trouvé' })
 }
 
-const route = useRoute()
-const config = useRuntimeConfig()
-const siteUrl = config.public.siteUrl || 'https://ousontlesdeveloppeuses.fr'
-const canonicalUrl = computed(() => `${siteUrl}/profil/${id}`)
+// SEO centralisé avec données dynamiques
+const getDescription = () => {
+  if (!developer.value) return 'Profil de développeuse sur OSLD'
+  const parts = []
+  if (developer.value.bio) parts.push(developer.value.bio)
+  if (developer.value.location) parts.push(`Basée à ${developer.value.location}`)
+  if (developer.value.skills?.length) parts.push(`Technologies: ${developer.value.skills.slice(0, 3).join(', ')}`)
+  return parts.join('. ') || 'Profil de développeuse sur OSLD'
+}
 
-// Dynamic SEO meta based on developer data
-useSeoMeta({
+const { canonicalUrl, siteUrl } = usePageSEO({
   title: () => developer.value ? `${developer.value.name} - Développeuse | OSLD` : 'Profil - OSLD',
-  ogTitle: () => developer.value ? `${developer.value.name} - Développeuse | OSLD` : 'Profil - OSLD',
-  description: () => {
-    if (!developer.value) return 'Profil de développeuse sur OSLD'
-    const parts = []
-    if (developer.value.bio) parts.push(developer.value.bio)
-    if (developer.value.location) parts.push(`Basée à ${developer.value.location}`)
-    if (developer.value.skills?.length) parts.push(`Technologies: ${developer.value.skills.slice(0, 3).join(', ')}`)
-    return parts.join('. ') || 'Profil de développeuse sur OSLD'
-  },
-  ogDescription: () => {
-    if (!developer.value) return 'Profil de développeuse sur OSLD'
-    const parts = []
-    if (developer.value.bio) parts.push(developer.value.bio)
-    if (developer.value.location) parts.push(`Basée à ${developer.value.location}`)
-    if (developer.value.skills?.length) parts.push(`Technologies: ${developer.value.skills.slice(0, 3).join(', ')}`)
-    return parts.join('. ') || 'Profil de développeuse sur OSLD'
-  },
-  ogImage: () => developer.value?.avatarUrl ? `${siteUrl}${developer.value.avatarUrl}` : `${siteUrl}/og-image.png`,
-  ogUrl: () => canonicalUrl.value,
-  ogType: 'profile',
-  twitterCard: 'summary_large_image',
-  twitterImage: () => developer.value?.avatarUrl ? `${siteUrl}${developer.value.avatarUrl}` : `${siteUrl}/og-image.png`
+  description: getDescription,
+  path: () => `/profil/${id}`,
+  image: () => developer.value?.avatarUrl ? `${siteUrl}${developer.value.avatarUrl}` : undefined,
+  type: 'profile'
 })
 
-useHead({
-  link: [
-    { rel: 'canonical', href: canonicalUrl }
-  ]
-})
-
-// Structured Data
-const { personSchema, breadcrumbSchema } = useStructuredData()
-
-useHead({
-  script: computed(() => {
-    const scripts: any[] = []
+// Structured Data type-safe
+const schema = useSchemaOrgSEO()
+watchEffect(() => {
+  if (developer.value) {
+    schema.setPerson({
+      name: developer.value.name,
+      bio: developer.value.bio,
+      avatarUrl: developer.value.avatarUrl,
+      location: developer.value.location,
+      website: developer.value.website,
+      linkedinUrl: developer.value.linkedinUrl,
+      githubUrl: developer.value.githubUrl,
+      skills: developer.value.skills
+    })
     
-    if (developer.value) {
-      scripts.push({
-        type: 'application/ld+json',
-        children: JSON.stringify(personSchema({
-          name: developer.value.name,
-          bio: developer.value.bio,
-          avatarUrl: developer.value.avatarUrl,
-          location: developer.value.location,
-          website: developer.value.website,
-          linkedinUrl: developer.value.linkedinUrl,
-          githubUrl: developer.value.githubUrl,
-          skills: developer.value.skills
-        }))
-      })
-      
-      scripts.push({
-        type: 'application/ld+json',
-        children: JSON.stringify(breadcrumbSchema([
-          { name: 'Accueil', url: siteUrl },
-          { name: 'Annuaire', url: `${siteUrl}/annuaire` },
-          { name: developer.value.name, url: canonicalUrl.value }
-        ]))
-      })
-    }
-    
-    return scripts
-  })
+    schema.setBreadcrumb([
+      { name: 'Accueil', url: siteUrl },
+      { name: 'Annuaire', url: `${siteUrl}/annuaire` },
+      { name: developer.value.name, url: canonicalUrl }
+    ])
+  }
 })
 </script>
 
 <template>
   <div class="profil-page">
     <div v-if="developer" class="profil-content">
-      <!-- Header -->
       <header class="profil-header">
         <NuxtLink to="/annuaire" class="back-link">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -123,7 +110,6 @@ useHead({
           </div>
         </div>
 
-        <!-- Links -->
         <div class="links">
           <a v-if="developer.linkedinUrl" :href="developer.linkedinUrl" target="_blank" class="link-btn">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
@@ -147,13 +133,11 @@ useHead({
         </div>
       </header>
 
-      <!-- Bio -->
       <section v-if="developer.bio" class="section">
         <h2 class="section-title">Bio</h2>
         <p class="bio">{{ developer.bio }}</p>
       </section>
 
-      <!-- Skills -->
       <section v-if="developer.skills?.length" class="section">
         <h2 class="section-title">Technologies</h2>
         <div class="skills">
@@ -163,7 +147,6 @@ useHead({
         </div>
       </section>
 
-      <!-- Open To -->
       <section v-if="developer.openTo?.length" class="section">
         <h2 class="section-title">Disponible pour</h2>
         <div class="open-to">
@@ -173,7 +156,6 @@ useHead({
         </div>
       </section>
 
-      <!-- Speaker Info -->
       <section v-if="developer.speakerProfile" class="section speaker-section">
         <div class="speaker-badge-large">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -182,10 +164,10 @@ useHead({
             <line x1="12" y1="19" x2="12" y2="23"/>
             <line x1="8" y1="23" x2="16" y2="23"/>
           </svg>
-          Speaker
+          Speakeuse
         </div>
 
-        <h2 class="section-title">Speakers Bureau</h2>
+        <h2 class="section-title">Profil Speakeuse</h2>
 
         <div v-if="developer.speakerProfile.topics?.length" class="topics">
           <span class="topics-label">Sujets :</span>
@@ -195,7 +177,7 @@ useHead({
         </div>
 
         <div class="speaker-options">
-          <span v-if="developer.speakerProfile.remoteOk" class="option">Remote OK</span>
+          <span v-if="developer.speakerProfile.remoteOk" class="option">Remote possible</span>
           <span v-if="developer.speakerProfile.travelWilling" class="option">Se déplace</span>
         </div>
       </section>

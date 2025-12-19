@@ -1,49 +1,22 @@
 <script setup lang="ts">
-const route = useRoute()
-const config = useRuntimeConfig()
-const siteUrl = config.public.siteUrl || 'https://ousontlesdeveloppeuses.fr'
-const canonicalUrl = `${siteUrl}/speakers`
-
-useSeoMeta({
+// SEO centralisé
+const { canonicalUrl, siteUrl } = usePageSEO({
   title: 'Speakers Bureau - OSLD',
-  ogTitle: 'Speakers Bureau - OSLD',
   description: 'Trouvez des intervenantes tech pour vos conférences et événements. Speakers disponibles en remote ou en présentiel.',
-  ogDescription: 'Trouvez des intervenantes tech pour vos conférences et événements. Speakers disponibles en remote ou en présentiel.',
-  ogImage: `${siteUrl}/og-image.png`,
-  ogUrl: canonicalUrl,
-  ogType: 'website',
-  twitterCard: 'summary_large_image',
-  twitterImage: `${siteUrl}/og-image.png`
+  path: '/speakers'
 })
 
-useHead({
-  link: [
-    { rel: 'canonical', href: canonicalUrl }
-  ]
-})
-
-// Structured Data
-const { collectionPageSchema, breadcrumbSchema } = useStructuredData()
-
-useHead({
-  script: [
-    {
-      type: 'application/ld+json',
-      children: JSON.stringify(collectionPageSchema(
-        'Speakers Bureau',
-        'Trouvez des intervenantes tech pour vos conférences et événements. Speakers disponibles en remote ou en présentiel.',
-        canonicalUrl
-      ))
-    },
-    {
-      type: 'application/ld+json',
-      children: JSON.stringify(breadcrumbSchema([
-        { name: 'Accueil', url: siteUrl },
-        { name: 'Speakers', url: canonicalUrl }
-      ]))
-    }
-  ]
-})
+// Structured Data type-safe
+const schema = useSchemaOrgSEO()
+schema.setCollectionPage(
+  'Speakers Bureau',
+  'Trouvez des intervenantes tech pour vos conférences et événements. Speakers disponibles en remote ou en présentiel.',
+  canonicalUrl
+)
+schema.setBreadcrumb([
+  { name: 'Accueil', url: siteUrl },
+  { name: 'Speakers', url: canonicalUrl }
+])
 
 interface Speaker {
   id: number
@@ -110,16 +83,15 @@ watch(() => filters.travel, () => updateUrl())
       <div class="page-header-content">
         <span class="page-label">
           <span class="label-line"></span>
-          Speakers Bureau
+          Speakeuses
         </span>
-        <h1 class="page-title">Intervenantes</h1>
+        <h1 class="page-title">Speakeuses</h1>
         <p class="page-subtitle">
-          {{ speakers?.length || 0 }} speakers disponibles pour vos conférences
+          {{ speakers?.length || 0 }} speakeuses disponibles pour vos conférences
         </p>
       </div>
     </header>
 
-    <!-- Filters -->
     <section class="filters">
       <div class="filters-row">
         <div class="filter-group">
@@ -150,7 +122,7 @@ watch(() => filters.travel, () => updateUrl())
       <div class="options-row">
         <label class="checkbox-label">
           <input type="checkbox" v-model="filters.remote" class="checkbox" />
-          <span class="checkbox-text">Remote OK</span>
+          <span class="checkbox-text">Remote possible</span>
         </label>
 
         <label class="checkbox-label">
@@ -160,7 +132,6 @@ watch(() => filters.travel, () => updateUrl())
       </div>
     </section>
 
-    <!-- Results -->
     <section class="results">
       <div v-if="!speakers?.length" class="empty-state">
         <p>Aucune speaker trouvée</p>
@@ -199,7 +170,7 @@ watch(() => filters.travel, () => updateUrl())
           </div>
 
           <div class="card-options">
-            <span v-if="speaker.speakerProfile?.remoteOk" class="option-tag">Remote OK</span>
+            <span v-if="speaker.speakerProfile?.remoteOk" class="option-tag">Remote possible</span>
             <span v-if="speaker.speakerProfile?.travelWilling" class="option-tag">Se déplace</span>
           </div>
 

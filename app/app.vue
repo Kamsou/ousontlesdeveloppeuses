@@ -19,7 +19,7 @@ const { data, status, signIn, signOut } = useAuth()
 
         <nav class="nav">
           <NuxtLink to="/annuaire" class="nav-link">Annuaire</NuxtLink>
-          <NuxtLink to="/speakers" class="nav-link">Speakers</NuxtLink>
+          <NuxtLink to="/speakers" class="nav-link">Speakeuses</NuxtLink>
           <NuxtLink to="/entreprises" class="nav-link">Entreprises</NuxtLink>
         </nav>
 

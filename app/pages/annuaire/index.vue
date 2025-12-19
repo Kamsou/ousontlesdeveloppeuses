@@ -1,61 +1,34 @@
 <script setup lang="ts">
-const route = useRoute()
-const config = useRuntimeConfig()
-const siteUrl = config.public.siteUrl || 'https://ousontlesdeveloppeuses.fr'
-const canonicalUrl = `${siteUrl}/annuaire`
-
-useSeoMeta({
+// SEO centralisé
+const { canonicalUrl, siteUrl } = usePageSEO({
   title: 'Annuaire des Développeuses - OSLD',
-  ogTitle: 'Annuaire des Développeuses - OSLD',
   description: 'Explorez les profils de développeuses en France. Filtrez par ville, technologie et disponibilité.',
-  ogDescription: 'Explorez les profils de développeuses en France. Filtrez par ville, technologie et disponibilité.',
-  ogImage: `${siteUrl}/og-image.png`,
-  ogUrl: canonicalUrl,
-  ogType: 'website',
-  twitterCard: 'summary_large_image',
-  twitterImage: `${siteUrl}/og-image.png`
+  path: '/annuaire'
 })
 
-useHead({
-  link: [
-    { rel: 'canonical', href: canonicalUrl }
-  ]
-})
-
-// Structured Data
-const { collectionPageSchema, breadcrumbSchema } = useStructuredData()
-
-useHead({
-  script: [
-    {
-      type: 'application/ld+json',
-      children: JSON.stringify(collectionPageSchema(
-        'Annuaire des Développeuses',
-        'Explorez les profils de développeuses en France. Filtrez par ville, technologie et disponibilité.',
-        canonicalUrl
-      ))
-    },
-    {
-      type: 'application/ld+json',
-      children: JSON.stringify(breadcrumbSchema([
-        { name: 'Accueil', url: siteUrl },
-        { name: 'Annuaire', url: canonicalUrl }
-      ]))
-    }
-  ]
-})
+// Structured Data type-safe
+const schema = useSchemaOrgSEO()
+schema.setCollectionPage(
+  'Annuaire des Développeuses',
+  'Explorez les profils de développeuses en France. Filtrez par ville, technologie et disponibilité.',
+  canonicalUrl
+)
+schema.setBreadcrumb([
+  { name: 'Accueil', url: siteUrl },
+  { name: 'Annuaire', url: canonicalUrl }
+])
 
 const route = useRoute()
 const router = useRouter()
 
 const openToOptions = [
-  { value: 'conference', label: 'Conference' },
+  { value: 'conference', label: 'Conférence' },
   { value: 'mentoring', label: 'Mentoring' },
   { value: 'freelance', label: 'Freelance' },
   { value: 'cdi', label: 'CDI' },
   { value: 'coffee_chat', label: 'Coffee chat' },
   { value: 'pair_programming', label: 'Pair programming' },
-  { value: 'cv_review', label: 'Review CV' }
+  { value: 'cv_review', label: 'Relecture CV' }
 ]
 
 const filters = reactive({
@@ -119,7 +92,6 @@ watch(() => filters.skill, () => updateUrl())
       </div>
     </header>
 
-    <!-- Filters -->
     <section class="filters">
       <div class="filters-row">
         <div class="filter-group">
@@ -148,7 +120,7 @@ watch(() => filters.skill, () => updateUrl())
       </div>
 
       <div class="open-to-filters">
-        <span class="filter-label">Open to</span>
+        <span class="filter-label">Disponible pour</span>
         <div class="tags-row">
           <button
             v-for="option in openToOptions"
@@ -162,7 +134,6 @@ watch(() => filters.skill, () => updateUrl())
       </div>
     </section>
 
-    <!-- Results -->
     <section class="results">
       <div v-if="!developers?.length" class="empty-state">
         <p>Aucun profil trouvé</p>
@@ -187,7 +158,7 @@ watch(() => filters.skill, () => updateUrl())
               <h3 class="card-name">{{ dev.name }}</h3>
               <p v-if="dev.location" class="card-location">{{ dev.location }}</p>
             </div>
-            <span v-if="dev.isSpeaker" class="speaker-badge">Speaker</span>
+            <span v-if="dev.isSpeaker" class="speaker-badge">Speakeuse</span>
           </div>
 
           <p v-if="dev.bio" class="card-bio">{{ dev.bio }}</p>
