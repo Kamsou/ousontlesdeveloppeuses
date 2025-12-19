@@ -1,11 +1,48 @@
 <script setup lang="ts">
+const route = useRoute()
+const config = useRuntimeConfig()
+const siteUrl = config.public.siteUrl || 'https://ousontlesdeveloppeuses.fr'
+const canonicalUrl = `${siteUrl}/annuaire`
+
 useSeoMeta({
   title: 'Annuaire des Développeuses - OSLD',
   ogTitle: 'Annuaire des Développeuses - OSLD',
   description: 'Explorez les profils de développeuses en France. Filtrez par ville, technologie et disponibilité.',
   ogDescription: 'Explorez les profils de développeuses en France. Filtrez par ville, technologie et disponibilité.',
-  ogImage: '/og-image.png',
-  twitterCard: 'summary_large_image'
+  ogImage: `${siteUrl}/og-image.png`,
+  ogUrl: canonicalUrl,
+  ogType: 'website',
+  twitterCard: 'summary_large_image',
+  twitterImage: `${siteUrl}/og-image.png`
+})
+
+useHead({
+  link: [
+    { rel: 'canonical', href: canonicalUrl }
+  ]
+})
+
+// Structured Data
+const { collectionPageSchema, breadcrumbSchema } = useStructuredData()
+
+useHead({
+  script: [
+    {
+      type: 'application/ld+json',
+      children: JSON.stringify(collectionPageSchema(
+        'Annuaire des Développeuses',
+        'Explorez les profils de développeuses en France. Filtrez par ville, technologie et disponibilité.',
+        canonicalUrl
+      ))
+    },
+    {
+      type: 'application/ld+json',
+      children: JSON.stringify(breadcrumbSchema([
+        { name: 'Accueil', url: siteUrl },
+        { name: 'Annuaire', url: canonicalUrl }
+      ]))
+    }
+  ]
 })
 
 const route = useRoute()
@@ -142,8 +179,9 @@ watch(() => filters.skill, () => updateUrl())
           <div class="card-header">
             <img
               :src="dev.avatarUrl || '/default-avatar.png'"
-              :alt="dev.name"
+              :alt="`Photo de profil de ${dev.name}, développeuse${dev.location ? ` basée à ${dev.location}` : ''}`"
               class="avatar"
+              loading="lazy"
             />
             <div class="card-info">
               <h3 class="card-name">{{ dev.name }}</h3>

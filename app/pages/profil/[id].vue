@@ -18,14 +18,78 @@ if (error.value) {
   throw createError({ statusCode: 404, message: 'Profil non trouvé' })
 }
 
+const route = useRoute()
+const config = useRuntimeConfig()
+const siteUrl = config.public.siteUrl || 'https://ousontlesdeveloppeuses.fr'
+const canonicalUrl = computed(() => `${siteUrl}/profil/${id}`)
+
 // Dynamic SEO meta based on developer data
 useSeoMeta({
-  title: () => developer.value ? `${developer.value.name} - OSLD` : 'Profil - OSLD',
-  ogTitle: () => developer.value ? `${developer.value.name} - OSLD` : 'Profil - OSLD',
-  description: () => developer.value?.bio || 'Profil de développeuse sur OSLD',
-  ogDescription: () => developer.value?.bio || 'Profil de développeuse sur OSLD',
-  ogImage: () => developer.value?.avatarUrl || '/og-image.png',
-  twitterCard: 'summary_large_image'
+  title: () => developer.value ? `${developer.value.name} - Développeuse | OSLD` : 'Profil - OSLD',
+  ogTitle: () => developer.value ? `${developer.value.name} - Développeuse | OSLD` : 'Profil - OSLD',
+  description: () => {
+    if (!developer.value) return 'Profil de développeuse sur OSLD'
+    const parts = []
+    if (developer.value.bio) parts.push(developer.value.bio)
+    if (developer.value.location) parts.push(`Basée à ${developer.value.location}`)
+    if (developer.value.skills?.length) parts.push(`Technologies: ${developer.value.skills.slice(0, 3).join(', ')}`)
+    return parts.join('. ') || 'Profil de développeuse sur OSLD'
+  },
+  ogDescription: () => {
+    if (!developer.value) return 'Profil de développeuse sur OSLD'
+    const parts = []
+    if (developer.value.bio) parts.push(developer.value.bio)
+    if (developer.value.location) parts.push(`Basée à ${developer.value.location}`)
+    if (developer.value.skills?.length) parts.push(`Technologies: ${developer.value.skills.slice(0, 3).join(', ')}`)
+    return parts.join('. ') || 'Profil de développeuse sur OSLD'
+  },
+  ogImage: () => developer.value?.avatarUrl ? `${siteUrl}${developer.value.avatarUrl}` : `${siteUrl}/og-image.png`,
+  ogUrl: () => canonicalUrl.value,
+  ogType: 'profile',
+  twitterCard: 'summary_large_image',
+  twitterImage: () => developer.value?.avatarUrl ? `${siteUrl}${developer.value.avatarUrl}` : `${siteUrl}/og-image.png`
+})
+
+useHead({
+  link: [
+    { rel: 'canonical', href: canonicalUrl }
+  ]
+})
+
+// Structured Data
+const { personSchema, breadcrumbSchema } = useStructuredData()
+
+useHead({
+  script: computed(() => {
+    const scripts: any[] = []
+    
+    if (developer.value) {
+      scripts.push({
+        type: 'application/ld+json',
+        children: JSON.stringify(personSchema({
+          name: developer.value.name,
+          bio: developer.value.bio,
+          avatarUrl: developer.value.avatarUrl,
+          location: developer.value.location,
+          website: developer.value.website,
+          linkedinUrl: developer.value.linkedinUrl,
+          githubUrl: developer.value.githubUrl,
+          skills: developer.value.skills
+        }))
+      })
+      
+      scripts.push({
+        type: 'application/ld+json',
+        children: JSON.stringify(breadcrumbSchema([
+          { name: 'Accueil', url: siteUrl },
+          { name: 'Annuaire', url: `${siteUrl}/annuaire` },
+          { name: developer.value.name, url: canonicalUrl.value }
+        ]))
+      })
+    }
+    
+    return scripts
+  })
 })
 </script>
 
@@ -44,8 +108,9 @@ useSeoMeta({
         <div class="header-main">
           <img
             :src="developer.avatarUrl || '/default-avatar.png'"
-            :alt="developer.name"
+            :alt="`Photo de profil de ${developer.name}, développeuse${developer.location ? ` basée à ${developer.location}` : ''}`"
             class="avatar"
+            loading="lazy"
           />
           <div class="header-info">
             <h1 class="name">{{ developer.name }}</h1>

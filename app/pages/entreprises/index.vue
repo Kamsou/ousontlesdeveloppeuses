@@ -1,11 +1,48 @@
 <script setup lang="ts">
+const route = useRoute()
+const config = useRuntimeConfig()
+const siteUrl = config.public.siteUrl || 'https://ousontlesdeveloppeuses.fr'
+const canonicalUrl = `${siteUrl}/entreprises`
+
 useSeoMeta({
   title: 'Entreprises Inclusives - OSLD',
   ogTitle: 'Entreprises Inclusives - OSLD',
   description: 'Découvrez les entreprises tech certifiées inclusives en France. Avis et notes par la communauté des développeuses.',
   ogDescription: 'Découvrez les entreprises tech certifiées inclusives en France. Avis et notes par la communauté des développeuses.',
-  ogImage: '/og-image.png',
-  twitterCard: 'summary_large_image'
+  ogImage: `${siteUrl}/og-image.png`,
+  ogUrl: canonicalUrl,
+  ogType: 'website',
+  twitterCard: 'summary_large_image',
+  twitterImage: `${siteUrl}/og-image.png`
+})
+
+useHead({
+  link: [
+    { rel: 'canonical', href: canonicalUrl }
+  ]
+})
+
+// Structured Data
+const { collectionPageSchema, breadcrumbSchema } = useStructuredData()
+
+useHead({
+  script: [
+    {
+      type: 'application/ld+json',
+      children: JSON.stringify(collectionPageSchema(
+        'Entreprises Inclusives',
+        'Découvrez les entreprises tech certifiées inclusives en France. Avis et notes par la communauté des développeuses.',
+        canonicalUrl
+      ))
+    },
+    {
+      type: 'application/ld+json',
+      children: JSON.stringify(breadcrumbSchema([
+        { name: 'Accueil', url: siteUrl },
+        { name: 'Entreprises', url: canonicalUrl }
+      ]))
+    }
+  ]
 })
 
 const route = useRoute()
@@ -175,7 +212,7 @@ function openReviewModal(company: any) {
         <div v-for="company in companies" :key="company.id" class="company-card">
           <div class="card-header">
             <div v-if="company.logoUrl" class="company-logo">
-              <img :src="company.logoUrl" :alt="company.name" />
+              <img :src="company.logoUrl" :alt="`Logo de ${company.name}${company.location ? `, entreprise basée à ${company.location}` : ''}`" loading="lazy" />
             </div>
             <div v-else class="company-logo placeholder">
               {{ company.name.charAt(0) }}

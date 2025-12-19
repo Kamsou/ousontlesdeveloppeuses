@@ -1,11 +1,48 @@
 <script setup lang="ts">
+const route = useRoute()
+const config = useRuntimeConfig()
+const siteUrl = config.public.siteUrl || 'https://ousontlesdeveloppeuses.fr'
+const canonicalUrl = `${siteUrl}/speakers`
+
 useSeoMeta({
   title: 'Speakers Bureau - OSLD',
   ogTitle: 'Speakers Bureau - OSLD',
   description: 'Trouvez des intervenantes tech pour vos conférences et événements. Speakers disponibles en remote ou en présentiel.',
   ogDescription: 'Trouvez des intervenantes tech pour vos conférences et événements. Speakers disponibles en remote ou en présentiel.',
-  ogImage: '/og-image.png',
-  twitterCard: 'summary_large_image'
+  ogImage: `${siteUrl}/og-image.png`,
+  ogUrl: canonicalUrl,
+  ogType: 'website',
+  twitterCard: 'summary_large_image',
+  twitterImage: `${siteUrl}/og-image.png`
+})
+
+useHead({
+  link: [
+    { rel: 'canonical', href: canonicalUrl }
+  ]
+})
+
+// Structured Data
+const { collectionPageSchema, breadcrumbSchema } = useStructuredData()
+
+useHead({
+  script: [
+    {
+      type: 'application/ld+json',
+      children: JSON.stringify(collectionPageSchema(
+        'Speakers Bureau',
+        'Trouvez des intervenantes tech pour vos conférences et événements. Speakers disponibles en remote ou en présentiel.',
+        canonicalUrl
+      ))
+    },
+    {
+      type: 'application/ld+json',
+      children: JSON.stringify(breadcrumbSchema([
+        { name: 'Accueil', url: siteUrl },
+        { name: 'Speakers', url: canonicalUrl }
+      ]))
+    }
+  ]
 })
 
 interface Speaker {
@@ -140,8 +177,9 @@ watch(() => filters.travel, () => updateUrl())
           <div class="card-header">
             <img
               :src="speaker.avatarUrl || '/default-avatar.png'"
-              :alt="speaker.name"
+              :alt="`Photo de profil de ${speaker.name}, speaker tech${speaker.location ? ` basée à ${speaker.location}` : ''}`"
               class="avatar"
+              loading="lazy"
             />
             <div class="card-info">
               <h3 class="card-name">{{ speaker.name }}</h3>

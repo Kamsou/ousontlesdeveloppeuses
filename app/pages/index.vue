@@ -1,11 +1,42 @@
 <script setup lang="ts">
+const route = useRoute()
+const config = useRuntimeConfig()
+const siteUrl = config.public.siteUrl || 'https://ousontlesdeveloppeuses.fr'
+const canonicalUrl = `${siteUrl}${route.path === '/' ? '' : route.path}`
+
 useSeoMeta({
   title: 'OSLD - Où Sont Les Développeuses',
   ogTitle: 'OSLD - Où Sont Les Développeuses',
   description: 'Annuaire des développeuses en France. Trouvez des talents tech féminins, des speakers pour vos conférences, et des entreprises inclusives.',
   ogDescription: 'Annuaire des développeuses en France. Trouvez des talents tech féminins, des speakers pour vos conférences, et des entreprises inclusives.',
-  ogImage: '/og-image.png',
-  twitterCard: 'summary_large_image'
+  ogImage: `${siteUrl}/og-image.png`,
+  ogUrl: canonicalUrl,
+  ogType: 'website',
+  ogLocale: 'fr_FR',
+  twitterCard: 'summary_large_image',
+  twitterImage: `${siteUrl}/og-image.png`
+})
+
+useHead({
+  link: [
+    { rel: 'canonical', href: canonicalUrl }
+  ]
+})
+
+// Structured Data
+const { organizationSchema, websiteSchema } = useStructuredData()
+
+useHead({
+  script: [
+    {
+      type: 'application/ld+json',
+      children: JSON.stringify(organizationSchema())
+    },
+    {
+      type: 'application/ld+json',
+      children: JSON.stringify(websiteSchema())
+    }
+  ]
 })
 
 const { status, signIn } = useAuth()
