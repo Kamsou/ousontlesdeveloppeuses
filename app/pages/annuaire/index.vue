@@ -36,7 +36,8 @@ const queryParams = computed(() => {
 })
 
 const { data: developers, refresh } = await useFetch('/api/developers', {
-  query: queryParams
+  query: queryParams,
+  watch: [queryParams]
 })
 
 function toggleOpenTo(value: string) {
@@ -51,6 +52,7 @@ function toggleOpenTo(value: string) {
 
 function updateUrl() {
   router.push({ query: queryParams.value })
+  refresh()
 }
 
 function clearFilters() {
@@ -58,6 +60,7 @@ function clearFilters() {
   filters.skill = ''
   filters.openTo = []
   router.push({ query: {} })
+  refresh()
 }
 
 watch(() => filters.location, () => updateUrl())

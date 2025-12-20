@@ -42,12 +42,14 @@ const queryParams = computed(() => {
   return params
 })
 
-const { data: speakers } = await useFetch<Speaker[]>('/api/speakers', {
-  query: queryParams
+const { data: speakers, refresh } = await useFetch<Speaker[]>('/api/speakers', {
+  query: queryParams,
+  watch: [queryParams]
 })
 
 function updateUrl() {
   router.push({ query: queryParams.value })
+  refresh()
 }
 
 function clearFilters() {
@@ -56,6 +58,7 @@ function clearFilters() {
   filters.remote = false
   filters.travel = false
   router.push({ query: {} })
+  refresh()
 }
 
 watch(() => filters.location, () => updateUrl())
