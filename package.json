@@ -13,6 +13,7 @@
     "@libsql/client": "^0.15.15",
     "@nuxthub/core": "^0.10.1",
     "@nuxtjs/sitemap": "^7.4.11",
+    "@nuxtjs/tailwindcss": "^6.14.0",
     "@sidebase/nuxt-auth": "^1.1.1",
     "drizzle-orm": "^0.45.1",
     "next-auth": "~4.21.1",

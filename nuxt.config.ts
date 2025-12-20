@@ -30,14 +30,18 @@ export default defineNuxtConfig({
         { name: 'twitter:image', content: '/og-image.png' }
       ],
       link: [
-        { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
+        { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
+        { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
+        { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: '' },
+        { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap' }
       ]
     }
   },
   modules: [
     '@nuxthub/core',
     '@sidebase/nuxt-auth',
-    '@nuxtjs/sitemap'
+    '@nuxtjs/sitemap',
+    '@nuxtjs/tailwindcss'
   ],
   site: {
     url: 'https://ousontlesdeveloppeuses.fr'

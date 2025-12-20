@@ -143,91 +143,96 @@ async function save() {
 </script>
 
 <template>
-  <div class="profil-edit">
-    <header class="page-header">
-      <span class="page-label">
-        <span class="label-line"></span>
+  <div class="max-w-3xl mx-auto px-4 md:px-8 pb-16">
+    <header class="py-12 border-b border-border mb-8">
+      <span class="flex items-center gap-4 text-xs uppercase tracking-[0.2em] text-text-muted mb-4">
+        <span class="w-10 h-px bg-text-muted"></span>
         {{ isNewProfile ? 'Créer' : 'Modifier' }} mon profil
       </span>
-      <h1 class="page-title">{{ isNewProfile ? 'Bienvenue' : 'Mon profil' }}</h1>
+      <h1 class="font-display text-3xl md:text-5xl font-medium tracking-tight">{{ isNewProfile ? 'Bienvenue' : 'Mon profil' }}</h1>
     </header>
 
-    <form @submit.prevent="save" class="form">
-      <div v-if="error" class="error-message">{{ error }}</div>
+    <form @submit.prevent="save">
+      <div v-if="error" class="p-4 bg-red-500/10 border border-red-500/30 rounded-lg text-red-500 mb-8">{{ error }}</div>
 
-      <section class="form-section">
-        <h2 class="section-title">Informations</h2>
+      <section class="py-8 border-b border-border">
+        <h2 class="font-display text-xl font-medium mb-2">Informations</h2>
 
-        <div class="form-grid">
-          <div class="form-group">
-            <label class="form-label">Nom *</label>
-            <input v-model="form.name" type="text" required class="form-input" />
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+          <div class="flex flex-col gap-2">
+            <label class="text-xs uppercase tracking-wide text-text-muted">Nom *</label>
+            <input v-model="form.name" type="text" required class="px-4 py-3 bg-bg-card border border-border rounded-lg text-text text-sm transition-colors focus:outline-none focus:border-text-muted" />
           </div>
 
-          <div class="form-group">
-            <label class="form-label">Ville</label>
-            <input v-model="form.location" type="text" placeholder="Paris" class="form-input" />
+          <div class="flex flex-col gap-2">
+            <label class="text-xs uppercase tracking-wide text-text-muted">Ville</label>
+            <input v-model="form.location" type="text" placeholder="Paris" class="px-4 py-3 bg-bg-card border border-border rounded-lg text-text text-sm transition-colors focus:outline-none focus:border-text-muted placeholder:text-text-muted" />
           </div>
 
-          <div class="form-group">
-            <label class="form-label">Années d'expérience</label>
-            <input v-model.number="form.yearsExperience" type="number" min="0" max="50" class="form-input" />
+          <div class="flex flex-col gap-2">
+            <label class="text-xs uppercase tracking-wide text-text-muted">Années d'expérience</label>
+            <input v-model.number="form.yearsExperience" type="number" min="0" max="50" class="px-4 py-3 bg-bg-card border border-border rounded-lg text-text text-sm transition-colors focus:outline-none focus:border-text-muted" />
           </div>
 
-          <div class="form-group">
-            <label class="form-label">Site web</label>
-            <input v-model="form.website" type="url" placeholder="https://" class="form-input" />
+          <div class="flex flex-col gap-2">
+            <label class="text-xs uppercase tracking-wide text-text-muted">Site web</label>
+            <input v-model="form.website" type="url" placeholder="https://" class="px-4 py-3 bg-bg-card border border-border rounded-lg text-text text-sm transition-colors focus:outline-none focus:border-text-muted placeholder:text-text-muted" />
           </div>
 
-          <div class="form-group">
-            <label class="form-label">LinkedIn *</label>
-            <input v-model="form.linkedinUrl" type="url" placeholder="https://linkedin.com/in/..." class="form-input" required />
+          <div class="flex flex-col gap-2">
+            <label class="text-xs uppercase tracking-wide text-text-muted">LinkedIn *</label>
+            <input v-model="form.linkedinUrl" type="url" placeholder="https://linkedin.com/in/..." class="px-4 py-3 bg-bg-card border border-border rounded-lg text-text text-sm transition-colors focus:outline-none focus:border-text-muted placeholder:text-text-muted" required />
           </div>
 
-          <div class="form-group">
-            <label class="form-label">Twitter/X</label>
-            <input v-model="form.twitterUrl" type="url" placeholder="https://twitter.com/..." class="form-input" />
+          <div class="flex flex-col gap-2">
+            <label class="text-xs uppercase tracking-wide text-text-muted">Twitter/X</label>
+            <input v-model="form.twitterUrl" type="url" placeholder="https://twitter.com/..." class="px-4 py-3 bg-bg-card border border-border rounded-lg text-text text-sm transition-colors focus:outline-none focus:border-text-muted placeholder:text-text-muted" />
           </div>
         </div>
 
-        <div class="form-group full-width">
-          <label class="form-label">Bio</label>
-          <textarea v-model="form.bio" rows="4" placeholder="Présentez-vous en quelques mots..." class="form-textarea"></textarea>
+        <div class="flex flex-col gap-2 md:col-span-2">
+          <label class="text-xs uppercase tracking-wide text-text-muted">Bio</label>
+          <textarea v-model="form.bio" rows="4" placeholder="Présentez-vous en quelques mots..." class="px-4 py-3 bg-bg-card border border-border rounded-lg text-text text-sm transition-colors focus:outline-none focus:border-text-muted resize-y min-h-[100px] placeholder:text-text-muted"></textarea>
         </div>
       </section>
 
-      <section class="form-section">
-        <h2 class="section-title">Technologies</h2>
+      <section class="py-8 border-b border-border">
+        <h2 class="font-display text-xl font-medium mb-4">Technologies</h2>
 
-        <div class="skills-input">
+        <div class="flex gap-2 mb-4">
           <input
             v-model="newSkill"
             type="text"
             placeholder="Ajouter une techno..."
-            class="form-input"
+            class="flex-1 px-4 py-3 bg-bg-card border border-border rounded-lg text-text text-sm transition-colors focus:outline-none focus:border-text-muted placeholder:text-text-muted"
             @keydown.enter.prevent="addSkill"
           />
-          <button type="button" @click="addSkill" class="btn-add">Ajouter</button>
+          <button type="button" @click="addSkill" class="px-6 py-3 bg-bg-card border border-border rounded-lg text-text cursor-pointer transition-all hover:bg-bg-card-hover">Ajouter</button>
         </div>
 
-        <div class="skills-list">
-          <span v-for="skill in form.skills" :key="skill" class="skill-tag">
+        <div class="flex flex-wrap gap-2">
+          <span v-for="skill in form.skills" :key="skill" class="flex items-center gap-2 px-4 py-2 bg-bg-card border border-border rounded-full text-sm">
             {{ skill }}
-            <button type="button" @click="removeSkill(skill)" class="remove-btn">&times;</button>
+            <button type="button" @click="removeSkill(skill)" class="bg-transparent border-none text-text-muted cursor-pointer text-lg leading-none p-0 hover:text-text">&times;</button>
           </span>
         </div>
       </section>
 
-      <section class="form-section">
-        <h2 class="section-title">Disponible pour</h2>
-        <p class="section-description">Indiquez ce pour quoi vous êtes disponible</p>
+      <section class="py-8 border-b border-border">
+        <h2 class="font-display text-xl font-medium mb-2">Disponible pour</h2>
+        <p class="text-text-muted text-sm mb-6">Indiquez ce pour quoi vous êtes disponible</p>
 
-        <div class="open-to-grid">
+        <div class="flex flex-col md:flex-row flex-wrap gap-3">
           <button
             v-for="option in openToOptions"
             :key="option.value"
             type="button"
-            :class="['open-to-btn', { active: form.openTo.includes(option.value) }]"
+            :class="[
+              'px-6 py-3 border rounded-full cursor-pointer text-sm transition-all w-full md:w-auto text-center',
+              form.openTo.includes(option.value)
+                ? 'bg-text border-text text-bg'
+                : 'bg-transparent border-border text-text-muted hover:border-text hover:text-text'
+            ]"
             @click="toggleOpenTo(option.value)"
           >
             {{ option.label }}
@@ -235,334 +240,48 @@ async function save() {
         </div>
       </section>
 
-      <section v-if="form.openTo.includes('conference')" class="form-section">
-        <h2 class="section-title">Profil Speakeuse</h2>
-        <p class="section-description">Informations pour les organisateurs d'événements</p>
+      <section v-if="form.openTo.includes('conference')" class="py-8 border-b border-border">
+        <h2 class="font-display text-xl font-medium mb-2">Profil Speakeuse</h2>
+        <p class="text-text-muted text-sm mb-6">Informations pour les organisateurs d'événements</p>
 
-        <div class="form-group">
-          <label class="form-label">Sujets de talk</label>
-          <div class="skills-input">
+        <div class="flex flex-col gap-2 mb-4">
+          <label class="text-xs uppercase tracking-wide text-text-muted">Sujets de talk</label>
+          <div class="flex gap-2 mb-4">
             <input
               v-model="newTopic"
               type="text"
               placeholder="React, Women in Tech..."
-              class="form-input"
+              class="flex-1 px-4 py-3 bg-bg-card border border-border rounded-lg text-text text-sm transition-colors focus:outline-none focus:border-text-muted placeholder:text-text-muted"
               @keydown.enter.prevent="addTopic"
             />
-            <button type="button" @click="addTopic" class="btn-add">Ajouter</button>
+            <button type="button" @click="addTopic" class="px-6 py-3 bg-bg-card border border-border rounded-lg text-text cursor-pointer transition-all hover:bg-bg-card-hover">Ajouter</button>
           </div>
-          <div class="skills-list">
-            <span v-for="topic in form.speakerTopics" :key="topic" class="skill-tag">
+          <div class="flex flex-wrap gap-2">
+            <span v-for="topic in form.speakerTopics" :key="topic" class="flex items-center gap-2 px-4 py-2 bg-bg-card border border-border rounded-full text-sm">
               {{ topic }}
-              <button type="button" @click="removeTopic(topic)" class="remove-btn">&times;</button>
+              <button type="button" @click="removeTopic(topic)" class="bg-transparent border-none text-text-muted cursor-pointer text-lg leading-none p-0 hover:text-text">&times;</button>
             </span>
           </div>
         </div>
 
-        <div class="checkbox-group">
-          <label class="checkbox-label">
-            <input v-model="form.remoteOk" type="checkbox" />
+        <div class="flex flex-col md:flex-row gap-4 md:gap-8 mt-4">
+          <label class="flex items-center gap-2 cursor-pointer text-text-muted">
+            <input v-model="form.remoteOk" type="checkbox" class="w-[18px] h-[18px] accent-text" />
             <span>Disponible en remote</span>
           </label>
-          <label class="checkbox-label">
-            <input v-model="form.travelWilling" type="checkbox" />
+          <label class="flex items-center gap-2 cursor-pointer text-text-muted">
+            <input v-model="form.travelWilling" type="checkbox" class="w-[18px] h-[18px] accent-text" />
             <span>Prête à me déplacer</span>
           </label>
         </div>
       </section>
 
-      <div class="form-actions">
-        <NuxtLink to="/annuaire" class="btn-cancel">Annuler</NuxtLink>
-        <button type="submit" :disabled="saving" class="btn-save">
+      <div class="flex justify-end gap-4 pt-8">
+        <NuxtLink to="/annuaire" class="px-8 py-4 bg-transparent border border-border rounded-full text-text-muted no-underline text-sm transition-all hover:border-text hover:text-text">Annuler</NuxtLink>
+        <button type="submit" :disabled="saving" class="px-8 py-4 bg-text border-none rounded-full text-bg text-sm font-medium cursor-pointer transition-all hover:bg-text-muted disabled:opacity-50 disabled:cursor-not-allowed">
           {{ saving ? 'Enregistrement...' : 'Enregistrer' }}
         </button>
       </div>
     </form>
   </div>
 </template>
-
-<style scoped>
-.profil-edit {
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 0 2rem 4rem;
-}
-
-.page-header {
-  padding: 3rem 0;
-  border-bottom: 1px solid var(--border);
-  margin-bottom: 2rem;
-}
-
-.page-label {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  font-size: 0.75rem;
-  text-transform: uppercase;
-  letter-spacing: 0.2em;
-  color: var(--text-muted);
-  margin-bottom: 1rem;
-}
-
-.label-line {
-  width: 40px;
-  height: 1px;
-  background: var(--text-muted);
-}
-
-.page-title {
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 3rem;
-  font-weight: 500;
-  letter-spacing: -0.03em;
-}
-
-.error-message {
-  padding: 1rem;
-  background: rgba(239, 68, 68, 0.1);
-  border: 1px solid rgba(239, 68, 68, 0.3);
-  border-radius: 8px;
-  color: #ef4444;
-  margin-bottom: 2rem;
-}
-
-.form-section {
-  padding: 2rem 0;
-  border-bottom: 1px solid var(--border);
-}
-
-.section-title {
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 1.25rem;
-  font-weight: 500;
-  margin-bottom: 0.5rem;
-}
-
-.section-description {
-  color: var(--text-muted);
-  font-size: 0.9rem;
-  margin-bottom: 1.5rem;
-}
-
-.form-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 1.5rem;
-  margin-bottom: 1.5rem;
-}
-
-.form-group {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.form-group.full-width {
-  grid-column: 1 / -1;
-}
-
-.form-label {
-  font-size: 0.8rem;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: var(--text-muted);
-}
-
-.form-input,
-.form-textarea {
-  padding: 0.75rem 1rem;
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  color: var(--text);
-  font-size: 0.9rem;
-  font-family: inherit;
-  transition: border-color 0.2s;
-}
-
-.form-input:focus,
-.form-textarea:focus {
-  outline: none;
-  border-color: var(--text-muted);
-}
-
-.form-textarea {
-  resize: vertical;
-  min-height: 100px;
-}
-
-.skills-input {
-  display: flex;
-  gap: 0.5rem;
-  margin-bottom: 1rem;
-}
-
-.btn-add {
-  padding: 0.75rem 1.5rem;
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  color: var(--text);
-  cursor: pointer;
-  font-family: inherit;
-  transition: all 0.2s;
-}
-
-.btn-add:hover {
-  background: var(--bg-card-hover);
-}
-
-.skills-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-}
-
-.skill-tag {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.5rem 1rem;
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: 100px;
-  font-size: 0.85rem;
-}
-
-.remove-btn {
-  background: none;
-  border: none;
-  color: var(--text-muted);
-  cursor: pointer;
-  font-size: 1.2rem;
-  line-height: 1;
-  padding: 0;
-}
-
-.remove-btn:hover {
-  color: var(--text);
-}
-
-.open-to-grid {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.75rem;
-}
-
-.open-to-btn {
-  padding: 0.75rem 1.5rem;
-  background: transparent;
-  border: 1px solid var(--border);
-  border-radius: 100px;
-  color: var(--text-muted);
-  cursor: pointer;
-  font-family: inherit;
-  font-size: 0.9rem;
-  transition: all 0.2s;
-}
-
-.open-to-btn:hover {
-  border-color: var(--text);
-  color: var(--text);
-}
-
-.open-to-btn.active {
-  background: var(--text);
-  border-color: var(--text);
-  color: var(--bg);
-}
-
-.checkbox-group {
-  display: flex;
-  gap: 2rem;
-  margin-top: 1rem;
-}
-
-.checkbox-label {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  cursor: pointer;
-  color: var(--text-muted);
-}
-
-.checkbox-label input {
-  width: 18px;
-  height: 18px;
-  cursor: pointer;
-}
-
-.form-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 1rem;
-  padding-top: 2rem;
-}
-
-.btn-cancel {
-  padding: 1rem 2rem;
-  background: transparent;
-  border: 1px solid var(--border);
-  border-radius: 100px;
-  color: var(--text-muted);
-  text-decoration: none;
-  font-size: 0.9rem;
-  transition: all 0.2s;
-}
-
-.btn-cancel:hover {
-  border-color: var(--text);
-  color: var(--text);
-}
-
-.btn-save {
-  padding: 1rem 2rem;
-  background: var(--text);
-  border: none;
-  border-radius: 100px;
-  color: var(--bg);
-  font-size: 0.9rem;
-  font-weight: 500;
-  cursor: pointer;
-  font-family: inherit;
-  transition: all 0.2s;
-}
-
-.btn-save:hover:not(:disabled) {
-  background: var(--text-muted);
-}
-
-.btn-save:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-@media (max-width: 768px) {
-  .profil-edit {
-    padding: 0 1.5rem 4rem;
-  }
-
-  .page-title {
-    font-size: 2rem;
-  }
-
-  .form-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .open-to-grid {
-    flex-direction: column;
-  }
-
-  .open-to-btn {
-    width: 100%;
-    text-align: center;
-  }
-
-  .checkbox-group {
-    flex-direction: column;
-    gap: 1rem;
-  }
-}
-</style>

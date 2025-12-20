@@ -65,109 +65,101 @@ watch(() => filters.travel, () => updateUrl())
 </script>
 
 <template>
-  <div class="speakers-page">
-    <header class="page-header">
-      <NuxtLink to="/" class="back-link">
-        ← Accueil
-      </NuxtLink>
-      <div class="page-header-content">
-        <span class="page-label">
-          <span class="label-line"></span>
-          Speakeuses
-        </span>
-        <h1 class="page-title">Speakeuses</h1>
-        <p class="page-subtitle">
-          {{ speakers?.length || 0 }} speakeuses disponibles pour vos conférences
-        </p>
-      </div>
+  <div class="max-w-7xl mx-auto px-4 md:px-16">
+    <header class="py-16 border-b border-border">
+      <span class="text-xs uppercase tracking-[0.2em] text-text-muted mb-6 block">Speakeuses</span>
+      <h1 class="font-display text-4xl md:text-7xl font-medium tracking-tight mb-2">Speakeuses</h1>
+      <p class="text-text-muted text-base">
+        {{ speakers?.length || 0 }} speakeuses disponibles pour vos conférences
+      </p>
     </header>
 
-    <section class="filters">
-      <div class="filters-row">
-        <div class="filter-group">
-          <label class="filter-label">Ville</label>
+    <section class="py-8 border-b border-border">
+      <div class="flex flex-col md:flex-row gap-6 items-stretch md:items-end mb-6">
+        <div class="flex-1 max-w-none md:max-w-[250px]">
+          <label class="block text-xs uppercase tracking-widest text-text-muted mb-2">Ville</label>
           <input
             v-model="filters.location"
             type="text"
             placeholder="Paris, Lyon..."
-            class="filter-input"
+            class="w-full px-4 py-3 bg-bg-card border border-border rounded-lg text-text text-sm transition-colors focus:outline-none focus:border-text-muted placeholder:text-text-muted"
           />
         </div>
 
-        <div class="filter-group">
-          <label class="filter-label">Sujet</label>
+        <div class="flex-1 max-w-none md:max-w-[250px]">
+          <label class="block text-xs uppercase tracking-widest text-text-muted mb-2">Sujet</label>
           <input
             v-model="filters.topic"
             type="text"
             placeholder="React, Leadership..."
-            class="filter-input"
+            class="w-full px-4 py-3 bg-bg-card border border-border rounded-lg text-text text-sm transition-colors focus:outline-none focus:border-text-muted placeholder:text-text-muted"
           />
         </div>
 
-        <button v-if="filters.location || filters.topic || filters.remote || filters.travel" @click="clearFilters" class="btn-clear">
+        <button v-if="filters.location || filters.topic || filters.remote || filters.travel" @click="clearFilters" class="px-6 py-3 bg-transparent border border-border rounded-lg text-text-muted text-sm cursor-pointer transition-all hover:border-text hover:text-text">
           Effacer
         </button>
       </div>
 
-      <div class="options-row">
-        <label class="checkbox-label">
-          <input type="checkbox" v-model="filters.remote" class="checkbox" />
-          <span class="checkbox-text">Remote possible</span>
+      <div class="flex gap-8">
+        <label class="flex items-center gap-3 cursor-pointer">
+          <input type="checkbox" v-model="filters.remote" class="w-[18px] h-[18px] accent-text" />
+          <span class="text-sm text-text-muted">Remote possible</span>
         </label>
 
-        <label class="checkbox-label">
-          <input type="checkbox" v-model="filters.travel" class="checkbox" />
-          <span class="checkbox-text">Se déplace</span>
+        <label class="flex items-center gap-3 cursor-pointer">
+          <input type="checkbox" v-model="filters.travel" class="w-[18px] h-[18px] accent-text" />
+          <span class="text-sm text-text-muted">Se déplace</span>
         </label>
       </div>
     </section>
 
-    <section class="results">
-      <div v-if="!speakers?.length" class="empty-state">
-        <p>Aucune speaker trouvée</p>
-        <button @click="clearFilters" class="btn-secondary">Effacer les filtres</button>
+    <section class="py-12">
+      <div v-if="!speakers?.length" class="text-center py-16 text-text-muted">
+        <p class="mb-4">Aucune speakeuse trouvée</p>
+        <button @click="clearFilters" class="px-6 py-3 bg-transparent border border-border rounded-lg text-text cursor-pointer">Effacer les filtres</button>
       </div>
 
-      <div v-else class="speakers-grid">
+      <div v-else class="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <NuxtLink
           v-for="speaker in speakers"
           :key="speaker.id"
           :to="`/profil/${speaker.id}`"
-          class="speaker-card"
+          class="flex flex-col gap-5 p-8 bg-bg-card border border-border rounded-2xl no-underline text-text transition-all hover:bg-bg-card-hover hover:border-text-muted hover:-translate-y-0.5"
         >
-          <div class="card-header">
+          <div class="flex items-center gap-4">
             <img
               :src="speaker.avatarUrl || '/default-avatar.png'"
               :alt="speaker.name"
-              class="avatar"
+              class="w-16 h-16 rounded-full object-cover"
             />
-            <div class="card-info">
-              <h3 class="card-name">{{ speaker.name }}</h3>
-              <p v-if="speaker.location" class="card-location">{{ speaker.location }}</p>
+            <div class="flex-1">
+              <h3 class="font-display text-xl font-medium">{{ speaker.name }}</h3>
+              <p v-if="speaker.location" class="text-sm text-text-muted mt-1">{{ speaker.location }}</p>
             </div>
           </div>
 
-          <p v-if="speaker.bio" class="card-bio">{{ speaker.bio }}</p>
+          <p v-if="speaker.bio" class="text-sm text-text-muted leading-relaxed line-clamp-2">{{ speaker.bio }}</p>
 
-          <div v-if="speaker.speakerProfile?.topics?.length" class="card-topics">
-            <span class="topics-label">Sujets</span>
-            <div class="topics-list">
-              <span v-for="topic in speaker.speakerProfile.topics" :key="topic" class="topic-tag">
+          <div v-if="speaker.speakerProfile?.topics?.length" class="flex flex-col gap-2">
+            <span class="text-[0.7rem] uppercase tracking-widest text-text-muted">Sujets</span>
+            <div class="flex flex-wrap gap-2">
+              <span v-for="topic in speaker.speakerProfile.topics" :key="topic" class="px-4 py-2 bg-text text-bg rounded-full text-sm font-medium">
                 {{ topic }}
               </span>
             </div>
           </div>
 
-          <div class="card-options">
-            <span v-if="speaker.speakerProfile?.remoteOk" class="option-tag">Remote possible</span>
-            <span v-if="speaker.speakerProfile?.travelWilling" class="option-tag">Se déplace</span>
+          <div class="flex gap-3">
+            <span v-if="speaker.speakerProfile?.remoteOk" class="px-3 py-1.5 bg-bg-card border border-border rounded-full text-xs text-text-muted">Remote possible</span>
+            <span v-if="speaker.speakerProfile?.travelWilling" class="px-3 py-1.5 bg-bg-card border border-border rounded-full text-xs text-text-muted">Se déplace</span>
           </div>
 
-          <div v-if="speaker.skills?.length" class="card-skills">
-            <span v-for="skill in speaker.skills.slice(0, 4)" :key="skill" class="skill-pill">
+          <div v-if="speaker.skills?.length" class="flex flex-wrap gap-2 pt-3 border-t border-border">
+            <span v-for="skill in speaker.skills.slice(0, 4)" :key="skill" class="px-3 py-1 bg-bg-card border border-border rounded-full text-xs text-text-muted">
               {{ skill }}
             </span>
-            <span v-if="speaker.skills.length > 4" class="skill-more">
+            <span v-if="speaker.skills.length > 4" class="px-2 py-1 text-xs text-text-muted">
               +{{ speaker.skills.length - 4 }}
             </span>
           </div>
@@ -176,340 +168,3 @@ watch(() => filters.travel, () => updateUrl())
     </section>
   </div>
 </template>
-
-<style scoped>
-.speakers-page {
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 0 4rem;
-}
-
-.page-header {
-  padding: 4rem 0;
-  border-bottom: 1px solid var(--border);
-}
-
-.back-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-size: 0.875rem;
-  color: var(--text-muted);
-  text-decoration: none;
-  margin-bottom: 1.5rem;
-  transition: color 0.2s;
-}
-
-.back-link:hover {
-  color: var(--text);
-}
-
-.page-label {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  font-size: 0.75rem;
-  text-transform: uppercase;
-  letter-spacing: 0.2em;
-  color: var(--text-muted);
-  margin-bottom: 1.5rem;
-}
-
-.label-line {
-  width: 40px;
-  height: 1px;
-  background: var(--text-muted);
-}
-
-.page-title {
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 4rem;
-  font-weight: 500;
-  letter-spacing: -0.03em;
-  margin-bottom: 0.5rem;
-}
-
-.page-subtitle {
-  color: var(--text-muted);
-  font-size: 1rem;
-}
-
-/* Filters */
-.filters {
-  padding: 2rem 0;
-  border-bottom: 1px solid var(--border);
-}
-
-.filters-row {
-  display: flex;
-  gap: 1.5rem;
-  align-items: flex-end;
-  margin-bottom: 1.5rem;
-}
-
-.filter-group {
-  flex: 1;
-  max-width: 250px;
-}
-
-.filter-label {
-  display: block;
-  font-size: 0.75rem;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: var(--text-muted);
-  margin-bottom: 0.5rem;
-}
-
-.filter-input {
-  width: 100%;
-  padding: 0.75rem 1rem;
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  color: var(--text);
-  font-size: 0.9rem;
-  font-family: inherit;
-  transition: border-color 0.2s;
-}
-
-.filter-input:focus {
-  outline: none;
-  border-color: var(--text-muted);
-}
-
-.filter-input::placeholder {
-  color: var(--text-muted);
-}
-
-.btn-clear {
-  padding: 0.75rem 1.5rem;
-  background: transparent;
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  color: var(--text-muted);
-  font-size: 0.9rem;
-  cursor: pointer;
-  transition: all 0.2s;
-  font-family: inherit;
-}
-
-.btn-clear:hover {
-  border-color: var(--text);
-  color: var(--text);
-}
-
-.options-row {
-  display: flex;
-  gap: 2rem;
-}
-
-.checkbox-label {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  cursor: pointer;
-}
-
-.checkbox {
-  width: 18px;
-  height: 18px;
-  accent-color: var(--text);
-}
-
-.checkbox-text {
-  font-size: 0.9rem;
-  color: var(--text-muted);
-}
-
-/* Results */
-.results {
-  padding: 3rem 0;
-}
-
-.empty-state {
-  text-align: center;
-  padding: 4rem 0;
-  color: var(--text-muted);
-}
-
-.empty-state p {
-  margin-bottom: 1rem;
-}
-
-.btn-secondary {
-  padding: 0.75rem 1.5rem;
-  background: transparent;
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  color: var(--text);
-  cursor: pointer;
-  font-family: inherit;
-}
-
-.speakers-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
-  gap: 1.5rem;
-}
-
-.speaker-card {
-  display: flex;
-  flex-direction: column;
-  gap: 1.25rem;
-  padding: 2rem;
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  text-decoration: none;
-  color: var(--text);
-  transition: all 0.3s ease;
-}
-
-.speaker-card:hover {
-  background: var(--bg-card-hover);
-  border-color: var(--text-muted);
-  transform: translateY(-2px);
-}
-
-.card-header {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-}
-
-.avatar {
-  width: 64px;
-  height: 64px;
-  border-radius: 50%;
-  object-fit: cover;
-}
-
-.card-info {
-  flex: 1;
-}
-
-.card-name {
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 1.25rem;
-  font-weight: 500;
-}
-
-.card-location {
-  font-size: 0.875rem;
-  color: var(--text-muted);
-  margin-top: 0.25rem;
-}
-
-.card-bio {
-  font-size: 0.9rem;
-  color: var(--text-muted);
-  line-height: 1.6;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
-.card-topics {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.topics-label {
-  font-size: 0.7rem;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: var(--text-muted);
-}
-
-.topics-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-}
-
-.topic-tag {
-  padding: 0.5rem 1rem;
-  background: var(--text);
-  color: var(--bg);
-  border-radius: 100px;
-  font-size: 0.8rem;
-  font-weight: 500;
-}
-
-.card-options {
-  display: flex;
-  gap: 0.75rem;
-}
-
-.option-tag {
-  padding: 0.375rem 0.875rem;
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: 100px;
-  font-size: 0.75rem;
-  color: var(--text-muted);
-}
-
-.card-skills {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  padding-top: 0.75rem;
-  border-top: 1px solid var(--border);
-}
-
-.skill-pill {
-  padding: 0.25rem 0.75rem;
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: 100px;
-  font-size: 0.75rem;
-  color: var(--text-muted);
-}
-
-.skill-more {
-  padding: 0.25rem 0.5rem;
-  font-size: 0.75rem;
-  color: var(--text-muted);
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-  .speakers-page {
-    padding: 0 1rem;
-    overflow-x: hidden;
-  }
-
-  .page-header {
-    padding: 2rem 0;
-  }
-
-  .page-label {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.5rem;
-  }
-
-  .page-title {
-    font-size: 2rem;
-    word-break: break-word;
-  }
-
-  .filters-row {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .filter-group {
-    max-width: none;
-  }
-
-  .speakers-grid {
-    grid-template-columns: 1fr;
-  }
-}
-</style>
