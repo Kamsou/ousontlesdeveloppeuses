@@ -8,17 +8,6 @@ useSeoMeta({
   twitterCard: 'summary_large_image'
 })
 
-const { status, signIn } = useAuth()
-const router = useRouter()
-
-function handleCreateProfile() {
-  if (status.value === 'authenticated') {
-    router.push('/profil')
-  } else {
-    signIn('github')
-  }
-}
-
 const { data: statsData } = await useFetch('/api/stats')
 
 function pluralize(count: number, singular: string, plural: string) {
@@ -53,17 +42,20 @@ const features = [
   {
     number: '01',
     title: 'Speakeuses',
-    description: 'Trouvez des speakeuses pour vos événements tech. Filtrez par sujet, disponibilité et localisation.'
+    description: 'Trouvez des speakeuses pour vos événements tech. Filtrez par sujet, disponibilité et localisation.',
+    link: '/speakers'
   },
   {
     number: '02',
     title: 'Disponible pour...',
-    description: 'Chaque profil indique ses disponibilités : conférence, mentoring, freelance, CDI, coffee chat, pair programming, relecture CV.'
+    description: 'Chaque profil indique ses disponibilités : conférence, mentoring, freelance, CDI, coffee chat, pair programming, relecture CV.',
+    link: '/annuaire'
   },
   {
     number: '03',
     title: 'Certifiée Inclusive',
-    description: 'Les entreprises avec 5+ avis positifs obtiennent le badge "Certifiée Inclusive". Transparence totale.'
+    description: 'Les entreprises avec 5+ avis positifs obtiennent le badge "Certifiée Inclusive". Transparence totale.',
+    link: '/entreprises'
   }
 ]
 </script>
@@ -72,8 +64,6 @@ const features = [
   <div class="max-w-[1600px] mx-auto">
     <section class="min-h-[calc(100vh-80px)] flex flex-col justify-center px-4 md:px-16 py-16 md:py-8 relative">
       <div class="max-w-4xl">
-        <span class="text-xs uppercase tracking-[0.2em] text-text-muted mb-12 block">Annuaire</span>
-
         <h1 class="font-display text-4xl md:text-[clamp(3.5rem,10vw,8rem)] font-medium leading-[0.95] tracking-tight mb-8">
           <span class="block overflow-hidden">
             <span class="inline-block mr-[0.2em]">Où</span>
@@ -86,26 +76,28 @@ const features = [
         </h1>
 
         <p class="text-lg text-text-muted max-w-md leading-relaxed mb-12">
-          L'annuaire qui référence les développeuses en France.
-          Trouvez des profils, des speakeuses, des mentors.
+          Le réseau des talents tech féminins en France.<br/>
+          Profils. Talks. Mentorat.
         </p>
 
         <div class="flex gap-6 items-center flex-wrap">
-          <button @click="handleCreateProfile" class="group flex items-center gap-4 px-6 py-4 bg-text text-bg border-none rounded-full text-sm font-medium cursor-pointer transition-all hover:gap-6 hover:pr-5">
+          <NuxtLink to="/profil" class="group flex items-center gap-4 px-6 py-4 bg-text text-bg border-none rounded-full text-sm font-medium cursor-pointer transition-all hover:gap-6 hover:pr-5 no-underline">
             <span>Créer mon profil</span>
             <span class="flex transition-transform group-hover:translate-x-1">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M5 12h14M12 5l7 7-7 7"/>
               </svg>
             </span>
-          </button>
-          <NuxtLink to="/annuaire" class="relative py-4 bg-transparent border-none text-text text-sm font-medium cursor-pointer after:content-[''] after:absolute after:bottom-3 after:left-0 after:w-full after:h-px after:bg-text after:scale-x-0 after:origin-right after:transition-transform hover:after:scale-x-100 hover:after:origin-left">Explorer l'annuaire</NuxtLink>
+          </NuxtLink>
+          <NuxtLink to="/experience" class="relative py-4 bg-transparent border-none text-text text-sm font-medium cursor-pointer after:content-[''] after:absolute after:bottom-3 after:left-0 after:w-full after:h-px after:bg-text after:scale-x-0 after:origin-right after:transition-transform hover:after:scale-x-100 hover:after:origin-left">Découvre ton profil dev</NuxtLink>
         </div>
       </div>
 
-      <div class="hidden md:flex absolute bottom-8 right-16 flex-col items-center gap-3">
-        <span class="text-[0.7rem] uppercase tracking-widest text-text-muted [writing-mode:vertical-rl]">Scroll</span>
-        <span class="w-px h-16 bg-text-muted animate-pulse"></span>
+      <div class="hidden md:flex absolute bottom-8 right-16 flex-col items-center gap-4">
+        <span class="text-[0.65rem] uppercase tracking-[0.2em] text-text-muted [writing-mode:vertical-rl]">Scroll</span>
+        <div class="relative w-px h-16 bg-border overflow-hidden">
+          <span class="absolute top-0 left-0 w-full h-8 bg-gradient-to-b from-text to-transparent scroll-line"></span>
+        </div>
       </div>
     </section>
 
@@ -136,7 +128,7 @@ const features = [
       </div>
 
       <div class="lg:col-span-2 flex flex-col">
-        <div v-for="feature in features" :key="feature.title" class="group grid grid-cols-[50px_1fr_40px] md:grid-cols-[80px_1fr_60px] gap-4 md:gap-8 py-8 md:py-12 border-t border-border last:border-b cursor-pointer transition-all hover:pl-4">
+        <NuxtLink v-for="feature in features" :key="feature.title" :to="feature.link" class="group grid grid-cols-[50px_1fr_40px] md:grid-cols-[80px_1fr_60px] gap-4 md:gap-8 py-8 md:py-12 border-t border-border last:border-b cursor-pointer transition-all hover:pl-4 no-underline">
           <span class="font-display text-sm text-text-muted">{{ feature.number }}</span>
           <div class="flex flex-col gap-3">
             <h3 class="font-display text-xl md:text-3xl font-medium tracking-tight transition-colors group-hover:text-text">{{ feature.title }}</h3>
@@ -147,7 +139,7 @@ const features = [
               <path d="M7 17L17 7M17 7H7M17 7V17"/>
             </svg>
           </div>
-        </div>
+        </NuxtLink>
       </div>
     </section>
 
@@ -182,14 +174,19 @@ const features = [
         <p class="text-text-muted text-base leading-relaxed mb-10">
           Indiquez vos technos, votre localisation et ce pour quoi vous êtes disponible.
         </p>
-        <button @click="handleCreateProfile" class="group inline-flex items-center gap-4 px-8 py-5 bg-text text-bg border-none rounded-full text-base font-medium cursor-pointer transition-all hover:bg-text-muted hover:gap-6">
-          <span>Commencer</span>
-          <span class="flex transition-transform group-hover:translate-x-1">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M5 12h14M12 5l7 7-7 7"/>
-            </svg>
-          </span>
-        </button>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+          <NuxtLink to="/profil" class="group inline-flex items-center gap-4 px-8 py-5 bg-text text-bg border-none rounded-full text-base font-medium cursor-pointer transition-all hover:bg-text-muted hover:gap-6 no-underline">
+            <span>Créer mon profil</span>
+            <span class="flex transition-transform group-hover:translate-x-1">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M5 12h14M12 5l7 7-7 7"/>
+              </svg>
+            </span>
+          </NuxtLink>
+          <NuxtLink to="/experience" class="text-text-muted hover:text-text text-sm transition-colors no-underline">
+            ou découvre ton profil dev →
+          </NuxtLink>
+        </div>
       </div>
     </section>
   </div>
@@ -213,5 +210,18 @@ const features = [
 
 .animate-scroll {
   animation: scroll 25s linear infinite;
+}
+
+@keyframes scroll-down {
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(200%);
+  }
+}
+
+.scroll-line {
+  animation: scroll-down 1.5s ease-in-out infinite;
 }
 </style>

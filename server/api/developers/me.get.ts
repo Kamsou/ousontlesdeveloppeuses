@@ -42,6 +42,8 @@ export default defineEventHandler(async (event) => {
     githubUrl: developer.githubUrl,
     linkedinUrl: developer.linkedinUrl,
     twitterUrl: developer.twitterUrl,
+    profileType: developer.profileType,
+    profilePhrase: developer.profilePhrase,
     skills: developer.skills.map(s => s.skillName),
     openTo: developer.openTo.map(o => o.type),
     speakerProfile: developer.speakerProfile ? {

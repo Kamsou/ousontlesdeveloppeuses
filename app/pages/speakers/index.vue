@@ -94,7 +94,7 @@ watch(() => filters.travel, () => updateUrl())
           <input
             v-model="filters.topic"
             type="text"
-            placeholder="React, Leadership..."
+            placeholder="Vue.js, Leadership..."
             class="w-full px-4 py-3 bg-bg-card border border-border rounded-lg text-text text-sm transition-colors focus:outline-none focus:border-text-muted placeholder:text-text-muted"
           />
         </div>

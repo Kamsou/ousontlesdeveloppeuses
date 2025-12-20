@@ -15,6 +15,8 @@ export const developers = sqliteTable('developers', {
   githubUrl: text('github_url'),
   linkedinUrl: text('linkedin_url'),
   twitterUrl: text('twitter_url'),
+  profileType: text('profile_type'), // Generated from experience quiz
+  profilePhrase: text('profile_phrase'), // Custom phrase from experience quiz
   createdAt: integer('created_at', { mode: 'timestamp' }).$defaultFn(() => new Date()),
   updatedAt: integer('updated_at', { mode: 'timestamp' }).$defaultFn(() => new Date())
 })

@@ -94,7 +94,7 @@ watch(() => filters.skill, () => updateUrl())
           <input
             v-model="filters.skill"
             type="text"
-            placeholder="React, Python..."
+            placeholder="Vue.js, Python..."
             class="w-full px-4 py-3 bg-bg-card border border-border rounded-lg text-text text-sm transition-colors focus:outline-none focus:border-text-muted placeholder:text-text-muted"
           />
         </div>

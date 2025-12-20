@@ -10,6 +10,7 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.71.2",
     "@libsql/client": "^0.15.15",
     "@nuxthub/core": "^0.10.1",
     "@nuxtjs/sitemap": "^7.4.11",

@@ -119,7 +119,7 @@ function openReviewModal(company: any) {
     </header>
 
     <section class="py-8 border-b border-border">
-      <div class="flex flex-col md:flex-row gap-6 items-stretch md:items-center">
+      <div class="flex flex-col md:flex-row gap-6 items-stretch md:items-end">
         <div class="flex-1 max-w-none md:max-w-[250px]">
           <label class="block text-xs uppercase tracking-widest text-text-muted mb-2">Ville</label>
           <input
@@ -130,7 +130,7 @@ function openReviewModal(company: any) {
           />
         </div>
 
-        <label class="flex items-center gap-3 cursor-pointer">
+        <label class="flex items-center gap-3 cursor-pointer h-[46px]">
           <input type="checkbox" v-model="filters.verified" class="w-[18px] h-[18px] accent-text" />
           <span class="text-sm text-text-muted">Certifiées Inclusives uniquement</span>
         </label>

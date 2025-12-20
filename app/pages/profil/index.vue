@@ -11,6 +11,8 @@ interface Profile {
   githubUrl: string | null
   linkedinUrl: string | null
   twitterUrl: string | null
+  profileType: string | null
+  profilePhrase: string | null
   skills: string[]
   openTo: string[]
   speakerProfile: {
@@ -21,17 +23,17 @@ interface Profile {
   } | null
 }
 
+definePageMeta({
+  middleware: 'sidebase-auth'
+})
+
 useSeoMeta({
   title: 'Mon Profil - OSLD',
   robots: 'noindex, nofollow'
 })
 
-const { data: session, status } = useAuth()
+const { data: session } = useAuth()
 const router = useRouter()
-
-if (status.value !== 'authenticated') {
-  navigateTo('/')
-}
 
 const openToOptions = [
   { value: 'conference', label: 'Conférence' },
@@ -46,6 +48,23 @@ const openToOptions = [
 const { data: profile, refresh } = await useFetch<Profile | null>('/api/developers/me')
 
 const isNewProfile = computed(() => !profile.value)
+
+const validProfileTypes = [
+  "L'Architecte",
+  'La Détective',
+  'La Speedrunner',
+  'La Perfectionniste',
+  'La Connectrice',
+  "L'Exploratrice",
+  'La Gardienne',
+  'La Créative'
+]
+
+const hasValidExperienceProfile = computed(() => {
+  return profile.value?.profileType &&
+    profile.value?.profilePhrase &&
+    validProfileTypes.includes(profile.value.profileType)
+})
 
 const form = reactive({
   name: '',
@@ -144,13 +163,40 @@ async function save() {
 
 <template>
   <div class="max-w-3xl mx-auto px-4 md:px-8 pb-16">
-    <header class="py-12 border-b border-border mb-8">
-      <span class="flex items-center gap-4 text-xs uppercase tracking-[0.2em] text-text-muted mb-4">
-        <span class="w-10 h-px bg-text-muted"></span>
+    <header class="py-12 mb-8" :class="{ 'border-b border-border': !hasValidExperienceProfile }">
+      <span class="text-xs uppercase tracking-[0.2em] text-text-muted mb-4 block">
         {{ isNewProfile ? 'Créer' : 'Modifier' }} mon profil
       </span>
       <h1 class="font-display text-3xl md:text-5xl font-medium tracking-tight">{{ isNewProfile ? 'Bienvenue' : 'Mon profil' }}</h1>
     </header>
+
+    <section v-if="hasValidExperienceProfile" class="mb-16 -mx-4 md:-mx-8 px-4 md:px-8 py-12 border-y border-border relative overflow-hidden">
+      <div class="absolute inset-0 flex items-center justify-center pointer-events-none select-none overflow-hidden">
+        <span class="font-display text-[20rem] md:text-[28rem] font-bold text-text opacity-[0.02] leading-none tracking-tighter">*</span>
+      </div>
+
+      <div class="relative">
+        <div class="flex flex-col gap-8">
+          <span class="text-[0.65rem] uppercase tracking-[0.3em] text-text-muted">Profil généré</span>
+
+          <div class="grid grid-cols-1 md:grid-cols-[1fr_auto] gap-8 md:gap-16 items-end">
+            <div>
+              <h2 class="font-display text-4xl md:text-6xl lg:text-7xl font-medium tracking-tight leading-[0.9] mb-6">{{ profile?.profileType }}</h2>
+              <p class="text-text-muted text-lg md:text-xl leading-relaxed max-w-xl">{{ profile?.profilePhrase }}</p>
+            </div>
+
+            <NuxtLink to="/experience" class="group flex items-center gap-3 self-end pb-2">
+              <span class="text-sm text-text-muted group-hover:text-text transition-colors">Refaire</span>
+              <span class="w-10 h-10 flex items-center justify-center border border-border rounded-full group-hover:border-text group-hover:bg-text group-hover:text-bg transition-all">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M17 1l4 4-4 4"/><path d="M3 11V9a4 4 0 014-4h14"/><path d="M7 23l-4-4 4-4"/><path d="M21 13v2a4 4 0 01-4 4H3"/>
+                </svg>
+              </span>
+            </NuxtLink>
+          </div>
+        </div>
+      </div>
+    </section>
 
     <form @submit.prevent="save">
       <div v-if="error" class="p-4 bg-red-500/10 border border-red-500/30 rounded-lg text-red-500 mb-8">{{ error }}</div>
@@ -250,7 +296,7 @@ async function save() {
             <input
               v-model="newTopic"
               type="text"
-              placeholder="React, Women in Tech..."
+              placeholder="Vue.js, Women in Tech..."
               class="flex-1 px-4 py-3 bg-bg-card border border-border rounded-lg text-text text-sm transition-colors focus:outline-none focus:border-text-muted placeholder:text-text-muted"
               @keydown.enter.prevent="addTopic"
             />
