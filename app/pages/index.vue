@@ -1,4 +1,14 @@
 <script setup lang="ts">
+const { status, signIn } = useAuth()
+
+function handleCreateProfile() {
+  if (status.value === 'authenticated') {
+    navigateTo('/profil')
+  } else {
+    signIn('github')
+  }
+}
+
 useSeoMeta({
   title: 'OSLD - Où Sont Les Développeuses',
   ogTitle: 'OSLD - Où Sont Les Développeuses',
@@ -81,14 +91,14 @@ const features = [
         </p>
 
         <div class="flex gap-6 items-center flex-wrap">
-          <NuxtLink to="/profil" class="group flex items-center gap-4 px-6 py-4 bg-text text-bg border-none rounded-full text-sm font-medium cursor-pointer transition-all hover:gap-6 hover:pr-5 no-underline">
+          <button @click="handleCreateProfile" class="group flex items-center gap-4 px-6 py-4 bg-text text-bg border-none rounded-full text-sm font-medium cursor-pointer transition-all hover:gap-6 hover:pr-5">
             <span>Créer mon profil</span>
             <span class="flex transition-transform group-hover:translate-x-1">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M5 12h14M12 5l7 7-7 7"/>
               </svg>
             </span>
-          </NuxtLink>
+          </button>
           <NuxtLink to="/experience" class="relative py-4 bg-transparent border-none text-text text-sm font-medium cursor-pointer after:content-[''] after:absolute after:bottom-3 after:left-0 after:w-full after:h-px after:bg-text after:scale-x-0 after:origin-right after:transition-transform hover:after:scale-x-100 hover:after:origin-left">Découvre ton profil dev</NuxtLink>
         </div>
       </div>
@@ -175,14 +185,14 @@ const features = [
           Indiquez vos technos, votre localisation et ce pour quoi vous êtes disponible.
         </p>
         <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
-          <NuxtLink to="/profil" class="group inline-flex items-center gap-4 px-8 py-5 bg-text text-bg border-none rounded-full text-base font-medium cursor-pointer transition-all hover:bg-text-muted hover:gap-6 no-underline">
+          <button @click="handleCreateProfile" class="group inline-flex items-center gap-4 px-8 py-5 bg-text text-bg border-none rounded-full text-base font-medium cursor-pointer transition-all hover:bg-text-muted hover:gap-6">
             <span>Créer mon profil</span>
             <span class="flex transition-transform group-hover:translate-x-1">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M5 12h14M12 5l7 7-7 7"/>
               </svg>
             </span>
-          </NuxtLink>
+          </button>
           <NuxtLink to="/experience" class="text-text-muted hover:text-text text-sm transition-colors no-underline">
             ou découvre ton profil dev →
           </NuxtLink>
