@@ -11,12 +11,15 @@ function handleCreateProfile() {
 
 useSeoMeta({
   title: 'OSLD - Où Sont Les Développeuses',
-  ogTitle: 'OSLD - Où Sont Les Développeuses',
   description: 'Annuaire des développeuses en France. Trouvez des talents tech féminins, des speakers pour vos conférences, et des entreprises inclusives.',
-  ogDescription: 'Annuaire des développeuses en France. Trouvez des talents tech féminins, des speakers pour vos conférences, et des entreprises inclusives.',
-  ogImage: '/og-image.png',
-  twitterCard: 'summary_large_image'
 })
+
+useSchemaOrg([
+  defineWebSite({
+    name: 'OSLD - Où Sont Les Développeuses',
+  }),
+  defineWebPage()
+])
 
 const { data: statsData } = await useFetch('/api/stats')
 

@@ -1,11 +1,7 @@
 <script setup lang="ts">
 useSeoMeta({
-  title: 'Speakeuses - OSLD',
-  ogTitle: 'Speakeuses - OSLD',
+  title: 'Speakeuses',
   description: 'Trouvez des intervenantes tech pour vos conférences et événements. Speakeuses disponibles en remote ou en présentiel.',
-  ogDescription: 'Trouvez des intervenantes tech pour vos conférences et événements. Speakeuses disponibles en remote ou en présentiel.',
-  ogImage: '/og-image.png',
-  twitterCard: 'summary_large_image'
 })
 
 interface Speaker {
@@ -139,7 +135,7 @@ watch(() => filters.travel, () => updateUrl())
           <div class="flex items-center gap-4">
             <img
               :src="speaker.avatarUrl || '/default-avatar.png'"
-              :alt="speaker.name"
+              :alt="`Photo de ${speaker.name}, speaker tech${speaker.location ? ` basée à ${speaker.location}` : ''}`"
               class="w-16 h-16 rounded-full object-cover"
             />
             <div class="flex-1">

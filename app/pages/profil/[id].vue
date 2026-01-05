@@ -40,13 +40,19 @@ if (error.value) {
 }
 
 useSeoMeta({
-  title: () => developer.value ? `${developer.value.name} - OSLD` : 'Profil - OSLD',
-  ogTitle: () => developer.value ? `${developer.value.name} - OSLD` : 'Profil - OSLD',
+  title: () => developer.value ? `${developer.value.name}` : 'Profil',
   description: () => developer.value?.bio || 'Profil de développeuse sur OSLD',
-  ogDescription: () => developer.value?.bio || 'Profil de développeuse sur OSLD',
-  ogImage: () => developer.value?.avatarUrl || '/og-image.png',
-  twitterCard: 'summary_large_image'
 })
+
+useSchemaOrg([
+  definePerson({
+    name: () => developer.value?.name,
+    description: () => developer.value?.bio || undefined,
+    image: () => developer.value?.avatarUrl || undefined,
+    jobTitle: 'Développeuse',
+    url: () => developer.value?.website || undefined,
+  })
+])
 </script>
 
 <template>
@@ -63,7 +69,7 @@ useSeoMeta({
         <div class="flex flex-col md:flex-row items-center gap-6 mb-6 text-center md:text-left">
           <img
             :src="developer.avatarUrl || '/default-avatar.png'"
-            :alt="developer.name"
+            :alt="`Photo de profil de ${developer.name}, développeuse${developer.location ? ` basée à ${developer.location}` : ''}`"
             class="w-24 h-24 rounded-full object-cover"
           />
           <div>

@@ -1,11 +1,7 @@
 <script setup lang="ts">
 useSeoMeta({
-  title: 'Entreprises Inclusives - OSLD',
-  ogTitle: 'Entreprises Inclusives - OSLD',
+  title: 'Entreprises Inclusives',
   description: 'Découvrez les entreprises tech certifiées inclusives en France. Avis et notes par la communauté des développeuses.',
-  ogDescription: 'Découvrez les entreprises tech certifiées inclusives en France. Avis et notes par la communauté des développeuses.',
-  ogImage: '/og-image.png',
-  twitterCard: 'summary_large_image'
 })
 
 const route = useRoute()
@@ -171,7 +167,7 @@ function openReviewModal(company: any) {
         <div v-for="company in companies" :key="company.id" class="flex flex-col gap-4 p-6 bg-bg-card border border-border rounded-2xl">
           <div class="flex items-center gap-4">
             <div v-if="company.logoUrl" class="w-12 h-12 rounded-lg overflow-hidden bg-bg-card-hover">
-              <img :src="company.logoUrl" :alt="company.name" class="w-full h-full object-cover" />
+              <img :src="company.logoUrl" :alt="`Logo de ${company.name}${company.location ? `, ${company.location}` : ''}`" class="w-full h-full object-cover" />
             </div>
             <div v-else class="w-12 h-12 rounded-lg bg-bg-card-hover flex items-center justify-center text-xl font-semibold text-text-muted">
               {{ company.name.charAt(0) }}

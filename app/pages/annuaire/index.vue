@@ -1,11 +1,7 @@
 <script setup lang="ts">
 useSeoMeta({
-  title: 'Annuaire des Développeuses - OSLD',
-  ogTitle: 'Annuaire des Développeuses - OSLD',
+  title: 'Annuaire des Développeuses',
   description: 'Explorez les profils de développeuses en France. Filtrez par ville, technologie et disponibilité.',
-  ogDescription: 'Explorez les profils de développeuses en France. Filtrez par ville, technologie et disponibilité.',
-  ogImage: '/og-image.png',
-  twitterCard: 'summary_large_image'
 })
 
 const route = useRoute()
@@ -140,7 +136,7 @@ watch(() => filters.skill, () => updateUrl())
           <div class="flex items-center gap-4">
             <img
               :src="dev.avatarUrl || '/default-avatar.png'"
-              :alt="dev.name"
+              :alt="`Photo de profil de ${dev.name}, développeuse${dev.location ? ` basée à ${dev.location}` : ''}`"
               class="w-12 h-12 rounded-full object-cover"
             />
             <div class="flex-1">

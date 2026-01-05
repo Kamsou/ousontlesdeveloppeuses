@@ -1,4 +1,3 @@
-// https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
@@ -11,27 +10,6 @@ export default defineNuxtConfig({
   app: {
     head: {
       htmlAttrs: { lang: 'fr' },
-      title: 'OSLD - Où Sont Les Développeuses',
-      meta: [
-        { charset: 'utf-8' },
-        { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-        { name: 'description', content: 'Annuaire des développeuses en France. Trouvez des talents tech féminins, des speakers pour vos conférences, et des entreprises inclusives.' },
-        { name: 'keywords', content: 'développeuses, femmes tech, annuaire, speakers, conférences, entreprises inclusives, France, diversité tech' },
-        { name: 'author', content: 'OSLD' },
-        { name: 'robots', content: 'index, follow' },
-        // Open Graph
-        { property: 'og:type', content: 'website' },
-        { property: 'og:site_name', content: 'OSLD - Où Sont Les Développeuses' },
-        { property: 'og:title', content: 'OSLD - Où Sont Les Développeuses' },
-        { property: 'og:description', content: 'Annuaire des développeuses en France. Trouvez des talents tech féminins, des speakers pour vos conférences, et des entreprises inclusives.' },
-        { property: 'og:image', content: '/og-image.png' },
-        { property: 'og:locale', content: 'fr_FR' },
-        // Twitter Card
-        { name: 'twitter:card', content: 'summary_large_image' },
-        { name: 'twitter:title', content: 'OSLD - Où Sont Les Développeuses' },
-        { name: 'twitter:description', content: 'Annuaire des développeuses en France. Trouvez des talents tech féminins, des speakers pour vos conférences, et des entreprises inclusives.' },
-        { name: 'twitter:image', content: '/og-image.png' }
-      ],
       link: [
         { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
         { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
@@ -43,11 +21,46 @@ export default defineNuxtConfig({
   modules: [
     '@nuxthub/core',
     '@sidebase/nuxt-auth',
-    '@nuxtjs/sitemap',
+    '@nuxtjs/seo',
     '@nuxtjs/tailwindcss'
   ],
+
   site: {
-    url: 'https://ousontlesdeveloppeuses.fr'
+    url: 'https://ousontlesdeveloppeuses.fr',
+    name: 'OSLD',
+    description: 'Annuaire des développeuses en France. Trouvez des talents tech féminins, des speakers pour vos conférences, et des entreprises inclusives.',
+    defaultLocale: 'fr',
+  },
+
+  seo: {
+    fallbackTitle: true,
+  },
+
+  schemaOrg: {
+    identity: {
+      type: 'Organization',
+      name: 'OSLD - Où Sont Les Développeuses',
+      url: 'https://ousontlesdeveloppeuses.fr',
+      logo: 'https://ousontlesdeveloppeuses.fr/og-image.png',
+      description: 'Plateforme communautaire pour rendre visibles les développeuses en France.',
+      sameAs: [
+        'https://github.com/Kamsou/ousontlesdevs',
+        'https://linkedin.com/in/camillecoutens',
+      ],
+    }
+  },
+
+  sitemap: {
+    sources: ['/api/__sitemap__/urls']
+  },
+
+  robots: {
+    disallow: ['/profil', '/api/'],
+    allow: ['/profil/*'],
+  },
+
+  ogImage: {
+    enabled: false
   },
   hub: {
     db: 'sqlite'
