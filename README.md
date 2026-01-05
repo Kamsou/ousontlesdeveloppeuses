@@ -1,26 +1,54 @@
-# OSLD - Ou Sont Les Developpeuses
+<div align="center">
 
-Annuaire des developpeuses en France. Trouvez des talents tech feminins, des speakers pour vos conferences, et des entreprises inclusives.
+# OSLD - Où Sont Les Développeuses ?
 
-**Site** : [ousontlesdeveloppeuses.fr](https://ousontlesdeveloppeuses.fr)
+**La plateforme qui rend visibles les développeuses en France.**
 
-## Fonctionnalites
+[![Site](https://img.shields.io/badge/Site-ousontlesdeveloppeuses.fr-8B5CF6?style=for-the-badge)](https://ousontlesdeveloppeuses.fr)
+[![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](LICENSE)
+[![Contribuer](https://img.shields.io/badge/Contribuer-Welcome-orange?style=for-the-badge)](CONTRIBUTING.md)
 
-- **Annuaire** : Profils de developpeuses avec competences, localisation et disponibilites
-- **Speakers Bureau** : Trouvez des intervenantes pour vos evenements tech
-- **Entreprises Inclusives** : Avis et notes sur les entreprises par la communaute
+</div>
+
+---
+
+## Pourquoi OSLD ?
+
+Les développeuses sont là. Elles codent, elles innovent, elles inspirent. Mais elles restent souvent invisibles.
+
+**OSLD** change ça. Une plateforme communautaire pour :
+- Se faire connaître et développer sa visibilité
+- Trouver des speakeuses pour vos événements tech
+- Identifier les entreprises vraiment inclusives
+
+---
+
+## Fonctionnalités
+
+| | Fonctionnalité | Description |
+|---|---|---|
+| 👩‍💻 | **Annuaire** | Profils de développeuses avec compétences, localisation et disponibilités |
+| 🎤 | **Speakeuses** | Bureau des intervenantes pour vos conférences et meetups |
+| 🏢 | **Entreprises** | Avis et notes sur l'inclusivité des entreprises par la communauté |
+| ✨ | **Ton Profil dev** | Quiz interactif pour créer ton profil développeuse |
+
+---
 
 ## Stack technique
 
-- **Frontend** : Nuxt 4, Vue 3, TypeScript
-- **Backend** : Nitro (Nuxt Server)
-- **Database** : Turso (SQLite) + Drizzle ORM
-- **Auth** : GitHub OAuth via @sidebase/nuxt-auth
-- **Deploiement** : Netlify
+```
+Frontend     →  Nuxt 4 · Vue 3 · TypeScript · Tailwind CSS
+Backend      →  Nitro (Nuxt Server)
+Database     →  Turso (SQLite) + Drizzle ORM
+Auth         →  GitHub OAuth via @sidebase/nuxt-auth
+Déploiement  →  Netlify
+```
 
-## Quick Start
+---
 
-### Prerequisites
+## Démarrage rapide
+
+### Prérequis
 
 - Node.js 20+
 - Compte [Turso](https://turso.tech) (gratuit)
@@ -33,65 +61,90 @@ Annuaire des developpeuses en France. Trouvez des talents tech feminins, des spe
 git clone https://github.com/Kamsou/ousontlesdevs.git
 cd ousontlesdevs
 
-# Installe les dependances
+# Installe les dépendances
 npm install
 
-# Copie les variables d'environnement
+# Configure l'environnement
 cp .env.example .env
-# Remplis les valeurs dans .env
-
-# Lance le serveur de dev
-npm run dev
 ```
 
-L'app tourne sur [http://localhost:3000](http://localhost:3000)
-
-### Variables d'environnement
+Remplis les variables dans `.env` :
 
 | Variable | Description |
 |----------|-------------|
 | `TURSO_DATABASE_URL` | URL de ta base Turso |
 | `TURSO_AUTH_TOKEN` | Token d'auth Turso |
-| `AUTH_SECRET` | Secret pour les sessions |
+| `AUTH_SECRET` | Secret pour les sessions (génère avec `openssl rand -base64 32`) |
 | `GITHUB_CLIENT_ID` | Client ID de ton OAuth App GitHub |
 | `GITHUB_CLIENT_SECRET` | Client Secret de ton OAuth App GitHub |
-| `NUXT_PUBLIC_AUTH_BASE_URL` | URL de l'API auth (localhost ou prod) |
-
-### Scripts
+| `NUXT_PUBLIC_AUTH_BASE_URL` | `http://localhost:3000` en local |
 
 ```bash
-npm run dev      # Serveur de developpement
-npm run build    # Build production
-npm run preview  # Preview du build
+# Lance le serveur
+npm run dev
 ```
+
+L'app tourne sur **http://localhost:3000**
+
+---
+
+## Scripts
+
+| Commande | Description |
+|----------|-------------|
+| `npm run dev` | Serveur de développement |
+| `npm run build` | Build production |
+| `npm run preview` | Preview du build |
+| `npm run db:generate` | Génère les migrations Drizzle |
+| `npm run db:migrate` | Applique les migrations |
+
+---
 
 ## Structure du projet
 
 ```
 ousontlesdevs/
 ├── app/
-│   ├── pages/          # Pages Vue (annuaire, speakers, entreprises, profil)
-│   └── app.vue         # Layout principal
+│   ├── pages/           # Pages (annuaire, speakers, entreprises, profil)
+│   └── app.vue          # Layout principal
 ├── server/
-│   ├── api/            # Endpoints API
+│   ├── api/             # Endpoints REST
 │   ├── db/
-│   │   ├── schema.ts   # Schema Drizzle
-│   │   └── migrations/ # Migrations SQL
-│   └── utils/
-│       └── db.ts       # Connexion Turso
-├── public/             # Assets statiques
-├── nuxt.config.ts      # Config Nuxt
-└── drizzle.config.ts   # Config Drizzle
+│   │   ├── schema.ts    # Schéma Drizzle
+│   │   └── migrations/  # Migrations SQL
+│   └── utils/db.ts      # Connexion Turso
+├── public/              # Assets statiques
+├── nuxt.config.ts       # Config Nuxt
+└── drizzle.config.ts    # Config Drizzle
 ```
+
+---
 
 ## Contribuer
 
-Les contributions sont les bienvenues ! Consulte [CONTRIBUTING.md](CONTRIBUTING.md) pour commencer.
+Les contributions sont les bienvenues !
 
-## Code de conduite
+1. Fork le projet
+2. Crée ta branche (`git checkout -b feature/ma-feature`)
+3. Commit (`git commit -m 'feat: ajoute ma feature'`)
+4. Push (`git push origin feature/ma-feature`)
+5. Ouvre une Pull Request
 
-Ce projet suit le [Contributor Covenant](CODE_OF_CONDUCT.md). En participant, tu t'engages a respecter ces regles.
+Consulte [CONTRIBUTING.md](CONTRIBUTING.md) pour plus de détails.
 
-## Licence
+---
 
-MIT
+## Communauté
+
+Ce projet suit le [Contributor Covenant](CODE_OF_CONDUCT.md).
+En participant, tu t'engages à créer un espace bienveillant et inclusif.
+
+---
+
+<div align="center">
+
+**Fait pour toutes les développeuses par [Camille Coutens](https://linkedin.com/in/camillecoutens)**
+
+MIT License
+
+</div>
