@@ -37,7 +37,17 @@ export default defineNuxtConfig({
   },
 
   schemaOrg: {
-    enabled: false,
+    identity: {
+      type: 'Organization',
+      name: 'OSLD - Où Sont Les Développeuses',
+      url: 'https://ousontlesdeveloppeuses.fr',
+      logo: 'https://ousontlesdeveloppeuses.fr/og-image.png',
+      description: 'Plateforme communautaire pour rendre visibles les développeuses en France.',
+      sameAs: [
+        'https://github.com/Kamsou/ousontlesdevs',
+        'https://linkedin.com/in/camillecoutens',
+      ],
+    },
   },
 
   sitemap: {
