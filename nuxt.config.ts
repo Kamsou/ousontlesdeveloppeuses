@@ -11,10 +11,7 @@ export default defineNuxtConfig({
     head: {
       htmlAttrs: { lang: 'fr' },
       link: [
-        { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
-        { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
-        { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: '' },
-        { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap' }
+        { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
       ]
     }
   },
@@ -22,8 +19,20 @@ export default defineNuxtConfig({
     '@nuxthub/core',
     '@sidebase/nuxt-auth',
     '@nuxtjs/seo',
-    '@nuxtjs/tailwindcss'
+    '@nuxtjs/tailwindcss',
+    '@nuxtjs/google-fonts'
   ],
+
+  googleFonts: {
+    families: {
+      Inter: [400, 500, 600, 700],
+      'Space Grotesk': [500, 700]
+    },
+    display: 'swap',
+    preload: true,
+    download: true,
+    inject: true
+  },
 
   site: {
     url: 'https://ousontlesdeveloppeuses.fr',
