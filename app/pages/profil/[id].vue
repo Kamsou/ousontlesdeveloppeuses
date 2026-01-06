@@ -40,9 +40,19 @@ if (error.value) {
 }
 
 useSeoMeta({
-  title: () => developer.value ? `${developer.value.name}` : 'Profil',
+  title: () => developer.value ? `${developer.value.name} - OSLD` : 'Profil',
   description: () => developer.value?.bio || 'Profil de développeuse sur OSLD',
+  ogTitle: () => developer.value ? `${developer.value.name} - Développeuse` : 'Profil',
+  ogDescription: () => developer.value?.bio || 'Découvrez le profil de cette développeuse sur OSLD',
+  ogImage: () => developer.value?.avatarUrl || 'https://ousontlesdeveloppeuses.fr/og-image.png',
+  ogType: 'profile',
+  twitterCard: 'summary',
+  twitterTitle: () => developer.value ? `${developer.value.name} - Développeuse` : 'Profil',
+  twitterDescription: () => developer.value?.bio || 'Découvrez le profil de cette développeuse sur OSLD',
+  twitterImage: () => developer.value?.avatarUrl || 'https://ousontlesdeveloppeuses.fr/og-image.png',
 })
+
+usePersonSchema(developer)
 </script>
 
 <template>

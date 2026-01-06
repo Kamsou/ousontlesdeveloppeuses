@@ -1,7 +1,11 @@
 <script setup lang="ts">
 useSeoMeta({
-  title: 'Speakeuses',
+  title: 'Speakeuses Tech - OSLD',
   description: 'Trouvez des intervenantes tech pour vos conférences et événements. Speakeuses disponibles en remote ou en présentiel.',
+  ogTitle: 'Speakeuses Tech - OSLD',
+  ogDescription: 'Trouvez des intervenantes tech pour vos conférences et événements. Speakeuses disponibles en remote ou en présentiel.',
+  ogImage: 'https://ousontlesdeveloppeuses.fr/og-image.png',
+  twitterCard: 'summary_large_image',
 })
 
 interface Speaker {

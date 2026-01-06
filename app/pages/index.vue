@@ -12,7 +12,18 @@ function handleCreateProfile() {
 useSeoMeta({
   title: 'OSLD - Où Sont Les Développeuses',
   description: 'Annuaire des développeuses en France. Trouvez des talents tech féminins, des speakers pour vos conférences, et des entreprises inclusives.',
+  ogTitle: 'OSLD - Où Sont Les Développeuses',
+  ogDescription: 'Annuaire des développeuses en France. Trouvez des talents tech féminins, des speakers pour vos conférences, et des entreprises inclusives.',
+  ogImage: 'https://ousontlesdeveloppeuses.fr/og-image.png',
+  ogType: 'website',
+  twitterCard: 'summary_large_image',
+  twitterTitle: 'OSLD - Où Sont Les Développeuses',
+  twitterDescription: 'Annuaire des développeuses en France. Trouvez des talents tech féminins, des speakers pour vos conférences.',
+  twitterImage: 'https://ousontlesdeveloppeuses.fr/og-image.png',
 })
+
+useOrganizationSchema()
+useWebSiteSchema()
 
 const { data: statsData } = await useFetch('/api/stats')
 

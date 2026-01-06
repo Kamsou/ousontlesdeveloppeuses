@@ -1,7 +1,11 @@
 <script setup lang="ts">
 useSeoMeta({
-  title: 'Annuaire des Développeuses',
+  title: 'Annuaire des Développeuses - OSLD',
   description: 'Explorez les profils de développeuses en France. Filtrez par ville, technologie et disponibilité.',
+  ogTitle: 'Annuaire des Développeuses - OSLD',
+  ogDescription: 'Explorez les profils de développeuses en France. Filtrez par ville, technologie et disponibilité.',
+  ogImage: 'https://ousontlesdeveloppeuses.fr/og-image.png',
+  twitterCard: 'summary_large_image',
 })
 
 const route = useRoute()

@@ -37,12 +37,7 @@ export default defineNuxtConfig({
   },
 
   schemaOrg: {
-    identity: {
-      type: 'Organization',
-      name: 'OSLD - Où Sont Les Développeuses',
-      url: 'https://ousontlesdeveloppeuses.fr',
-      logo: 'https://ousontlesdeveloppeuses.fr/og-image.png',
-    },
+    enabled: false,
   },
 
   sitemap: {
@@ -72,7 +67,7 @@ export default defineNuxtConfig({
     }
   },
   nitro: {
-    preset: 'netlify-legacy',
+    preset: 'netlify',
     experimental: {
       asyncContext: true
     }
