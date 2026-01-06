@@ -1,5 +1,6 @@
 import { developers } from '../../db/schema'
 import { useDrizzle } from '../../utils/db'
+import { asSitemapUrl, defineSitemapEventHandler } from '#imports'
 
 export default defineSitemapEventHandler(async () => {
   const db = useDrizzle()
@@ -9,7 +10,7 @@ export default defineSitemapEventHandler(async () => {
     updatedAt: developers.updatedAt,
   }).from(developers)
 
-  return allDevelopers.map(dev => ({
+  return allDevelopers.map(dev => asSitemapUrl({
     loc: `/profil/${dev.id}`,
     lastmod: dev.updatedAt?.toISOString(),
   }))
