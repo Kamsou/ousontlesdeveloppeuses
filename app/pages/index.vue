@@ -14,13 +14,6 @@ useSeoMeta({
   description: 'Annuaire des développeuses en France. Trouvez des talents tech féminins, des speakers pour vos conférences, et des entreprises inclusives.',
 })
 
-useSchemaOrg([
-  defineWebSite({
-    name: 'OSLD - Où Sont Les Développeuses',
-  }),
-  defineWebPage()
-])
-
 const { data: statsData } = await useFetch('/api/stats')
 
 function pluralize(count: number, singular: string, plural: string) {

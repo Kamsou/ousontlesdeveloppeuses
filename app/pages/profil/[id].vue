@@ -43,16 +43,6 @@ useSeoMeta({
   title: () => developer.value ? `${developer.value.name}` : 'Profil',
   description: () => developer.value?.bio || 'Profil de développeuse sur OSLD',
 })
-
-useSchemaOrg([
-  definePerson({
-    name: () => developer.value?.name,
-    description: () => developer.value?.bio || undefined,
-    image: () => developer.value?.avatarUrl || undefined,
-    jobTitle: 'Développeuse',
-    url: () => developer.value?.website || undefined,
-  })
-])
 </script>
 
 <template>
