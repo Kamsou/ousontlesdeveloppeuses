@@ -100,7 +100,7 @@ watch(() => route.path, () => {
     </main>
 
     <footer class="relative z-[1] text-center py-8 text-text-muted text-sm border-t border-border">
-      <p>Fait pour toutes les développeuses par <a href="https://linkedin.com/in/camillecoutens" target="_blank" rel="noopener noreferrer" class="text-text hover:text-primary transition-colors">Camille Coutens</a></p>
+      <p>Fait pour toutes les développeuses par <a href="https://linkedin.com/in/camillecoutens" target="_blank" rel="noopener noreferrer" class="text-text hover:text-primary transition-colors underline underline-offset-2 decoration-border hover:decoration-primary">Camille Coutens</a></p>
     </footer>
   </div>
 </template>

@@ -218,7 +218,7 @@ const features = [
               </svg>
             </span>
           </button>
-          <NuxtLink to="/experience" class="text-text-muted hover:text-text text-sm transition-colors no-underline">
+          <NuxtLink to="/experience" class="text-text-muted hover:text-text text-sm transition-colors underline underline-offset-4 decoration-border hover:decoration-text">
             ou découvre ton profil dev →
           </NuxtLink>
         </div>

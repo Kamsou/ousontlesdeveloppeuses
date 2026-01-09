@@ -15,13 +15,7 @@ export default defineNuxtConfig({
       ]
     }
   },
-  modules: [
-    '@nuxthub/core',
-    '@sidebase/nuxt-auth',
-    '@nuxtjs/seo',
-    '@nuxtjs/tailwindcss',
-    '@nuxtjs/google-fonts'
-  ],
+  modules: ['@nuxthub/core', '@sidebase/nuxt-auth', '@nuxtjs/seo', '@nuxtjs/tailwindcss', '@nuxtjs/google-fonts', '@nuxt/a11y'],
 
   googleFonts: {
     families: {
@@ -61,6 +55,7 @@ export default defineNuxtConfig({
   robots: {
     disallow: ['/profil', '/api/'],
     allow: ['/profil/*'],
+    blockNonSeoBots: true,
   },
 
   ogImage: {
