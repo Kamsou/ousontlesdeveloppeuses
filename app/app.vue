@@ -1,11 +1,39 @@
-<script setup>
+<script setup lang="ts">
 const { data, status, signIn, signOut } = useAuth()
 const route = useRoute()
 const isHome = computed(() => route.path === '/')
 const menuOpen = ref(false)
+const userMenuOpen = ref(false)
+
+const { data: isAdmin, refresh: refreshAdmin } = useFetch('/api/admin/check', {
+  immediate: status.value === 'authenticated',
+  default: () => false
+})
+
+watch(() => status.value, (newStatus) => {
+  if (newStatus === 'authenticated') {
+    refreshAdmin()
+  }
+})
 
 watch(() => route.path, () => {
   menuOpen.value = false
+  userMenuOpen.value = false
+})
+
+function handleClickOutside(e: MouseEvent) {
+  const target = e.target as HTMLElement
+  if (!target.closest('.user-menu')) {
+    userMenuOpen.value = false
+  }
+}
+
+onMounted(() => {
+  document.addEventListener('click', handleClickOutside)
+})
+
+onUnmounted(() => {
+  document.removeEventListener('click', handleClickOutside)
 })
 </script>
 
@@ -22,13 +50,13 @@ watch(() => route.path, () => {
           <span class="font-display text-base font-semibold tracking-widest">OSLD</span>
         </NuxtLink>
 
-        <nav class="hidden lg:flex gap-8 absolute left-1/2 -translate-x-1/2">
-          <NuxtLink v-if="!isHome" to="/" class="text-text-muted no-underline text-sm font-medium transition-colors hover:text-text">Accueil</NuxtLink>
-          <NuxtLink to="/annuaire" class="text-text-muted no-underline text-sm font-medium transition-colors hover:text-text">Annuaire</NuxtLink>
-          <NuxtLink to="/speakers" class="text-text-muted no-underline text-sm font-medium transition-colors hover:text-text">Speakeuses</NuxtLink>
-          <NuxtLink to="/entreprises" class="text-text-muted no-underline text-sm font-medium transition-colors hover:text-text">Entreprises</NuxtLink>
-          <NuxtLink to="/experience" class="text-text-muted no-underline text-sm font-medium transition-colors hover:text-text">Ton Profil dev</NuxtLink>
-          <a href="https://github.com/Kamsou/ousontlesdevs" target="_blank" rel="noopener noreferrer" class="text-text-muted no-underline text-sm font-medium transition-colors hover:text-text">Contribuer</a>
+        <nav class="hidden lg:flex gap-6 absolute left-1/2 -translate-x-1/2">
+          <NuxtLink v-if="!isHome" to="/" class="text-text-muted no-underline text-sm font-medium transition-colors hover:text-text whitespace-nowrap">Accueil</NuxtLink>
+          <NuxtLink to="/annuaire" class="text-text-muted no-underline text-sm font-medium transition-colors hover:text-text whitespace-nowrap">Annuaire</NuxtLink>
+          <NuxtLink to="/speakers" class="text-text-muted no-underline text-sm font-medium transition-colors hover:text-text whitespace-nowrap">Speakeuses</NuxtLink>
+          <NuxtLink to="/entreprises" class="text-text-muted no-underline text-sm font-medium transition-colors hover:text-text whitespace-nowrap">Entreprises</NuxtLink>
+          <NuxtLink to="/experience" class="text-text-muted no-underline text-sm font-medium transition-colors hover:text-text whitespace-nowrap">Quiz</NuxtLink>
+          <a href="https://github.com/Kamsou/ousontlesdevs" target="_blank" rel="noopener noreferrer" class="text-text-muted no-underline text-sm font-medium transition-colors hover:text-text whitespace-nowrap">Contribuer</a>
         </nav>
 
         <div class="flex items-center gap-4">
@@ -44,15 +72,45 @@ watch(() => route.path, () => {
             </button>
           </template>
           <template v-else>
-            <div class="hidden lg:flex items-center gap-4">
-              <NuxtLink to="/profil" class="flex items-center gap-3 no-underline text-text">
-                <img :src="data?.user?.image" :alt="data?.user?.name" class="w-9 h-9 rounded-full border-2 border-primary" />
-                <span class="font-medium text-sm">{{ data?.user?.name }}</span>
-              </NuxtLink>
-              <button @click="signOut()" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-sm text-sm font-medium cursor-pointer transition-all bg-transparent text-text-muted border border-border hover:bg-bg-card hover:text-text">Déconnexion</button>
+            <div class="hidden lg:block relative user-menu">
+              <button @click.stop="userMenuOpen = !userMenuOpen" class="flex items-center gap-2 cursor-pointer bg-transparent border-none">
+                <img :src="data?.user?.image || ''" :alt="data?.user?.name || ''" class="w-9 h-9 rounded-full border-2 border-primary" />
+                <svg :class="['w-4 h-4 text-text-muted transition-transform', userMenuOpen ? 'rotate-180' : '']" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M6 9l6 6 6-6"/>
+                </svg>
+              </button>
+              <div v-if="userMenuOpen" class="absolute right-0 top-full mt-2 w-48 py-2 bg-bg border border-border rounded-lg shadow-xl">
+                <div class="px-4 py-2 border-b border-border">
+                  <p class="font-medium text-sm text-text truncate">{{ data?.user?.name }}</p>
+                </div>
+                <NuxtLink to="/profil" class="flex items-center gap-2 px-4 py-2 text-sm text-text-muted no-underline hover:bg-border/30 hover:text-text transition-colors">
+                  <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                    <circle cx="12" cy="7" r="4"/>
+                  </svg>
+                  Mon profil
+                </NuxtLink>
+                <NuxtLink v-if="isAdmin" to="/admin" class="flex items-center gap-2 px-4 py-2 text-sm text-primary no-underline hover:bg-border/30 transition-colors">
+                  <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="3" width="7" height="7"/>
+                    <rect x="14" y="3" width="7" height="7"/>
+                    <rect x="14" y="14" width="7" height="7"/>
+                    <rect x="3" y="14" width="7" height="7"/>
+                  </svg>
+                  Dashboard
+                </NuxtLink>
+                <button @click="signOut()" class="flex items-center gap-2 w-full px-4 py-2 text-sm text-text-muted bg-transparent border-none cursor-pointer hover:bg-border/30 hover:text-text transition-colors">
+                  <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                    <polyline points="16 17 21 12 16 7"/>
+                    <line x1="21" y1="12" x2="9" y2="12"/>
+                  </svg>
+                  Déconnexion
+                </button>
+              </div>
             </div>
             <NuxtLink to="/profil" class="lg:hidden">
-              <img :src="data?.user?.image" :alt="data?.user?.name" class="w-9 h-9 rounded-full border-2 border-primary" />
+              <img :src="data?.user?.image || ''" :alt="data?.user?.name || ''" class="w-9 h-9 rounded-full border-2 border-primary" />
             </NuxtLink>
           </template>
 
@@ -85,8 +143,9 @@ watch(() => route.path, () => {
         </template>
         <template v-else>
           <div class="flex flex-col gap-4">
+            <NuxtLink v-if="isAdmin" to="/admin" class="text-primary no-underline text-xl font-medium">Admin</NuxtLink>
             <NuxtLink to="/profil" class="flex items-center gap-3 no-underline text-text">
-              <img :src="data?.user?.image" :alt="data?.user?.name" class="w-10 h-10 rounded-full border-2 border-primary" />
+              <img :src="data?.user?.image || ''" :alt="data?.user?.name || ''" class="w-10 h-10 rounded-full border-2 border-primary" />
               <span class="font-medium">{{ data?.user?.name }}</span>
             </NuxtLink>
             <button @click="signOut()" class="inline-flex items-center justify-center px-6 py-3 rounded-lg text-base font-medium cursor-pointer transition-all bg-transparent text-text-muted border border-border hover:bg-bg-card hover:text-text">Déconnexion</button>
@@ -100,21 +159,8 @@ watch(() => route.path, () => {
     </main>
 
     <footer class="relative z-[1] text-center py-8 text-text-muted text-sm border-t border-border">
-      <p>Fait pour toutes les développeuses par <a href="https://linkedin.com/in/camillecoutens" target="_blank" rel="noopener noreferrer" class="text-text-muted hover:text-primary transition-colors">Camille Coutens</a></p>
+      <p>Fait pour toutes les développeuses par <a href="https://linkedin.com/in/camillecoutens" target="_blank" rel="noopener noreferrer" class="text-text-muted underline underline-offset-2 decoration-border hover:text-primary hover:decoration-primary transition-colors">Camille Coutens</a></p>
     </footer>
   </div>
 </template>
 
-<style>
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-body {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-  line-height: 1.6;
-  overflow-x: hidden;
-}
-</style>

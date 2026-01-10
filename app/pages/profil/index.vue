@@ -206,50 +206,52 @@ async function save() {
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
           <div class="flex flex-col gap-2">
-            <label class="text-xs uppercase tracking-wide text-text-muted">Nom *</label>
-            <input v-model="form.name" type="text" required class="px-4 py-3 bg-bg-card border border-border rounded-lg text-text text-sm transition-colors focus:outline-none focus:border-text-muted" />
+            <label for="name" class="text-xs uppercase tracking-wide text-text-muted">Nom *</label>
+            <input id="name" v-model="form.name" type="text" required class="px-4 py-3 bg-bg-card border border-border rounded-lg text-text text-sm transition-colors focus:outline-none focus:border-text-muted" />
           </div>
 
           <div class="flex flex-col gap-2">
-            <label class="text-xs uppercase tracking-wide text-text-muted">Ville</label>
-            <input v-model="form.location" type="text" placeholder="Paris" class="px-4 py-3 bg-bg-card border border-border rounded-lg text-text text-sm transition-colors focus:outline-none focus:border-text-muted placeholder:text-text-muted" />
+            <label for="location" class="text-xs uppercase tracking-wide text-text-muted">Ville</label>
+            <input id="location" v-model="form.location" type="text" placeholder="Paris" class="px-4 py-3 bg-bg-card border border-border rounded-lg text-text text-sm transition-colors focus:outline-none focus:border-text-muted placeholder:text-text-muted" />
           </div>
 
           <div class="flex flex-col gap-2">
-            <label class="text-xs uppercase tracking-wide text-text-muted">Années d'expérience</label>
-            <input v-model.number="form.yearsExperience" type="number" min="0" max="50" class="px-4 py-3 bg-bg-card border border-border rounded-lg text-text text-sm transition-colors focus:outline-none focus:border-text-muted" />
+            <label for="years-experience" class="text-xs uppercase tracking-wide text-text-muted">Années d'expérience</label>
+            <input id="years-experience" v-model.number="form.yearsExperience" type="number" min="0" max="50" class="px-4 py-3 bg-bg-card border border-border rounded-lg text-text text-sm transition-colors focus:outline-none focus:border-text-muted" />
           </div>
 
           <div class="flex flex-col gap-2">
-            <label class="text-xs uppercase tracking-wide text-text-muted">Site web</label>
-            <input v-model="form.website" type="url" placeholder="https://" class="px-4 py-3 bg-bg-card border border-border rounded-lg text-text text-sm transition-colors focus:outline-none focus:border-text-muted placeholder:text-text-muted" />
+            <label for="website" class="text-xs uppercase tracking-wide text-text-muted">Site web</label>
+            <input id="website" v-model="form.website" type="url" placeholder="https://" class="px-4 py-3 bg-bg-card border border-border rounded-lg text-text text-sm transition-colors focus:outline-none focus:border-text-muted placeholder:text-text-muted" />
           </div>
 
           <div class="flex flex-col gap-2">
-            <label class="text-xs uppercase tracking-wide text-text-muted">LinkedIn *</label>
-            <input v-model="form.linkedinUrl" type="url" placeholder="https://linkedin.com/in/..." class="px-4 py-3 bg-bg-card border border-border rounded-lg text-text text-sm transition-colors focus:outline-none focus:border-text-muted placeholder:text-text-muted" required />
+            <label for="linkedin" class="text-xs uppercase tracking-wide text-text-muted">LinkedIn *</label>
+            <input id="linkedin" v-model="form.linkedinUrl" type="url" placeholder="https://linkedin.com/in/..." class="px-4 py-3 bg-bg-card border border-border rounded-lg text-text text-sm transition-colors focus:outline-none focus:border-text-muted placeholder:text-text-muted" required />
           </div>
 
           <div class="flex flex-col gap-2">
-            <label class="text-xs uppercase tracking-wide text-text-muted">Twitter/X</label>
-            <input v-model="form.twitterUrl" type="url" placeholder="https://twitter.com/..." class="px-4 py-3 bg-bg-card border border-border rounded-lg text-text text-sm transition-colors focus:outline-none focus:border-text-muted placeholder:text-text-muted" />
+            <label for="twitter" class="text-xs uppercase tracking-wide text-text-muted">Twitter/X</label>
+            <input id="twitter" v-model="form.twitterUrl" type="url" placeholder="https://twitter.com/..." class="px-4 py-3 bg-bg-card border border-border rounded-lg text-text text-sm transition-colors focus:outline-none focus:border-text-muted placeholder:text-text-muted" />
           </div>
         </div>
 
         <div class="flex flex-col gap-2 md:col-span-2">
-          <label class="text-xs uppercase tracking-wide text-text-muted">Bio</label>
-          <textarea v-model="form.bio" rows="4" placeholder="Présentez-vous en quelques mots..." class="px-4 py-3 bg-bg-card border border-border rounded-lg text-text text-sm transition-colors focus:outline-none focus:border-text-muted resize-y min-h-[100px] placeholder:text-text-muted"></textarea>
+          <label for="bio" class="text-xs uppercase tracking-wide text-text-muted">Bio</label>
+          <textarea id="bio" v-model="form.bio" rows="4" placeholder="Présentez-vous en quelques mots..." class="px-4 py-3 bg-bg-card border border-border rounded-lg text-text text-sm transition-colors focus:outline-none focus:border-text-muted resize-y min-h-[100px] placeholder:text-text-muted"></textarea>
         </div>
       </section>
 
       <section class="py-8 border-b border-border">
-        <h2 class="font-display text-xl font-medium mb-4">Technologies</h2>
+        <h2 id="technologies-label" class="font-display text-xl font-medium mb-4">Technologies</h2>
 
         <div class="flex gap-2 mb-4">
           <input
+            id="new-skill"
             v-model="newSkill"
             type="text"
             placeholder="Ajouter une techno..."
+            aria-labelledby="technologies-label"
             class="flex-1 px-4 py-3 bg-bg-card border border-border rounded-lg text-text text-sm transition-colors focus:outline-none focus:border-text-muted placeholder:text-text-muted"
             @keydown.enter.prevent="addSkill"
           />
@@ -291,9 +293,10 @@ async function save() {
         <p class="text-text-muted text-sm mb-6">Informations pour les organisateurs d'événements</p>
 
         <div class="flex flex-col gap-2 mb-4">
-          <label class="text-xs uppercase tracking-wide text-text-muted">Sujets de talk</label>
+          <label for="new-topic" class="text-xs uppercase tracking-wide text-text-muted">Sujets de talk</label>
           <div class="flex gap-2 mb-4">
             <input
+              id="new-topic"
               v-model="newTopic"
               type="text"
               placeholder="Vue.js, Women in Tech..."

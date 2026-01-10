@@ -17,6 +17,8 @@ export default defineNuxtConfig({
   },
   modules: ['@nuxthub/core', '@sidebase/nuxt-auth', '@nuxtjs/seo', '@nuxtjs/tailwindcss', '@nuxtjs/google-fonts', '@nuxt/a11y'],
 
+  css: ['@/assets/css/main.css'],
+
   googleFonts: {
     families: {
       Inter: [400, 500, 600, 700],
@@ -53,7 +55,7 @@ export default defineNuxtConfig({
   },
 
   robots: {
-    disallow: ['/profil', '/api/'],
+    disallow: ['/profil', '/api/', '/admin'],
     allow: ['/profil/*'],
     blockNonSeoBots: true,
   },

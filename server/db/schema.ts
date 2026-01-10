@@ -16,6 +16,7 @@ export const developers = sqliteTable('developers', {
   twitterUrl: text('twitter_url'),
   profileType: text('profile_type'),
   profilePhrase: text('profile_phrase'),
+  isAdmin: integer('is_admin', { mode: 'boolean' }).default(false),
   createdAt: integer('created_at', { mode: 'timestamp' }).$defaultFn(() => new Date()),
   updatedAt: integer('updated_at', { mode: 'timestamp' }).$defaultFn(() => new Date())
 })

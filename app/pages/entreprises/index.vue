@@ -106,7 +106,7 @@ function openReviewModal(company: any) {
       <div class="flex flex-col md:flex-row justify-between items-start gap-6">
         <div>
           <div class="overflow-hidden">
-            <span class="text-xs uppercase tracking-[0.2em] text-text-muted mb-6 block animate-slide-up">Entreprises</span>
+            <span class="text-xs uppercase tracking-[0.2em] text-text/80 mb-6 block animate-slide-up">Entreprises</span>
           </div>
           <div class="overflow-hidden">
             <h1 class="font-display text-4xl md:text-7xl font-medium tracking-tight mb-2 animate-slide-up animation-delay-100">Entreprises</h1>
@@ -177,7 +177,7 @@ function openReviewModal(company: any) {
               {{ company.name.charAt(0) }}
             </div>
             <div class="flex-1">
-              <h3 class="font-display text-lg font-medium flex items-center gap-3">
+              <h2 class="font-display text-lg font-medium flex items-center gap-3">
                 {{ company.name }}
                 <span v-if="company.isVerifiedInclusive" class="inline-flex items-center gap-1 px-2 py-1 bg-text text-bg rounded-full text-[0.65rem] font-medium uppercase tracking-wide">
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
@@ -185,7 +185,7 @@ function openReviewModal(company: any) {
                   </svg>
                   Certifiée
                 </span>
-              </h3>
+              </h2>
               <p v-if="company.location" class="text-sm text-text-muted mt-1">{{ company.location }}</p>
             </div>
           </div>

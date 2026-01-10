@@ -17,7 +17,7 @@ const step = ref<Step>('intro')
 const isTransitioning = ref(false)
 const currentQuestion = computed(() => {
   const match = step.value.match(/^q(\d)$/)
-  return match ? parseInt(match[1]) : 0
+  return match?.[1] ? parseInt(match[1]) : 0
 })
 
 const answers = reactive({
@@ -111,8 +111,8 @@ function selectOption(questionKey: keyof typeof answers, value: string) {
 function nextStep() {
   const steps: Step[] = ['intro', 'q1', 'q2', 'q3', 'q4', 'q5', 'generating', 'result']
   const currentIndex = steps.indexOf(step.value)
-  if (currentIndex < steps.length - 1) {
-    const nextStepValue = steps[currentIndex + 1]
+  const nextStepValue = steps[currentIndex + 1]
+  if (currentIndex < steps.length - 1 && nextStepValue) {
     transitionTo(nextStepValue)
 
     if (nextStepValue === 'generating') {
@@ -124,8 +124,9 @@ function nextStep() {
 function previousStep() {
   const steps: Step[] = ['intro', 'q1', 'q2', 'q3', 'q4', 'q5', 'generating', 'result']
   const currentIndex = steps.indexOf(step.value)
-  if (currentIndex > 0) {
-    transitionTo(steps[currentIndex - 1])
+  const prevStepValue = steps[currentIndex - 1]
+  if (currentIndex > 0 && prevStepValue) {
+    transitionTo(prevStepValue)
   }
 }
 
@@ -150,7 +151,7 @@ async function generateProfile() {
     localStorage.setItem('osld_experience_profile', JSON.stringify(generatedProfile.value))
     localStorage.setItem('osld_experience_answers', JSON.stringify(answers))
 
-    if (status.value === 'authenticated') {
+    if (status.value === 'authenticated' && generatedProfile.value) {
       try {
         await $fetch('/api/experience/save', {
           method: 'POST',
@@ -229,7 +230,7 @@ function restart() {
         <div class="max-w-6xl mx-auto w-full grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-24 items-center">
           <div>
             <div class="overflow-hidden mb-6">
-              <span class="block text-xs uppercase tracking-[0.3em] text-text-muted animate-slide-up">Experience</span>
+              <span class="block text-xs uppercase tracking-[0.3em] text-text/80 animate-slide-up">Experience</span>
             </div>
             <div class="overflow-hidden">
               <h1 class="font-display text-5xl md:text-7xl lg:text-8xl font-medium tracking-tight leading-[0.9] animate-slide-up animation-delay-100">

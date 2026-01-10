@@ -71,7 +71,7 @@ watch(() => filters.travel, () => updateUrl())
   <div class="max-w-7xl mx-auto px-4 md:px-16">
     <header class="py-16 border-b border-border">
       <div class="overflow-hidden">
-        <span class="text-xs uppercase tracking-[0.2em] text-text-muted mb-6 block animate-slide-up">Speakeuses</span>
+        <span class="text-xs uppercase tracking-[0.2em] text-text/80 mb-6 block animate-slide-up">Speakeuses</span>
       </div>
       <div class="overflow-hidden">
         <h1 class="font-display text-4xl md:text-7xl font-medium tracking-tight mb-2 animate-slide-up animation-delay-100">Speakeuses</h1>
@@ -143,7 +143,7 @@ watch(() => filters.travel, () => updateUrl())
               class="w-16 h-16 rounded-full object-cover"
             />
             <div class="flex-1">
-              <h3 class="font-display text-xl font-medium">{{ speaker.name }}</h3>
+              <h2 class="font-display text-xl font-medium">{{ speaker.name }}</h2>
               <p v-if="speaker.location" class="text-sm text-text-muted mt-1">{{ speaker.location }}</p>
             </div>
           </div>
