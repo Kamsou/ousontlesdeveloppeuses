@@ -22,7 +22,9 @@ useSeoMeta({
   twitterImage: 'https://ousontlesdeveloppeuses.fr/og-image.png',
 })
 
-const { data: statsData, status: statsStatus } = useLazyFetch('/api/stats')
+const { data: statsData, status: statsStatus } = useLazyFetch('/api/stats', {
+  server: false
+})
 
 function pluralize(count: number, singular: string, plural: string) {
   return count <= 1 ? singular : plural

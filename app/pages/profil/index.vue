@@ -32,7 +32,7 @@ useSeoMeta({
   robots: 'noindex, nofollow'
 })
 
-const { data: session } = useAuth()
+const { data: session, signOut } = useAuth()
 const router = useRouter()
 
 const openToOptions = [
@@ -135,6 +135,8 @@ function toggleOpenTo(value: string) {
   }
 }
 
+const deleting = ref(false)
+
 async function save() {
   saving.value = true
   error.value = ''
@@ -157,6 +159,19 @@ async function save() {
     error.value = e.data?.message || 'Une erreur est survenue'
   } finally {
     saving.value = false
+  }
+}
+
+async function deleteProfile() {
+  if (!confirm('Supprimer définitivement ton profil de l\'annuaire ? Cette action est irréversible.')) return
+
+  deleting.value = true
+  try {
+    await $fetch('/api/developers/me', { method: 'DELETE' } as any)
+    await signOut({ callbackUrl: '/' })
+  } catch (e: any) {
+    error.value = e.data?.message || 'Erreur lors de la suppression'
+    deleting.value = false
   }
 }
 </script>
@@ -339,5 +354,23 @@ async function save() {
         </button>
       </div>
     </form>
+
+    <section v-if="!isNewProfile" class="mt-16 pt-8 border-t border-red-500/20">
+      <h2 class="text-sm font-medium text-red-400 mb-4">Zone de danger</h2>
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 border border-red-500/20 rounded-xl">
+        <div>
+          <p class="text-sm text-text">Supprimer mon profil</p>
+          <p class="text-xs text-text-muted mt-1">Cette action est irréversible.</p>
+        </div>
+        <button
+          type="button"
+          @click="deleteProfile"
+          :disabled="deleting"
+          class="px-6 py-3 bg-transparent border border-red-500/30 text-red-400 rounded-full text-sm cursor-pointer transition-all hover:bg-red-500/10 disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          {{ deleting ? 'Suppression...' : 'Supprimer' }}
+        </button>
+      </div>
+    </section>
   </div>
 </template>

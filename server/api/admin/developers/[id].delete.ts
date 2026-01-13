@@ -15,7 +15,6 @@ export default defineEventHandler(async (event) => {
 
   const db = useDrizzle()
 
-  // Vérifier si l'utilisateur est admin
   const admin = await db.query.developers.findFirst({
     where: eq(tables.developers.githubId, githubId)
   })
@@ -30,17 +29,13 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 400, message: 'ID invalide' })
   }
 
-  // Empêcher l'admin de se supprimer lui-même
   if (admin.id === id) {
     throw createError({ statusCode: 400, message: 'Vous ne pouvez pas supprimer votre propre compte' })
   }
 
-  // Supprimer les données liées (foreign keys)
   await db.delete(tables.developerSkills).where(eq(tables.developerSkills.developerId, id))
   await db.delete(tables.developerOpenTo).where(eq(tables.developerOpenTo.developerId, id))
   await db.delete(tables.speakerProfiles).where(eq(tables.speakerProfiles.developerId, id))
-
-  // Supprimer le développeur
   await db.delete(tables.developers).where(eq(tables.developers.id, id))
 
   return { success: true }
