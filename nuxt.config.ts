@@ -67,7 +67,7 @@ export default defineNuxtConfig({
     enabled: false
   },
   hub: {
-    db: 'sqlite'
+    database: true
   },
   auth: {
     baseURL: process.env.NUXT_PUBLIC_AUTH_BASE_URL || 'http://localhost:3000/api/auth',
