@@ -27,6 +27,12 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 403, message: 'Non autorisé' })
   }
 
+  const emailOptInUpdate: { emailOptIn?: boolean; emailOptInDate?: Date } = {}
+  if (typeof body.emailOptIn === 'boolean') {
+    emailOptInUpdate.emailOptIn = body.emailOptIn
+    emailOptInUpdate.emailOptInDate = new Date()
+  }
+
   await db.update(tables.developers).set({
     name: body.name ?? developer.name,
     bio: body.bio ?? developer.bio,
@@ -35,6 +41,7 @@ export default defineEventHandler(async (event) => {
     website: body.website ?? developer.website,
     linkedinUrl: body.linkedinUrl ?? developer.linkedinUrl,
     twitterUrl: body.twitterUrl ?? developer.twitterUrl,
+    ...emailOptInUpdate,
     updatedAt: new Date()
   }).where(eq(tables.developers.id, id))
 

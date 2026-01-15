@@ -51,6 +51,8 @@ export default defineEventHandler(async (event) => {
       available: developer.speakerProfile.available,
       remoteOk: developer.speakerProfile.remoteOk,
       travelWilling: developer.speakerProfile.travelWilling
-    } : null
+    } : null,
+    emailOptIn: developer.emailOptIn ?? false,
+    emailOptInAsked: developer.emailOptInDate !== null
   }
 })

@@ -21,6 +21,8 @@ interface Profile {
     remoteOk: boolean | null
     travelWilling: boolean | null
   } | null
+  emailOptIn: boolean
+  emailOptInAsked: boolean
 }
 
 definePageMeta({
@@ -78,7 +80,8 @@ const form = reactive({
   openTo: [] as string[],
   speakerTopics: [] as string[],
   remoteOk: true,
-  travelWilling: false
+  travelWilling: false,
+  emailOptIn: false
 })
 
 const newSkill = ref('')
@@ -99,6 +102,7 @@ watch(profile, (p) => {
     form.speakerTopics = p.speakerProfile?.topics || []
     form.remoteOk = p.speakerProfile?.remoteOk ?? true
     form.travelWilling = p.speakerProfile?.travelWilling ?? false
+    form.emailOptIn = p.emailOptIn ?? false
   } else if (session.value?.user) {
     form.name = session.value.user.name || ''
   }
@@ -136,6 +140,33 @@ function toggleOpenTo(value: string) {
 }
 
 const deleting = ref(false)
+
+const showOptInModal = ref(false)
+
+onMounted(() => {
+  const shouldShow = isNewProfile.value || (profile.value && !profile.value.emailOptInAsked)
+  if (shouldShow) {
+    showOptInModal.value = true
+  }
+})
+
+async function handleOptInChoice(choice: boolean) {
+  showOptInModal.value = false
+  form.emailOptIn = choice
+
+  if (profile.value) {
+    try {
+      await $fetch(`/api/developers/${profile.value.id}`, {
+        method: 'PUT',
+        body: { emailOptIn: choice }
+      })
+      profile.value.emailOptIn = choice
+      profile.value.emailOptInAsked = true
+    } catch {
+      form.emailOptIn = !choice
+    }
+  }
+}
 
 async function save() {
   saving.value = true
@@ -177,6 +208,53 @@ async function deleteProfile() {
 </script>
 
 <template>
+  <Teleport to="body">
+    <Transition name="modal">
+      <div v-if="showOptInModal" class="fixed inset-0 z-50 flex items-center justify-center p-4">
+        <div class="absolute inset-0 bg-black/90 backdrop-blur-md" @click="handleOptInChoice(false)" />
+        <dialog open role="dialog" aria-labelledby="optin-title" aria-describedby="optin-desc" class="relative bg-bg border border-border rounded-3xl p-10 max-w-lg w-full overflow-hidden">
+          <div class="absolute -top-20 -right-20 w-40 h-40 bg-primary/20 rounded-full blur-3xl pointer-events-none" aria-hidden="true" />
+          <div class="absolute -bottom-10 -left-10 w-32 h-32 bg-primary/10 rounded-full blur-2xl pointer-events-none" aria-hidden="true" />
+
+          <div class="relative">
+            <p class="text-[0.65rem] uppercase tracking-[0.3em] text-primary mb-6" aria-hidden="true">Psst...</p>
+
+            <h2 id="optin-title" class="font-display text-3xl md:text-4xl font-medium leading-tight mb-4">
+              Attends, lis ça<br />
+              <span class="text-text-muted">avant de fermer</span>
+            </h2>
+
+            <p id="optin-desc" class="text-text-muted text-base leading-relaxed mb-8 max-w-sm">
+              News sur l'avancée du projet, sondages pour améliorer l'app ensemble. On construit ça avec toi.
+            </p>
+
+            <div class="flex flex-col sm:flex-row gap-3">
+              <button
+                @click="handleOptInChoice(true)"
+                class="group flex-1 px-6 py-4 bg-text text-bg rounded-full font-medium transition-all hover:bg-primary flex items-center justify-center gap-2"
+              >
+                Je veux ça
+                <svg class="w-4 h-4 transition-transform group-hover:translate-x-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                  <path d="M5 12h14M12 5l7 7-7 7"/>
+                </svg>
+              </button>
+              <button
+                @click="handleOptInChoice(false)"
+                class="px-6 py-4 bg-transparent text-text-muted rounded-full font-medium transition-all hover:text-text"
+              >
+                Pas maintenant
+              </button>
+            </div>
+
+            <p class="text-[0.7rem] text-text-muted mt-6">
+              Zéro spam. Désinscription en 1 clic. Promis.
+            </p>
+          </div>
+        </dialog>
+      </div>
+    </Transition>
+  </Teleport>
+
   <div class="max-w-3xl mx-auto px-4 md:px-8 pb-16">
     <header class="py-12 mb-8" :class="{ 'border-b border-border': !hasValidExperienceProfile }">
       <span class="text-xs uppercase tracking-[0.2em] text-text-muted mb-4 block">
@@ -192,30 +270,24 @@ async function deleteProfile() {
       </p>
     </div>
 
-    <section v-if="hasValidExperienceProfile" class="mb-16 -mx-4 md:-mx-8 px-4 md:px-8 py-12 border-y border-border relative overflow-hidden">
-      <div class="absolute inset-0 flex items-center justify-center pointer-events-none select-none overflow-hidden">
-        <span class="font-display text-[20rem] md:text-[28rem] font-bold text-text opacity-[0.02] leading-none tracking-tighter">*</span>
-      </div>
-
-      <div class="relative">
-        <div class="flex flex-col gap-8">
-          <span class="text-[0.65rem] uppercase tracking-[0.3em] text-text-muted">Profil généré</span>
-
-          <div class="grid grid-cols-1 md:grid-cols-[1fr_auto] gap-8 md:gap-16 items-end">
-            <div>
-              <h2 class="font-display text-4xl md:text-6xl lg:text-7xl font-medium tracking-tight leading-[0.9] mb-6">{{ profile?.profileType }}</h2>
-              <p class="text-text-muted text-lg md:text-xl leading-relaxed max-w-xl">{{ profile?.profilePhrase }}</p>
-            </div>
-
-            <NuxtLink to="/experience" class="group flex items-center gap-3 self-end pb-2">
-              <span class="text-sm text-text-muted group-hover:text-text transition-colors">Refaire</span>
-              <span class="w-10 h-10 flex items-center justify-center border border-border rounded-full group-hover:border-text group-hover:bg-text group-hover:text-bg transition-all">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M17 1l4 4-4 4"/><path d="M3 11V9a4 4 0 014-4h14"/><path d="M7 23l-4-4 4-4"/><path d="M21 13v2a4 4 0 01-4 4H3"/>
-                </svg>
-              </span>
-            </NuxtLink>
+    <section v-if="hasValidExperienceProfile" class="mb-10 relative group">
+      <div class="absolute inset-0 bg-gradient-to-r from-primary/5 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+      <div class="relative p-6 md:p-8 border border-border/50 rounded-2xl">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-6">
+          <div class="flex-1 min-w-0">
+            <span class="text-[0.6rem] uppercase tracking-[0.25em] text-text-muted/70 mb-2 block">Ton profil</span>
+            <p class="font-display text-2xl md:text-3xl font-medium tracking-tight mb-1">{{ profile?.profileType }}</p>
+            <p class="text-text-muted text-sm leading-relaxed">{{ profile?.profilePhrase }}</p>
           </div>
+
+          <NuxtLink to="/experience" class="group/btn flex items-center gap-3 px-5 py-3 border border-border/50 rounded-full hover:border-text/30 hover:bg-white/[0.02] transition-all duration-300 shrink-0">
+            <span class="text-sm text-text-muted group-hover/btn:text-text transition-colors">Refaire</span>
+            <span class="w-6 h-6 flex items-center justify-center rounded-full bg-white/5 group-hover/btn:bg-white/10 transition-colors">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-text-muted group-hover/btn:text-text transition-colors">
+                <path d="M17 1l4 4-4 4"/><path d="M3 11V9a4 4 0 014-4h14"/><path d="M7 23l-4-4 4-4"/><path d="M21 13v2a4 4 0 01-4 4H3"/>
+              </svg>
+            </span>
+          </NuxtLink>
         </div>
       </div>
     </section>
@@ -223,15 +295,28 @@ async function deleteProfile() {
     <form @submit.prevent="save">
       <div v-if="error" class="p-4 bg-red-500/10 border border-red-500/30 rounded-lg text-red-500 mb-8">{{ error }}</div>
 
+      <!-- Section 1: Identité -->
       <section class="py-8 border-b border-border">
-        <h2 class="font-display text-xl font-medium mb-2">Informations</h2>
+        <h2 class="font-display text-xl font-medium mb-6">Identité</h2>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+        <div class="flex flex-col gap-6">
           <div class="flex flex-col gap-2">
             <label for="name" class="text-xs uppercase tracking-wide text-text-muted">Nom *</label>
             <input id="name" v-model="form.name" type="text" required class="px-4 py-3 bg-bg-card border border-border rounded-lg text-text text-sm transition-colors focus:outline-none focus:border-text-muted" />
           </div>
 
+          <div class="flex flex-col gap-2">
+            <label for="bio" class="text-xs uppercase tracking-wide text-text-muted">Bio</label>
+            <textarea id="bio" v-model="form.bio" rows="3" placeholder="Ce que tu fais, ce qui te passionne..." class="px-4 py-3 bg-bg-card border border-border rounded-lg text-text text-sm transition-colors focus:outline-none focus:border-text-muted resize-y min-h-[80px] placeholder:text-text-muted"></textarea>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 2: Localisation & Expérience -->
+      <section class="py-8 border-b border-border">
+        <h2 class="font-display text-xl font-medium mb-6">Localisation & Expérience</h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div class="flex flex-col gap-2">
             <label for="location" class="text-xs uppercase tracking-wide text-text-muted">Ville</label>
             <input id="location" v-model="form.location" type="text" placeholder="Paris" class="px-4 py-3 bg-bg-card border border-border rounded-lg text-text text-sm transition-colors focus:outline-none focus:border-text-muted placeholder:text-text-muted" />
@@ -241,38 +326,19 @@ async function deleteProfile() {
             <label for="years-experience" class="text-xs uppercase tracking-wide text-text-muted">Années d'expérience</label>
             <input id="years-experience" v-model.number="form.yearsExperience" type="number" min="0" max="50" class="px-4 py-3 bg-bg-card border border-border rounded-lg text-text text-sm transition-colors focus:outline-none focus:border-text-muted" />
           </div>
-
-          <div class="flex flex-col gap-2">
-            <label for="website" class="text-xs uppercase tracking-wide text-text-muted">Site web</label>
-            <input id="website" v-model="form.website" type="url" placeholder="https://" class="px-4 py-3 bg-bg-card border border-border rounded-lg text-text text-sm transition-colors focus:outline-none focus:border-text-muted placeholder:text-text-muted" />
-          </div>
-
-          <div class="flex flex-col gap-2">
-            <label for="linkedin" class="text-xs uppercase tracking-wide text-text-muted">LinkedIn *</label>
-            <input id="linkedin" v-model="form.linkedinUrl" type="url" placeholder="https://linkedin.com/in/..." class="px-4 py-3 bg-bg-card border border-border rounded-lg text-text text-sm transition-colors focus:outline-none focus:border-text-muted placeholder:text-text-muted" required />
-          </div>
-
-          <div class="flex flex-col gap-2">
-            <label for="twitter" class="text-xs uppercase tracking-wide text-text-muted">Twitter/X</label>
-            <input id="twitter" v-model="form.twitterUrl" type="url" placeholder="https://twitter.com/..." class="px-4 py-3 bg-bg-card border border-border rounded-lg text-text text-sm transition-colors focus:outline-none focus:border-text-muted placeholder:text-text-muted" />
-          </div>
-        </div>
-
-        <div class="flex flex-col gap-2 md:col-span-2">
-          <label for="bio" class="text-xs uppercase tracking-wide text-text-muted">Bio</label>
-          <textarea id="bio" v-model="form.bio" rows="4" placeholder="Présentez-vous en quelques mots..." class="px-4 py-3 bg-bg-card border border-border rounded-lg text-text text-sm transition-colors focus:outline-none focus:border-text-muted resize-y min-h-[100px] placeholder:text-text-muted"></textarea>
         </div>
       </section>
 
+      <!-- Section 3: Compétences -->
       <section class="py-8 border-b border-border">
-        <h2 id="competences-label" class="font-display text-xl font-medium mb-4">Compétences</h2>
+        <h2 id="competences-label" class="font-display text-xl font-medium mb-6">Compétences</h2>
 
         <div class="flex gap-2 mb-4">
           <input
             id="new-skill"
             v-model="newSkill"
             type="text"
-            placeholder="Ajouter une compétence..."
+            placeholder="Vue.js, TypeScript, Node..."
             aria-labelledby="competences-label"
             class="flex-1 px-4 py-3 bg-bg-card border border-border rounded-lg text-text text-sm transition-colors focus:outline-none focus:border-text-muted placeholder:text-text-muted"
             @keydown.enter.prevent="addSkill"
@@ -285,12 +351,14 @@ async function deleteProfile() {
             {{ skill }}
             <button type="button" @click="removeSkill(skill)" class="bg-transparent border-none text-text-muted cursor-pointer text-lg leading-none p-0 hover:text-text">&times;</button>
           </span>
+          <span v-if="form.skills.length === 0" class="text-sm text-text-muted">Aucune compétence ajoutée</span>
         </div>
       </section>
 
+      <!-- Section 4: Disponibilités -->
       <section class="py-8 border-b border-border">
         <h2 class="font-display text-xl font-medium mb-2">Disponible pour</h2>
-        <p class="text-text-muted text-sm mb-6">Indiquez ce pour quoi vous êtes disponible</p>
+        <p class="text-text-muted text-sm mb-6">Qu'est-ce qui t'intéresse ?</p>
 
         <div class="flex flex-col md:flex-row flex-wrap gap-3">
           <button
@@ -308,43 +376,89 @@ async function deleteProfile() {
             {{ option.label }}
           </button>
         </div>
+
+        <!-- Profil Speakeuse (conditionnel) -->
+        <div v-if="form.openTo.includes('conference')" class="mt-8 pt-8 border-t border-border/50">
+          <h3 class="font-medium text-lg mb-2">Profil Speakeuse</h3>
+          <p class="text-text-muted text-sm mb-6">Infos pour les organisateurs d'événements</p>
+
+          <div class="flex flex-col gap-2 mb-4">
+            <label for="new-topic" class="text-xs uppercase tracking-wide text-text-muted">Sujets de talk</label>
+            <div class="flex gap-2 mb-4">
+              <input
+                id="new-topic"
+                v-model="newTopic"
+                type="text"
+                placeholder="Vue.js, Women in Tech..."
+                class="flex-1 px-4 py-3 bg-bg-card border border-border rounded-lg text-text text-sm transition-colors focus:outline-none focus:border-text-muted placeholder:text-text-muted"
+                @keydown.enter.prevent="addTopic"
+              />
+              <button type="button" @click="addTopic" class="px-6 py-3 bg-bg-card border border-border rounded-lg text-text cursor-pointer transition-all hover:bg-bg-card-hover">Ajouter</button>
+            </div>
+            <div class="flex flex-wrap gap-2">
+              <span v-for="topic in form.speakerTopics" :key="topic" class="flex items-center gap-2 px-4 py-2 bg-bg-card border border-border rounded-full text-sm">
+                {{ topic }}
+                <button type="button" @click="removeTopic(topic)" class="bg-transparent border-none text-text-muted cursor-pointer text-lg leading-none p-0 hover:text-text">&times;</button>
+              </span>
+              <span v-if="form.speakerTopics.length === 0" class="text-sm text-text-muted">Aucun sujet ajouté</span>
+            </div>
+          </div>
+
+          <div class="flex flex-col md:flex-row gap-4 md:gap-8 mt-4">
+            <label class="flex items-center gap-2 cursor-pointer text-text-muted hover:text-text transition-colors">
+              <input v-model="form.remoteOk" type="checkbox" class="w-[18px] h-[18px] accent-text" />
+              <span>Disponible en remote</span>
+            </label>
+            <label class="flex items-center gap-2 cursor-pointer text-text-muted hover:text-text transition-colors">
+              <input v-model="form.travelWilling" type="checkbox" class="w-[18px] h-[18px] accent-text" />
+              <span>Prête à me déplacer</span>
+            </label>
+          </div>
+        </div>
       </section>
 
-      <section v-if="form.openTo.includes('conference')" class="py-8 border-b border-border">
-        <h2 class="font-display text-xl font-medium mb-2">Profil Speakeuse</h2>
-        <p class="text-text-muted text-sm mb-6">Informations pour les organisateurs d'événements</p>
+      <!-- Section 5: Liens -->
+      <section class="py-8 border-b border-border">
+        <h2 class="font-display text-xl font-medium mb-2">Liens</h2>
+        <p class="text-text-muted text-sm mb-6">Où te trouver sur le web</p>
 
-        <div class="flex flex-col gap-2 mb-4">
-          <label for="new-topic" class="text-xs uppercase tracking-wide text-text-muted">Sujets de talk</label>
-          <div class="flex gap-2 mb-4">
-            <input
-              id="new-topic"
-              v-model="newTopic"
-              type="text"
-              placeholder="Vue.js, Women in Tech..."
-              class="flex-1 px-4 py-3 bg-bg-card border border-border rounded-lg text-text text-sm transition-colors focus:outline-none focus:border-text-muted placeholder:text-text-muted"
-              @keydown.enter.prevent="addTopic"
-            />
-            <button type="button" @click="addTopic" class="px-6 py-3 bg-bg-card border border-border rounded-lg text-text cursor-pointer transition-all hover:bg-bg-card-hover">Ajouter</button>
+        <div class="flex flex-col gap-4">
+          <div class="flex flex-col gap-2">
+            <label for="linkedin" class="text-xs uppercase tracking-wide text-text-muted">LinkedIn *</label>
+            <input id="linkedin" v-model="form.linkedinUrl" type="url" placeholder="https://linkedin.com/in/..." required class="px-4 py-3 bg-bg-card border border-border rounded-lg text-text text-sm transition-colors focus:outline-none focus:border-text-muted placeholder:text-text-muted" />
           </div>
-          <div class="flex flex-wrap gap-2">
-            <span v-for="topic in form.speakerTopics" :key="topic" class="flex items-center gap-2 px-4 py-2 bg-bg-card border border-border rounded-full text-sm">
-              {{ topic }}
-              <button type="button" @click="removeTopic(topic)" class="bg-transparent border-none text-text-muted cursor-pointer text-lg leading-none p-0 hover:text-text">&times;</button>
+
+          <div class="flex flex-col gap-2">
+            <label for="website" class="text-xs uppercase tracking-wide text-text-muted">Site web / Portfolio</label>
+            <input id="website" v-model="form.website" type="url" placeholder="https://..." class="px-4 py-3 bg-bg-card border border-border rounded-lg text-text text-sm transition-colors focus:outline-none focus:border-text-muted placeholder:text-text-muted" />
+          </div>
+
+          <div class="flex flex-col gap-2">
+            <label for="twitter" class="text-xs uppercase tracking-wide text-text-muted">Twitter / X</label>
+            <input id="twitter" v-model="form.twitterUrl" type="url" placeholder="https://twitter.com/..." class="px-4 py-3 bg-bg-card border border-border rounded-lg text-text text-sm transition-colors focus:outline-none focus:border-text-muted placeholder:text-text-muted" />
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 6: Préférences -->
+      <section class="py-8 border-b border-border">
+        <h2 class="font-display text-xl font-medium mb-6">Préférences</h2>
+
+        <label class="flex items-start gap-3 cursor-pointer group">
+          <input
+            v-model="form.emailOptIn"
+            type="checkbox"
+            class="w-[18px] h-[18px] accent-primary mt-0.5 shrink-0"
+          />
+          <div class="flex flex-col gap-1">
+            <span class="text-text group-hover:text-primary transition-colors">
+              Recevoir les actualités OSLD
+            </span>
+            <span class="text-xs text-text-muted">
+              News sur l'avancée du projet, sondages pour améliorer l'app. Zéro spam.
             </span>
           </div>
-        </div>
-
-        <div class="flex flex-col md:flex-row gap-4 md:gap-8 mt-4">
-          <label class="flex items-center gap-2 cursor-pointer text-text-muted">
-            <input v-model="form.remoteOk" type="checkbox" class="w-[18px] h-[18px] accent-text" />
-            <span>Disponible en remote</span>
-          </label>
-          <label class="flex items-center gap-2 cursor-pointer text-text-muted">
-            <input v-model="form.travelWilling" type="checkbox" class="w-[18px] h-[18px] accent-text" />
-            <span>Prête à me déplacer</span>
-          </label>
-        </div>
+        </label>
       </section>
 
       <div class="flex justify-end gap-4 pt-8">
