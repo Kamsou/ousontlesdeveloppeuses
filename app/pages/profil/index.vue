@@ -265,15 +265,15 @@ async function deleteProfile() {
       </section>
 
       <section class="py-8 border-b border-border">
-        <h2 id="technologies-label" class="font-display text-xl font-medium mb-4">Technologies</h2>
+        <h2 id="competences-label" class="font-display text-xl font-medium mb-4">Compétences</h2>
 
         <div class="flex gap-2 mb-4">
           <input
             id="new-skill"
             v-model="newSkill"
             type="text"
-            placeholder="Ajouter une techno..."
-            aria-labelledby="technologies-label"
+            placeholder="Ajouter une compétence..."
+            aria-labelledby="competences-label"
             class="flex-1 px-4 py-3 bg-bg-card border border-border rounded-lg text-text text-sm transition-colors focus:outline-none focus:border-text-muted placeholder:text-text-muted"
             @keydown.enter.prevent="addSkill"
           />

@@ -120,7 +120,7 @@ useSchemaOrg([
       </section>
 
       <section v-if="developer.skills?.length" class="py-8 border-b border-border">
-        <h2 class="font-display text-sm font-medium uppercase tracking-widest text-text-muted mb-4">Technologies</h2>
+        <h2 class="font-display text-sm font-medium uppercase tracking-widest text-text-muted mb-4">Compétences</h2>
         <div class="flex flex-wrap gap-3">
           <span v-for="skill in developer.skills" :key="skill" class="px-5 py-2 bg-bg-card border border-border rounded-full text-sm">
             {{ skill }}
