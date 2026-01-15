@@ -67,7 +67,10 @@ watch(() => filters.skill, () => updateUrl())
       <span class="text-xs uppercase tracking-[0.2em] text-text-muted mb-6 block">Annuaire</span>
       <h1 class="font-display text-4xl md:text-7xl font-medium tracking-tight mb-2">Développeuses</h1>
       <p class="text-text-muted text-base">
-        {{ developers?.length || 0 }} profils
+        <ClientOnly>
+          <span>{{ developers?.length || 0 }} profils</span>
+          <template #fallback><span class="inline-block w-16 h-5 bg-border rounded animate-pulse" /></template>
+        </ClientOnly>
       </p>
     </header>
 
@@ -119,7 +122,11 @@ watch(() => filters.skill, () => updateUrl())
     </section>
 
     <section class="py-12">
-      <div v-if="!developers?.length" class="text-center py-16 text-text-muted">
+      <div v-if="isLoading" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <CardSkeleton v-for="i in 6" :key="i" />
+      </div>
+
+      <div v-else-if="!developers?.length" class="text-center py-16 text-text-muted">
         <p class="mb-4">Aucun profil trouvé</p>
         <button @click="clearFilters" class="px-6 py-3 bg-transparent border border-border rounded-lg text-text cursor-pointer">Effacer les filtres</button>
       </div>

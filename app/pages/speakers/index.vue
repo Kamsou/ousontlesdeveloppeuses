@@ -80,7 +80,10 @@ watch(() => filters.travel, () => updateUrl())
       </div>
       <div class="overflow-hidden">
         <p class="text-text-muted text-base animate-slide-up animation-delay-200">
-          {{ speakers?.length || 0 }} speakeuses disponibles pour vos conférences
+          <ClientOnly>
+            <span>{{ speakers?.length || 0 }} speakeuses disponibles pour vos conférences</span>
+            <template #fallback><span class="inline-block w-64 h-5 bg-border rounded animate-pulse" /></template>
+          </ClientOnly>
         </p>
       </div>
     </header>
@@ -126,7 +129,11 @@ watch(() => filters.travel, () => updateUrl())
     </section>
 
     <section class="py-12">
-      <div v-if="!speakers?.length" class="text-center py-16 text-text-muted">
+      <div v-if="isLoading" class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <CardSkeleton v-for="i in 4" :key="i" variant="speaker" />
+      </div>
+
+      <div v-else-if="!speakers?.length" class="text-center py-16 text-text-muted">
         <p class="mb-4">Aucune speakeuse trouvée</p>
         <button @click="clearFilters" class="px-6 py-3 bg-transparent border border-border rounded-lg text-text cursor-pointer">Effacer les filtres</button>
       </div>
