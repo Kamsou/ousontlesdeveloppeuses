@@ -119,7 +119,7 @@ onUnmounted(() => {
             </NuxtLink>
           </template>
 
-          <button @click="menuOpen = !menuOpen" class="lg:hidden flex flex-col justify-center items-center w-10 h-10 gap-1.5 cursor-pointer bg-transparent border-none">
+          <button @click="menuOpen = !menuOpen" :aria-label="menuOpen ? 'Fermer le menu' : 'Ouvrir le menu'" :aria-expanded="menuOpen" class="lg:hidden flex flex-col justify-center items-center w-10 h-10 gap-1.5 cursor-pointer bg-transparent border-none">
             <span :class="['h-0.5 w-5 bg-text rounded-sm transition-all duration-300', menuOpen ? 'rotate-45 translate-y-2' : '']"></span>
             <span :class="['h-0.5 w-5 bg-text rounded-sm transition-all duration-300', menuOpen ? 'opacity-0' : '']"></span>
             <span :class="['h-0.5 w-5 bg-text rounded-sm transition-all duration-300', menuOpen ? '-rotate-45 -translate-y-2' : '']"></span>

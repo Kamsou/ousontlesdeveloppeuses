@@ -22,7 +22,7 @@ export default {
         border: 'rgba(255, 255, 255, 0.1)'
       },
       fontFamily: {
-        sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+        sans: ['Satoshi', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
         display: ['Space Grotesk', 'sans-serif']
       },
       borderRadius: {
