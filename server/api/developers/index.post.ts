@@ -10,6 +10,7 @@ export default defineEventHandler(async (event) => {
   }
 
   const githubId = (token?.id || token?.sub) as string
+  const githubLogin = token?.login as string | undefined
 
   if (!githubId) {
     throw createError({ statusCode: 400, message: 'ID GitHub non trouvé' })
@@ -39,7 +40,7 @@ export default defineEventHandler(async (event) => {
     location: body.location || null,
     yearsExperience: body.yearsExperience || null,
     website: body.website || null,
-    githubUrl: `https://github.com/${session.user.name}`,
+    githubUrl: githubLogin ? `https://github.com/${githubLogin}` : null,
     linkedinUrl: body.linkedinUrl || null,
     twitterUrl: body.twitterUrl || null
   }).returning()

@@ -10,15 +10,17 @@ export default NuxtAuthHandler({
     signIn: '/',
   },
   callbacks: {
-    jwt({ token, account }) {
+    jwt({ token, account, profile }) {
       if (account) {
         token.id = account.providerAccountId
+        token.login = (profile as any)?.login
       }
       return token
     },
     session({ session, token }) {
       if (session.user) {
         (session.user as any).id = token.id
+        ;(session.user as any).login = token.login
       }
       return session
     },
