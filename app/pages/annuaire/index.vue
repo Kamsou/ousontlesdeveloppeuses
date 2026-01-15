@@ -8,18 +8,10 @@ useSeoMeta({
   twitterCard: 'summary_large_image',
 })
 
+import { openToOptions } from '~/utils/constants'
+
 const route = useRoute()
 const router = useRouter()
-
-const openToOptions = [
-  { value: 'conference', label: 'Conférence' },
-  { value: 'mentoring', label: 'Mentoring' },
-  { value: 'freelance', label: 'Freelance' },
-  { value: 'cdi', label: 'CDI' },
-  { value: 'coffee_chat', label: 'Coffee chat' },
-  { value: 'pair_programming', label: 'Pair programming' },
-  { value: 'cv_review', label: 'Relecture CV' }
-]
 
 const filters = reactive({
   location: route.query.location as string || '',
@@ -35,10 +27,12 @@ const queryParams = computed(() => {
   return params
 })
 
-const { data: developers, refresh } = await useFetch('/api/developers', {
+const { data: developers, status, refresh } = useLazyFetch('/api/developers', {
   query: queryParams,
   watch: [queryParams]
 })
+
+const isLoading = computed(() => status.value === 'pending')
 
 function toggleOpenTo(value: string) {
   const index = filters.openTo.indexOf(value)

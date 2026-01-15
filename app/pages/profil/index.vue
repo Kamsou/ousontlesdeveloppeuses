@@ -34,18 +34,10 @@ useSeoMeta({
   robots: 'noindex, nofollow'
 })
 
+import { openToOptions } from '~/utils/constants'
+
 const { data: session, signOut } = useAuth()
 const router = useRouter()
-
-const openToOptions = [
-  { value: 'conference', label: 'Conférence' },
-  { value: 'mentoring', label: 'Mentoring' },
-  { value: 'freelance', label: 'Freelance' },
-  { value: 'cdi', label: 'CDI' },
-  { value: 'coffee_chat', label: 'Coffee chat' },
-  { value: 'pair_programming', label: 'Pair programming' },
-  { value: 'cv_review', label: 'Relecture CV' }
-]
 
 const { data: profile, refresh } = await useFetch<Profile | null>('/api/developers/me')
 

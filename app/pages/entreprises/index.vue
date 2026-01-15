@@ -24,9 +24,11 @@ const queryParams = computed(() => {
   return params
 })
 
-const { data: companies, refresh } = await useFetch('/api/companies', {
+const { data: companies, status: fetchStatus, refresh } = useLazyFetch('/api/companies', {
   query: queryParams
 })
+
+const isLoading = computed(() => fetchStatus.value === 'pending')
 
 function updateUrl() {
   router.push({ query: queryParams.value })

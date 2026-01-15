@@ -42,10 +42,12 @@ const queryParams = computed(() => {
   return params
 })
 
-const { data: speakers, refresh } = await useFetch<Speaker[]>('/api/speakers', {
+const { data: speakers, status, refresh } = useLazyFetch<Speaker[]>('/api/speakers', {
   query: queryParams,
   watch: [queryParams]
 })
+
+const isLoading = computed(() => status.value === 'pending')
 
 function updateUrl() {
   router.push({ query: queryParams.value })

@@ -1,4 +1,4 @@
-import { eq, and, like } from 'drizzle-orm'
+import { eq } from 'drizzle-orm'
 
 export default defineEventHandler(async (event) => {
   const query = getQuery(event)
@@ -36,7 +36,7 @@ export default defineEventHandler(async (event) => {
     const topicFilter = (query.topic as string).toLowerCase()
     results = results.filter(dev => {
       if (!dev.speakerProfile?.topics) return false
-      const topics = JSON.parse(dev.speakerProfile.topics as string || '[]')
+      const topics = parseTopics(dev.speakerProfile.topics)
       return topics.some((t: string) => t.toLowerCase().includes(topicFilter))
     })
   }
@@ -57,7 +57,7 @@ export default defineEventHandler(async (event) => {
     location: dev.location,
     skills: dev.skills.map(s => s.skillName),
     speakerProfile: dev.speakerProfile ? {
-      topics: JSON.parse(dev.speakerProfile.topics as string || '[]'),
+      topics: parseTopics(dev.speakerProfile.topics),
       remoteOk: dev.speakerProfile.remoteOk,
       travelWilling: dev.speakerProfile.travelWilling,
       available: dev.speakerProfile.available

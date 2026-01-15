@@ -36,7 +36,7 @@ export default defineEventHandler(async (event) => {
     skills: developer.skills.map(s => s.skillName),
     openTo: developer.openTo.map(o => o.type),
     speakerProfile: developer.speakerProfile ? {
-      topics: developer.speakerProfile.topics ? JSON.parse(developer.speakerProfile.topics) : [],
+      topics: parseTopics(developer.speakerProfile.topics),
       available: developer.speakerProfile.available,
       remoteOk: developer.speakerProfile.remoteOk,
       travelWilling: developer.speakerProfile.travelWilling
