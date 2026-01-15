@@ -39,7 +39,7 @@ Les développeuses sont là. Elles codent, elles innovent, elles inspirent. Mais
 ```
 Frontend     →  Nuxt 4 · Vue 3 · TypeScript · Tailwind CSS
 Backend      →  Nitro (Nuxt Server)
-Database     →  Turso (SQLite) + Drizzle ORM
+Database     →  NuxtHub (Cloudflare D1) + Drizzle ORM
 Auth         →  GitHub OAuth via @sidebase/nuxt-auth
 Déploiement  →  Netlify
 ```
@@ -51,7 +51,7 @@ Déploiement  →  Netlify
 ### Prérequis
 
 - Node.js 20+
-- Compte [Turso](https://turso.tech) (gratuit)
+- Compte [NuxtHub](https://hub.nuxt.com) (gratuit)
 - [GitHub OAuth App](https://github.com/settings/developers)
 
 ### Installation
@@ -72,12 +72,12 @@ Remplis les variables dans `.env` :
 
 | Variable | Description |
 |----------|-------------|
-| `TURSO_DATABASE_URL` | URL de ta base Turso |
-| `TURSO_AUTH_TOKEN` | Token d'auth Turso |
 | `AUTH_SECRET` | Secret pour les sessions (génère avec `openssl rand -base64 32`) |
 | `GITHUB_CLIENT_ID` | Client ID de ton OAuth App GitHub |
 | `GITHUB_CLIENT_SECRET` | Client Secret de ton OAuth App GitHub |
 | `NUXT_PUBLIC_AUTH_BASE_URL` | `http://localhost:3000` en local |
+
+> **Note** : En local, NuxtHub utilise une base SQLite locale. En production, la base D1 est gérée automatiquement.
 
 ```bash
 # Lance le serveur
@@ -95,8 +95,9 @@ L'app tourne sur **http://localhost:3000**
 | `npm run dev` | Serveur de développement |
 | `npm run build` | Build production |
 | `npm run preview` | Preview du build |
-| `npm run db:generate` | Génère les migrations Drizzle |
-| `npm run db:migrate` | Applique les migrations |
+| `npx drizzle-kit generate` | Génère les migrations Drizzle |
+
+> **Note** : Les migrations sont appliquées automatiquement à chaque déploiement Netlify.
 
 ---
 
@@ -106,13 +107,14 @@ L'app tourne sur **http://localhost:3000**
 ousontlesdevs/
 ├── app/
 │   ├── pages/           # Pages (annuaire, speakers, entreprises, profil)
+│   ├── utils/           # Constantes partagées (openToOptions)
 │   └── app.vue          # Layout principal
 ├── server/
 │   ├── api/             # Endpoints REST
 │   ├── db/
 │   │   ├── schema.ts    # Schéma Drizzle
 │   │   └── migrations/  # Migrations SQL
-│   └── utils/db.ts      # Connexion Turso
+│   └── utils/           # Helpers (db, parseTopics)
 ├── public/              # Assets statiques
 ├── nuxt.config.ts       # Config Nuxt
 └── drizzle.config.ts    # Config Drizzle
