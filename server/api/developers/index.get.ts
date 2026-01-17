@@ -1,8 +1,9 @@
-import { eq, like, inArray } from 'drizzle-orm'
-
 export default defineEventHandler(async (event) => {
   const db = useDrizzle()
   const query = getQuery(event)
+
+  const page = parseInt(query.page as string) || 1
+  const limit = parseInt(query.limit as string) || 24
 
   const developers = await db.query.developers.findMany({
     with: {
@@ -39,17 +40,28 @@ export default defineEventHandler(async (event) => {
     )
   }
 
-  return filtered.map(d => ({
-    id: d.id,
-    name: d.name,
-    avatarUrl: d.avatarUrl,
-    bio: d.bio,
-    location: d.location,
-    yearsExperience: d.yearsExperience,
-    linkedinUrl: d.linkedinUrl,
-    githubUrl: d.githubUrl,
-    skills: d.skills.map(s => s.skillName),
-    openTo: d.openTo.map(o => o.type),
-    isSpeaker: d.speakerProfile?.available || d.openTo.some(o => o.type === 'conference')
-  }))
+  const total = filtered.length
+  const paginated = filtered.slice(0, page * limit)
+
+  return {
+    developers: paginated.map(d => ({
+      id: d.id,
+      name: d.name,
+      avatarUrl: d.avatarUrl,
+      bio: d.bio,
+      location: d.location,
+      yearsExperience: d.yearsExperience,
+      linkedinUrl: d.linkedinUrl,
+      githubUrl: d.githubUrl,
+      skills: d.skills.map(s => s.skillName),
+      openTo: d.openTo.map(o => o.type),
+      isSpeaker: d.speakerProfile?.available || d.openTo.some(o => o.type === 'conference')
+    })),
+    pagination: {
+      total,
+      page,
+      limit,
+      hasMore: paginated.length < total
+    }
+  }
 })

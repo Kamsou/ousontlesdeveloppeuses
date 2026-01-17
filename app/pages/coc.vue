@@ -1,9 +1,9 @@
 <script setup lang="ts">
 useSeoMeta({
-  title: 'Code de conduite - OSLD',
-  description: 'Notre engagement pour créer un espace sûr, inclusif et bienveillant pour toutes les développeuses.',
-  ogTitle: 'Code de conduite - OSLD',
-  ogDescription: 'Notre engagement pour créer un espace sûr, inclusif et bienveillant pour toutes les développeuses.',
+  title: 'Code de conduite',
+  description: 'Nos engagements pour un espace safe, inclusif et bienveillant.',
+  ogTitle: 'Code de conduite',
+  ogDescription: 'Nos engagements pour un espace safe, inclusif et bienveillant.',
   robots: 'index, follow'
 })
 </script>

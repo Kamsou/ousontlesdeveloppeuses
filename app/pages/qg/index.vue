@@ -43,7 +43,7 @@ definePageMeta({
 })
 
 useSeoMeta({
-  title: 'Mon QG | OSLD',
+  title: 'Mon QG',
   robots: 'noindex'
 })
 

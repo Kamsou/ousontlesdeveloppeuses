@@ -3,15 +3,15 @@ const { $clientPosthog } = useNuxtApp()
 const { status, signIn } = useAuth()
 
 useSeoMeta({
-  title: 'OSLD - Où Sont Les Développeuses',
-  description: 'Annuaire des développeuses en France. Trouvez des talents tech féminins, des speakers pour vos conférences, et des entreprises inclusives.',
-  ogTitle: 'OSLD - Où Sont Les Développeuses',
-  ogDescription: 'Annuaire des développeuses en France. Trouvez des talents tech féminins, des speakers pour vos conférences, et des entreprises inclusives.',
+  title: 'Où Sont Les Développeuses',
+  description: 'La communauté des développeuses en France. Annuaire de talents tech, speakeuses pour vos events, et entreprises inclusives.',
+  ogTitle: 'OSLD — Où Sont Les Développeuses',
+  ogDescription: 'La communauté des développeuses en France. Annuaire de talents tech, speakeuses pour vos events, et entreprises inclusives.',
   ogImage: 'https://ousontlesdeveloppeuses.fr/og-image.png',
   ogType: 'website',
   twitterCard: 'summary_large_image',
-  twitterTitle: 'OSLD - Où Sont Les Développeuses',
-  twitterDescription: 'Annuaire des développeuses en France. Trouvez des talents tech féminins, des speakers pour vos conférences.',
+  twitterTitle: 'OSLD — Où Sont Les Développeuses',
+  twitterDescription: 'La communauté des développeuses en France. Annuaire de talents tech, speakeuses pour vos events.',
   twitterImage: 'https://ousontlesdeveloppeuses.fr/og-image.png',
 })
 

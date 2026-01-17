@@ -1,9 +1,9 @@
 <script setup lang="ts">
 useSeoMeta({
-  title: 'Speakeuses Tech - OSLD',
-  description: 'Trouvez des intervenantes tech pour vos conférences et événements. Speakeuses disponibles en remote ou en présentiel.',
-  ogTitle: 'Speakeuses Tech - OSLD',
-  ogDescription: 'Trouvez des intervenantes tech pour vos conférences et événements. Speakeuses disponibles en remote ou en présentiel.',
+  title: 'Speakeuses Tech',
+  description: 'Trouvez des speakeuses tech pour vos conférences. Filtrez par sujet, remote ou présentiel.',
+  ogTitle: 'Speakeuses Tech',
+  ogDescription: 'Trouvez des speakeuses tech pour vos conférences. Filtrez par sujet, remote ou présentiel.',
   ogImage: 'https://ousontlesdeveloppeuses.fr/og-image.png',
   twitterCard: 'summary_large_image',
 })

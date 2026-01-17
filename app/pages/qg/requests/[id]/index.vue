@@ -1,4 +1,13 @@
 <script setup lang="ts">
+interface HelpRequest {
+  id: number
+  title: string
+  description: string | null
+  helpType: 'bug' | 'review' | 'advice' | 'pair' | 'other'
+  status: 'open' | 'closed'
+  techs: { id: number; techName: string }[]
+}
+
 definePageMeta({
   middleware: 'sidebase-auth'
 })
@@ -8,11 +17,11 @@ const router = useRouter()
 const requestId = route.params.id
 
 useSeoMeta({
-  title: 'Ma demande | OSLD',
+  title: 'Ma demande',
   robots: 'noindex'
 })
 
-const { data: request, status: requestStatus, refresh: refreshRequest } = await useFetch(`/api/help-requests/${requestId}`)
+const { data: request, status: requestStatus, refresh: refreshRequest } = await useFetch<HelpRequest>(`/api/help-requests/${requestId}`)
 const { data: matchesData, status: matchesStatus } = useLazyFetch<{
   matches: any[]
   total: number
@@ -52,9 +61,10 @@ async function updateStatus(status: 'open' | 'closed') {
   const isClosing_ = status === 'closed'
 
   try {
-    await $fetch(`/api/help-requests/${requestId}`, {
+    await fetch(`/api/help-requests/${requestId}`, {
       method: 'PATCH',
-      body: { status }
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ status })
     })
     await refreshRequest()
     if (isClosing_) {
@@ -75,7 +85,7 @@ async function confirmDeleteRequest() {
   isDeleting.value = true
 
   try {
-    await $fetch(`/api/help-requests/${requestId}`, {
+    await fetch(`/api/help-requests/${requestId}`, {
       method: 'DELETE'
     })
     toast.success('Demande supprimée')

@@ -4,10 +4,10 @@ const { status, signIn } = useAuth()
 const router = useRouter()
 
 useSeoMeta({
-  title: 'Découvre ton profil développeuse - OSLD',
-  ogTitle: 'Découvre ton profil développeuse - OSLD',
-  description: 'Réponds à 5 questions et découvre quel type de développeuse tu es. Un portrait personnalisé généré par IA.',
-  ogDescription: 'Réponds à 5 questions et découvre quel type de développeuse tu es. Un portrait personnalisé généré par IA.',
+  title: 'Quel type de dev es-tu ?',
+  ogTitle: 'Quel type de dev es-tu ?',
+  description: '5 questions pour découvrir ton profil de développeuse. Portrait personnalisé généré par IA.',
+  ogDescription: '5 questions pour découvrir ton profil de développeuse. Portrait personnalisé généré par IA.',
   ogImage: '/og-image.png',
   twitterCard: 'summary_large_image'
 })
@@ -439,7 +439,7 @@ function restart() {
               @click="handleSignUp"
               class="px-8 py-4 bg-foreground text-background border-none text-base font-medium cursor-pointer transition-all hover:opacity-80"
             >
-              {{ status === 'authenticated' ? 'Voir mon profil' : 'Créer mon compte' }}
+              {{ status === 'authenticated' ? 'Voir mon profil' : 'Créer mon compte (développeuse only)' }}
             </button>
             <button
               @click="shareProfile"

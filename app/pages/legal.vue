@@ -1,7 +1,7 @@
 <script setup lang="ts">
 useSeoMeta({
-  title: 'Mentions légales - OSLD',
-  description: 'Mentions légales du site OSLD - Où Sont Les Développeuses.',
+  title: 'Mentions légales',
+  description: 'Mentions légales du site OSLD.',
   robots: 'noindex, nofollow'
 })
 </script>

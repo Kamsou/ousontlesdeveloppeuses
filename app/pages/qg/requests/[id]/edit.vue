@@ -1,4 +1,13 @@
 <script setup lang="ts">
+interface HelpRequest {
+  id: number
+  title: string
+  description: string | null
+  helpType: 'bug' | 'review' | 'advice' | 'pair' | 'other'
+  status: 'open' | 'in_progress' | 'closed'
+  techs: { id: number; techName: string }[]
+}
+
 definePageMeta({
   middleware: 'sidebase-auth'
 })
@@ -9,11 +18,11 @@ const requestId = route.params.id
 const toast = useToast()
 
 useSeoMeta({
-  title: 'Modifier ma demande | OSLD',
+  title: 'Modifier ma demande',
   robots: 'noindex'
 })
 
-const { data: request, status } = await useFetch(`/api/help-requests/${requestId}`)
+const { data: request, status } = await useFetch<HelpRequest>(`/api/help-requests/${requestId}`)
 
 const form = ref({
   title: '',
@@ -74,20 +83,21 @@ async function submit() {
   error.value = ''
 
   try {
-    await $fetch(`/api/help-requests/${requestId}`, {
+    await fetch(`/api/help-requests/${requestId}`, {
       method: 'PUT',
-      body: {
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
         title: form.value.title,
         description: form.value.description,
         helpType: form.value.helpType,
         techs: form.value.techs
-      }
+      })
     })
 
     toast.success('Demande modifiée')
     router.push(`/qg/requests/${requestId}`)
-  } catch (e: any) {
-    toast.error(e.data?.message || 'Erreur lors de la modification')
+  } catch {
+    toast.error('Erreur lors de la modification')
   } finally {
     saving.value = false
   }

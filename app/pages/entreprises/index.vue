@@ -1,9 +1,9 @@
 <script setup lang="ts">
 useSeoMeta({
-  title: 'Entreprises Inclusives - OSLD',
-  description: 'Découvrez les entreprises tech certifiées inclusives en France. Avis et notes par la communauté des développeuses.',
-  ogTitle: 'Entreprises Inclusives - OSLD',
-  ogDescription: 'Découvrez les entreprises tech certifiées inclusives en France. Avis et notes par la communauté des développeuses.',
+  title: 'Entreprises Inclusives',
+  description: 'Les entreprises tech où il fait bon travailler. Avis et notes par la communauté des développeuses.',
+  ogTitle: 'Entreprises Inclusives',
+  ogDescription: 'Les entreprises tech où il fait bon travailler. Avis et notes par la communauté des développeuses.',
   ogImage: 'https://ousontlesdeveloppeuses.fr/og-image.png',
   twitterCard: 'summary_large_image',
 })

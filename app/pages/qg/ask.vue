@@ -4,7 +4,7 @@ definePageMeta({
 })
 
 useSeoMeta({
-  title: 'Demander de l\'aide | OSLD',
+  title: 'Demander de l\'aide',
   robots: 'noindex'
 })
 

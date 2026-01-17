@@ -8,7 +8,13 @@ const developerTypes = [
   'La Connectrice',
   'L\'Exploratrice',
   'La Gardienne',
-  'La Créative'
+  'La Créative',
+  'La Mentore',
+  'L\'Automatrice',
+  'La Stratège',
+  'La Bidouilleuse',
+  'La Vulgarisatrice',
+  'L\'Endurante'
 ]
 
 const typeDescriptions: Record<string, string> = {
@@ -19,7 +25,13 @@ const typeDescriptions: Record<string, string> = {
   'La Connectrice': 'Code = communication. Empathie, collaboration.',
   'L\'Exploratrice': 'Nouvelle techno ? J\'arrive. Curiosité, adaptabilité.',
   'La Gardienne': 'Sécurité et stabilité d\'abord. Fiabilité, rigueur.',
-  'La Créative': 'Le code est un art. Innovation, originalité.'
+  'La Créative': 'Le code est un art. Innovation, originalité.',
+  'La Mentore': 'Transmet, accompagne, fait grandir. Le code se partage.',
+  'L\'Automatrice': 'Si c\'est répétitif, c\'est automatisable. Scripts et pipelines.',
+  'La Stratège': 'Voit trois coups d\'avance. Tech et business alignés.',
+  'La Bidouilleuse': 'Prototype, hack, improvise. Le MVP avant tout.',
+  'La Vulgarisatrice': 'Explique le complexe simplement. Bridge tech/non-tech.',
+  'L\'Endurante': 'Legacy, dette technique ? Challenge accepted. Ténacité.'
 }
 
 export default defineEventHandler(async (event) => {
@@ -99,7 +111,31 @@ function generateFallbackProfile(answers: Record<string, string>) {
   let phrase = 'Tu explores, tu testes, tu apprends. Le code est ton terrain de jeu.'
   let insight = 'Tu fais partie des développeuses qui n\'ont pas peur de l\'inconnu.'
 
-  if (answers.q2 === 'schema') {
+  if (answers.q2 === 'team' && answers.q5 === 'explain') {
+    type = 'La Mentore'
+    phrase = 'Tu transmets, tu accompagnes, tu fais grandir les autres.'
+    insight = 'Tu fais partie des développeuses qui rendent les équipes meilleures.'
+  } else if (answers.q5 === 'explain' && answers.q1 === 'openspace') {
+    type = 'La Vulgarisatrice'
+    phrase = 'Tu traduis le complexe en simple. Le pont entre deux mondes.'
+    insight = 'Tu fais partie des développeuses qui rendent la tech accessible.'
+  } else if (answers.q2 === 'poc' && answers.q1 === 'anywhere') {
+    type = 'La Bidouilleuse'
+    phrase = 'Tu prototypes, tu hack, tu improvises. Le MVP, c\'est ton terrain.'
+    insight = 'Tu fais partie des développeuses qui trouvent toujours une solution.'
+  } else if (answers.q3 === 'stay' && answers.q5 === 'debug') {
+    type = 'L\'Endurante'
+    phrase = 'Legacy, dette technique ? Tu relèves le défi. Ténacité incarnée.'
+    insight = 'Tu fais partie des développeuses qui ne lâchent jamais.'
+  } else if (answers.q2 === 'schema' && answers.q5 === 'estimate') {
+    type = 'La Stratège'
+    phrase = 'Tu vois trois coups d\'avance. Tech et business alignés.'
+    insight = 'Tu fais partie des développeuses qui pensent impact.'
+  } else if (answers.q5 === 'predict' && answers.q2 === 'doc') {
+    type = 'L\'Automatrice'
+    phrase = 'Si c\'est répétitif, tu l\'automatises. Scripts et pipelines, ton dada.'
+    insight = 'Tu fais partie des développeuses qui optimisent tout.'
+  } else if (answers.q2 === 'schema') {
     type = 'L\'Architecte'
     phrase = 'Tu vois le système avant de voir le code. La structure, c\'est ta force.'
     insight = 'Tu fais partie des développeuses qui pensent à long terme.'

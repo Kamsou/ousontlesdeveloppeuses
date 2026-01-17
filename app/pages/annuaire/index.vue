@@ -1,39 +1,80 @@
 <script setup lang="ts">
 useSeoMeta({
-  title: 'Annuaire des Développeuses - OSLD',
-  description: 'Explorez les profils de développeuses en France. Filtrez par ville, technologie et disponibilité.',
-  ogTitle: 'Annuaire des Développeuses - OSLD',
-  ogDescription: 'Explorez les profils de développeuses en France. Filtrez par ville, technologie et disponibilité.',
+  title: 'Annuaire des Développeuses',
+  description: 'Trouvez des développeuses en France. Filtrez par ville, techno et disponibilité (freelance, CDI, mentoring...).',
+  ogTitle: 'Annuaire des Développeuses',
+  ogDescription: 'Trouvez des développeuses en France. Filtrez par ville, techno et disponibilité (freelance, CDI, mentoring...).',
   ogImage: 'https://ousontlesdeveloppeuses.fr/og-image.png',
   twitterCard: 'summary_large_image',
 })
 
 import { openToOptions } from '~/utils/constants'
 
+interface Developer {
+  id: number
+  name: string
+  avatarUrl: string | null
+  bio: string | null
+  location: string | null
+  yearsExperience: number | null
+  linkedinUrl: string | null
+  githubUrl: string | null
+  skills: string[]
+  openTo: string[]
+  isSpeaker: boolean
+}
+
+interface ApiResponse {
+  developers: Developer[]
+  pagination: {
+    total: number
+    page: number
+    limit: number
+    hasMore: boolean
+  }
+}
+
 const { $clientPosthog } = useNuxtApp()
 const route = useRoute()
 const router = useRouter()
 
 const filters = reactive({
-  location: route.query.location as string || '',
-  skill: route.query.skill as string || '',
-  openTo: (route.query.openTo as string)?.split(',').filter(Boolean) || []
+  location: String(route.query.location || ''),
+  skill: String(route.query.skill || ''),
+  openTo: route.query.openTo ? String(route.query.openTo).split(',').filter(Boolean) : []
 })
+
+const page = ref(1)
+const isLoadingMore = ref(false)
 
 const queryParams = computed(() => {
   const params: Record<string, string> = {}
   if (filters.location) params.location = filters.location
   if (filters.skill) params.skill = filters.skill
   if (filters.openTo.length) params.openTo = filters.openTo.join(',')
+  params.page = page.value.toString()
   return params
 })
 
-const { data: developers, status, refresh } = useLazyFetch('/api/developers', {
-  query: queryParams,
-  watch: [queryParams]
+const { data, status } = useLazyFetch<ApiResponse>('/api/developers', {
+  query: queryParams
 })
 
-const isLoading = computed(() => status.value === 'pending')
+const developers = computed(() => data.value?.developers || [])
+const pagination = computed(() => data.value?.pagination)
+const isLoading = computed(() => status.value === 'pending' && page.value === 1)
+
+async function loadMore() {
+  isLoadingMore.value = true
+  page.value++
+  await nextTick()
+  await new Promise(resolve => setTimeout(resolve, 100))
+  isLoadingMore.value = false
+}
+
+watch([() => filters.location, () => filters.skill, () => filters.openTo], () => {
+  page.value = 1
+})
 
 function toggleOpenTo(value: string) {
   const index = filters.openTo.indexOf(value)
@@ -47,16 +88,19 @@ function toggleOpenTo(value: string) {
 }
 
 function updateUrl() {
-  router.push({ query: queryParams.value })
-  refresh()
+  const urlParams: Record<string, string> = {}
+  if (filters.location) urlParams.location = filters.location
+  if (filters.skill) urlParams.skill = filters.skill
+  if (filters.openTo.length) urlParams.openTo = filters.openTo.join(',')
+  router.push({ query: urlParams })
 }
 
 function clearFilters() {
   filters.location = ''
   filters.skill = ''
   filters.openTo = []
+  page.value = 1
   router.push({ query: {} })
-  refresh()
 }
 
 let searchTimeout: ReturnType<typeof setTimeout> | null = null
@@ -71,7 +115,7 @@ function trackSearch() {
       location: filters.location || null,
       skill: filters.skill || null,
       openTo: filters.openTo.length ? filters.openTo : null,
-      results_count: developers.value?.length || 0
+      results_count: pagination.value?.total || 0
     })
   }, 1000)
 }
@@ -87,7 +131,7 @@ watch(() => filters.skill, () => { updateUrl(); trackSearch() })
       <h1 class="font-display text-4xl md:text-7xl font-medium tracking-tight mb-2">Développeuses</h1>
       <p class="text-foreground-muted text-base">
         <span v-if="isLoading" class="inline-block w-20 h-5 bg-border rounded animate-pulse align-middle" />
-        <span v-else>{{ developers?.length || 0 }} profils</span>
+        <span v-else>{{ pagination?.total || 0 }} profils</span>
       </p>
     </header>
 
@@ -139,6 +183,7 @@ watch(() => filters.skill, () => { updateUrl(); trackSearch() })
     </section>
 
     <section class="py-12">
+      <h2 class="sr-only">Liste des profils</h2>
       <div v-if="isLoading" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <CardSkeleton v-for="i in 6" :key="i" />
       </div>
@@ -185,6 +230,20 @@ watch(() => filters.skill, () => { updateUrl(); trackSearch() })
             </span>
           </div>
         </NuxtLink>
+      </div>
+
+      <div v-if="pagination?.hasMore" class="flex justify-center mt-12">
+        <button
+          @click="loadMore"
+          :disabled="isLoadingMore"
+          class="px-8 py-3 border border-border rounded-full text-foreground-muted text-sm cursor-pointer transition-all hover:border-foreground hover:text-foreground disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          <span v-if="isLoadingMore" class="flex items-center gap-2">
+            <span class="w-4 h-4 border-2 border-foreground-muted border-t-transparent rounded-full animate-spin"></span>
+            Chargement...
+          </span>
+          <span v-else>Voir plus</span>
+        </button>
       </div>
     </section>
   </div>
