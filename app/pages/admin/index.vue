@@ -57,6 +57,21 @@ function formatDate(date: string | Date | null) {
 
 <template>
   <div class="max-w-[1600px] mx-auto px-4 md:px-16 py-12">
+    <div class="flex flex-wrap gap-3 mb-8">
+      <NuxtLink
+        to="/admin"
+        class="px-4 py-2 bg-foreground text-background rounded-lg text-sm font-medium no-underline"
+      >
+        Développeuses
+      </NuxtLink>
+      <NuxtLink
+        to="/admin/feedbacks"
+        class="px-4 py-2 border border-border rounded-lg text-sm font-medium hover:border-foreground-muted transition-colors no-underline"
+      >
+        Feedbacks
+      </NuxtLink>
+    </div>
+
     <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
       <div>
         <h1 class="font-display text-3xl md:text-4xl font-medium tracking-tight">Dashboard Admin</h1>
