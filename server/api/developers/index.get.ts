@@ -1,4 +1,8 @@
+import { useRateLimit } from '../../utils/rateLimit'
+
 export default defineEventHandler(async (event) => {
+  useRateLimit(event, { windowMs: 60 * 1000, max: 60 })
+
   const db = useDrizzle()
   const query = getQuery(event)
 

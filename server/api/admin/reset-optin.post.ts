@@ -25,9 +25,11 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 400, message: 'Name required' })
   }
 
+  const escapedName = name.replace(/[%_\\]/g, '\\$&')
+
   await db.update(tables.developers)
     .set({ emailOptIn: false, emailOptInDate: null })
-    .where(like(tables.developers.name, `%${name}%`))
+    .where(like(tables.developers.name, `%${escapedName}%`))
 
   return { success: true, message: `Reset opt-in for users matching "${name}"` }
 })

@@ -1,6 +1,6 @@
 import { getServerSession, getToken } from '#auth'
-import { eq } from 'drizzle-orm'
 import { sendWelcomeEmail } from '../../utils/email'
+import { validateProfileUrls, validateOpenTo } from '../../utils/validation'
 
 export default defineEventHandler(async (event) => {
   const session = await getServerSession(event)
@@ -26,17 +26,15 @@ export default defineEventHandler(async (event) => {
   if (!body.cocAccepted) {
     throw createError({ statusCode: 400, message: 'Tu dois accepter le code de conduite' })
   }
-  const db = useDrizzle()
 
-  const existing = await db.query.developers.findFirst({
-    where: eq(tables.developers.githubId, githubId)
-  })
-
-  if (existing) {
-    throw createError({ statusCode: 400, message: 'Profil déjà existant' })
+  const urlError = validateProfileUrls(body)
+  if (urlError) {
+    throw createError({ statusCode: 400, message: urlError })
   }
 
-  const [developer] = await db.insert(tables.developers).values({
+  const db = useDrizzle()
+
+  const result = await db.insert(tables.developers).values({
     githubId,
     name: body.name || session.user.name || '',
     email: session.user.email || null,
@@ -49,7 +47,13 @@ export default defineEventHandler(async (event) => {
     linkedinUrl: body.linkedinUrl || null,
     twitterUrl: body.twitterUrl || null,
     cocAcceptedAt: new Date()
-  }).returning()
+  }).onConflictDoNothing({ target: tables.developers.githubId }).returning()
+
+  if (!result.length) {
+    throw createError({ statusCode: 400, message: 'Profil déjà existant' })
+  }
+
+  const [developer] = result
 
   if (body.skills?.length) {
     await db.insert(tables.developerSkills).values(
@@ -60,16 +64,18 @@ export default defineEventHandler(async (event) => {
     )
   }
 
-  if (body.openTo?.length) {
+  const validOpenTo = body.openTo?.length ? validateOpenTo(body.openTo) : []
+
+  if (validOpenTo.length) {
     await db.insert(tables.developerOpenTo).values(
-      body.openTo.map((type: string) => ({
+      validOpenTo.map(type => ({
         developerId: developer.id,
         type
       }))
     )
   }
 
-  if (body.openTo?.includes('conference')) {
+  if (validOpenTo.includes('conference')) {
     await db.insert(tables.speakerProfiles).values({
       developerId: developer.id,
       topics: body.speakerTopics ? JSON.stringify(body.speakerTopics) : null,

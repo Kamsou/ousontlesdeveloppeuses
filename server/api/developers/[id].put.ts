@@ -1,5 +1,6 @@
 import { getServerSession, getToken } from '#auth'
 import { eq } from 'drizzle-orm'
+import { validateProfileUrls, validateOpenTo } from '../../utils/validation'
 
 export default defineEventHandler(async (event) => {
   const session = await getServerSession(event)
@@ -13,6 +14,12 @@ export default defineEventHandler(async (event) => {
 
   const id = Number(getRouterParam(event, 'id'))
   const body = await readBody(event)
+
+  const urlError = validateProfileUrls(body)
+  if (urlError) {
+    throw createError({ statusCode: 400, message: urlError })
+  }
+
   const db = useDrizzle()
 
   const developer = await db.query.developers.findFirst({
@@ -58,10 +65,11 @@ export default defineEventHandler(async (event) => {
   }
 
   if (body.openTo) {
+    const validOpenTo = validateOpenTo(body.openTo)
     await db.delete(tables.developerOpenTo).where(eq(tables.developerOpenTo.developerId, id))
-    if (body.openTo.length) {
+    if (validOpenTo.length) {
       await db.insert(tables.developerOpenTo).values(
-        body.openTo.map((type: string) => ({
+        validOpenTo.map(type => ({
           developerId: id,
           type
         }))
@@ -72,7 +80,7 @@ export default defineEventHandler(async (event) => {
       where: eq(tables.speakerProfiles.developerId, id)
     })
 
-    if (body.openTo.includes('conference')) {
+    if (validOpenTo.includes('conference')) {
       if (existingSpeaker) {
         await db.update(tables.speakerProfiles).set({
           topics: body.speakerTopics ? JSON.stringify(body.speakerTopics) : existingSpeaker.topics,

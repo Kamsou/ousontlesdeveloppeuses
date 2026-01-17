@@ -1,5 +1,14 @@
 import { Resend } from 'resend'
 
+function escapeHtml(text: string): string {
+  return text
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;')
+}
+
 let resendClient: Resend | null = null
 
 function getResend() {
@@ -122,7 +131,7 @@ export async function sendContactEmail({
 
   const context = helpRequestTitle
     ? `<p style="font-size: 14px; color: #6b7280; margin-bottom: 24px; padding: 12px 16px; background: #f9fafb; border-radius: 8px;">
-        Concernant : <strong>${helpRequestTitle}</strong>
+        Concernant : <strong>${escapeHtml(helpRequestTitle)}</strong>
       </p>`
     : ''
 
@@ -145,7 +154,7 @@ export async function sendContactEmail({
         ${context}
 
         <div style="padding: 20px; background: #fafafa; border-left: 3px solid #1a1a1a; margin-bottom: 28px;">
-          <p style="font-size: 16px; line-height: 1.7; color: #374151; margin: 0; white-space: pre-wrap;">${message}</p>
+          <p style="font-size: 16px; line-height: 1.7; color: #374151; margin: 0; white-space: pre-wrap;">${escapeHtml(message)}</p>
         </div>
 
         <p style="font-size: 15px; line-height: 1.6; color: #374151; margin-bottom: 8px;">
