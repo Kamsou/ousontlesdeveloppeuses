@@ -1,0 +1,229 @@
+<script setup lang="ts">
+definePageMeta({
+  middleware: 'sidebase-auth'
+})
+
+const route = useRoute()
+const router = useRouter()
+const requestId = route.params.id
+const toast = useToast()
+
+useSeoMeta({
+  title: 'Modifier ma demande | OSLD',
+  robots: 'noindex'
+})
+
+const { data: request, status } = await useFetch(`/api/help-requests/${requestId}`)
+
+const form = ref({
+  title: '',
+  description: '',
+  helpType: 'bug' as 'bug' | 'review' | 'advice' | 'pair' | 'other',
+  techs: [] as string[]
+})
+
+const techInput = ref('')
+const saving = ref(false)
+const error = ref('')
+
+const canSubmit = computed(() => form.value.title.trim().length > 0)
+
+watch(request, (r) => {
+  if (r) {
+    form.value.title = r.title || ''
+    form.value.description = r.description || ''
+    form.value.helpType = r.helpType || 'bug'
+    form.value.techs = r.techs?.map((t: any) => t.techName) || []
+  }
+}, { immediate: true })
+
+const helpTypes = [
+  { value: 'bug', label: 'Bug', description: 'Un truc qui marche pas' },
+  { value: 'review', label: 'Review', description: 'Relire mon code' },
+  { value: 'advice', label: 'Conseil', description: 'Avis sur une approche' },
+  { value: 'pair', label: 'Pair', description: 'Coder ensemble' },
+  { value: 'other', label: 'Autre', description: 'Autre chose' }
+]
+
+function addTech() {
+  const tech = techInput.value.trim()
+  if (tech && !form.value.techs.includes(tech)) {
+    form.value.techs.push(tech)
+    techInput.value = ''
+  }
+}
+
+function removeTech(tech: string) {
+  form.value.techs = form.value.techs.filter(t => t !== tech)
+}
+
+function handleTechKeydown(e: KeyboardEvent) {
+  if (e.key === 'Enter') {
+    e.preventDefault()
+    addTech()
+  }
+}
+
+async function submit() {
+  if (!form.value.title.trim()) {
+    error.value = 'Le titre est requis'
+    return
+  }
+
+  saving.value = true
+  error.value = ''
+
+  try {
+    await $fetch(`/api/help-requests/${requestId}`, {
+      method: 'PUT',
+      body: {
+        title: form.value.title,
+        description: form.value.description,
+        helpType: form.value.helpType,
+        techs: form.value.techs
+      }
+    })
+
+    toast.success('Demande modifiée')
+    router.push(`/qg/requests/${requestId}`)
+  } catch (e: any) {
+    toast.error(e.data?.message || 'Erreur lors de la modification')
+  } finally {
+    saving.value = false
+  }
+}
+</script>
+
+<template>
+  <div class="min-h-screen bg-background">
+    <div class="max-w-2xl mx-auto px-6 py-16">
+      <NuxtLink :to="`/qg/requests/${requestId}`" class="inline-flex items-center gap-2 text-foreground-muted hover:text-foreground transition-colors mb-8">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M19 12H5M12 19l-7-7 7-7" />
+        </svg>
+        Retour
+      </NuxtLink>
+
+      <div v-if="status === 'pending'" class="animate-pulse space-y-4">
+        <div class="h-8 bg-border/50 rounded w-1/2"></div>
+        <div class="h-12 bg-border/50 rounded"></div>
+      </div>
+
+      <div v-else-if="request">
+        <h1 class="font-display text-2xl font-medium mb-8">
+          Modifier la demande
+        </h1>
+
+        <form @submit.prevent="submit" class="space-y-8">
+          <div v-if="error" class="p-4 bg-red-500/10 border border-red-500/30 rounded-lg text-red-400">
+            {{ error }}
+          </div>
+
+          <div class="space-y-2">
+            <label for="title" class="block text-sm text-foreground-muted">
+              Titre *
+            </label>
+            <input
+              id="title"
+              v-model="form.title"
+              type="text"
+              class="w-full px-4 py-3 bg-background border border-border rounded-lg text-foreground focus:outline-none focus:border-foreground-muted transition-colors"
+            />
+          </div>
+
+          <div class="space-y-2">
+            <label for="description" class="block text-sm text-foreground-muted">
+              Description
+            </label>
+            <textarea
+              id="description"
+              v-model="form.description"
+              rows="4"
+              class="w-full px-4 py-3 bg-background border border-border rounded-lg text-foreground focus:outline-none focus:border-foreground-muted transition-colors resize-none"
+            />
+          </div>
+
+          <div class="space-y-3">
+            <label class="block text-sm text-foreground-muted">
+              Type d'aide
+            </label>
+            <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+              <button
+                v-for="type in helpTypes"
+                :key="type.value"
+                type="button"
+                @click="form.helpType = type.value as typeof form.helpType"
+                :class="[
+                  'p-4 border rounded-xl text-left transition-all',
+                  form.helpType === type.value
+                    ? 'border-foreground bg-white/5'
+                    : 'border-border hover:border-foreground-muted'
+                ]"
+              >
+                <span class="block font-medium text-sm">{{ type.label }}</span>
+                <span class="block text-xs text-foreground-muted mt-1">{{ type.description }}</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="space-y-3">
+            <label for="techs" class="block text-sm text-foreground-muted">
+              Technologies
+            </label>
+            <div class="flex gap-2">
+              <input
+                id="techs"
+                v-model="techInput"
+                type="text"
+                placeholder="Ajouter une techno..."
+                @keydown="handleTechKeydown"
+                class="flex-1 px-4 py-3 bg-background border border-border rounded-lg text-foreground placeholder:text-foreground-muted/50 focus:outline-none focus:border-foreground-muted transition-colors"
+              />
+              <button
+                type="button"
+                @click="addTech"
+                class="px-4 py-3 border border-border rounded-lg text-foreground-muted hover:text-foreground hover:border-foreground-muted transition-colors"
+              >
+                Ajouter
+              </button>
+            </div>
+            <div v-if="form.techs.length" class="flex flex-wrap gap-2">
+              <span
+                v-for="tech in form.techs"
+                :key="tech"
+                class="inline-flex items-center gap-2 px-3 py-1 bg-white/5 border border-border rounded-full text-sm"
+              >
+                {{ tech }}
+                <button type="button" @click="removeTech(tech)" :aria-label="`Retirer ${tech}`" class="text-foreground-muted hover:text-foreground">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <path d="M18 6L6 18M6 6l12 12" />
+                  </svg>
+                </button>
+              </span>
+            </div>
+          </div>
+
+          <div class="flex gap-3 pt-4">
+            <NuxtLink
+              :to="`/qg/requests/${requestId}`"
+              class="px-6 py-3 border border-border rounded-full text-foreground-muted hover:text-foreground hover:border-foreground-muted transition-colors"
+            >
+              Annuler
+            </NuxtLink>
+            <button
+              type="submit"
+              :disabled="saving || !canSubmit"
+              class="flex-1 px-6 py-3 bg-foreground text-background rounded-full font-medium transition-all hover:bg-foreground-muted disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {{ saving ? 'Enregistrement...' : 'Enregistrer' }}
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <div v-else class="text-center py-16">
+        <p class="text-foreground-muted">Demande non trouvée</p>
+      </div>
+    </div>
+  </div>
+</template>

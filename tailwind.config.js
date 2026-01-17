@@ -10,12 +10,12 @@ export default {
         },
         secondary: '#06b6d4',
         accent: '#22d3ee',
-        bg: {
+        background: {
           DEFAULT: '#0a0a0f',
           card: 'rgba(255, 255, 255, 0.03)',
           'card-hover': 'rgba(255, 255, 255, 0.06)'
         },
-        text: {
+        foreground: {
           DEFAULT: '#f8fafc',
           muted: '#94a3b8'
         },

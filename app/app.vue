@@ -45,25 +45,25 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="min-h-screen flex flex-col relative bg-bg text-text">
-    <header class="fixed top-0 left-0 right-0 z-50 px-4 md:px-8 py-4 backdrop-blur-xl bg-bg/80 border-b border-border">
+  <div class="min-h-screen flex flex-col relative bg-background text-foreground">
+    <header class="fixed top-0 left-0 right-0 z-50 px-4 md:px-8 py-4 backdrop-blur-xl bg-background/80 border-b border-border">
       <div class="max-w-7xl mx-auto flex items-center justify-between">
-        <NuxtLink to="/" class="flex items-center gap-3 no-underline text-text group z-10">
+        <NuxtLink to="/" class="flex items-center gap-3 no-underline text-foreground group z-10">
           <span class="flex flex-col gap-[3px] w-[18px]">
-            <span class="h-0.5 bg-text rounded-sm transition-all duration-300 w-full group-hover:w-2/5"></span>
-            <span class="h-0.5 bg-text rounded-sm transition-all duration-300 w-[70%] group-hover:w-full"></span>
-            <span class="h-0.5 bg-text rounded-sm transition-all duration-300 w-2/5 group-hover:w-[70%]"></span>
+            <span class="h-0.5 bg-foreground rounded-sm transition-all duration-300 w-full group-hover:w-2/5"></span>
+            <span class="h-0.5 bg-foreground rounded-sm transition-all duration-300 w-[70%] group-hover:w-full"></span>
+            <span class="h-0.5 bg-foreground rounded-sm transition-all duration-300 w-2/5 group-hover:w-[70%]"></span>
           </span>
           <span class="font-display text-base font-semibold tracking-widest">OSLD</span>
         </NuxtLink>
 
-        <nav class="hidden lg:flex items-center gap-6 absolute left-1/2 -translate-x-1/2">
-          <NuxtLink v-if="!isHome" to="/" class="text-text-muted no-underline text-sm font-medium transition-colors hover:text-text whitespace-nowrap">Accueil</NuxtLink>
-          <NuxtLink to="/annuaire" :class="['no-underline text-sm font-medium transition-colors whitespace-nowrap', route.path.startsWith('/annuaire') || route.path.startsWith('/profil/') ? 'text-text' : 'text-text-muted hover:text-text']">Annuaire</NuxtLink>
-          <NuxtLink to="/speakers" :class="['no-underline text-sm font-medium transition-colors whitespace-nowrap', route.path === '/speakers' ? 'text-text' : 'text-text-muted hover:text-text']">Speakeuses</NuxtLink>
-          <NuxtLink to="/entreprises" :class="['no-underline text-sm font-medium transition-colors whitespace-nowrap', route.path === '/entreprises' ? 'text-text' : 'text-text-muted hover:text-text']">Entreprises</NuxtLink>
-          <NuxtLink to="/experience" :class="['no-underline text-sm font-medium transition-all whitespace-nowrap px-3 py-1 rounded-full border', route.path === '/experience' ? 'text-primary border-primary' : 'text-text-muted border-border hover:text-primary hover:border-primary']">Quiz</NuxtLink>
-          <a href="https://github.com/Kamsou/ousontlesdevs" target="_blank" rel="noopener noreferrer" class="text-text-muted no-underline text-sm font-medium transition-colors hover:text-text whitespace-nowrap flex items-center gap-1.5">
+        <nav aria-label="Navigation principale" class="hidden lg:flex items-center gap-6 absolute left-1/2 -translate-x-1/2">
+          <NuxtLink v-if="!isHome" to="/" class="text-foreground-muted no-underline text-sm font-medium transition-colors hover:text-foreground whitespace-nowrap">Accueil</NuxtLink>
+          <NuxtLink to="/annuaire" :class="['no-underline text-sm font-medium transition-colors whitespace-nowrap', route.path.startsWith('/annuaire') || route.path.startsWith('/profil/') ? 'text-foreground' : 'text-foreground-muted hover:text-foreground']">Annuaire</NuxtLink>
+          <NuxtLink to="/speakers" :class="['no-underline text-sm font-medium transition-colors whitespace-nowrap', route.path === '/speakers' ? 'text-foreground' : 'text-foreground-muted hover:text-foreground']">Speakeuses</NuxtLink>
+          <NuxtLink to="/entreprises" :class="['no-underline text-sm font-medium transition-colors whitespace-nowrap', route.path === '/entreprises' ? 'text-foreground' : 'text-foreground-muted hover:text-foreground']">Entreprises</NuxtLink>
+          <NuxtLink to="/experience" :class="['no-underline text-sm font-medium transition-all whitespace-nowrap px-3 py-1 rounded-full border', route.path === '/experience' ? 'text-primary border-primary' : 'text-foreground-muted border-border hover:text-primary hover:border-primary']">Quiz</NuxtLink>
+          <a href="https://github.com/Kamsou/ousontlesdevs" target="_blank" rel="noopener noreferrer" class="text-foreground-muted no-underline text-sm font-medium transition-colors hover:text-foreground whitespace-nowrap flex items-center gap-1.5">
             <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
               <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
             </svg>
@@ -73,10 +73,10 @@ onUnmounted(() => {
 
         <div class="flex items-center gap-4">
           <template v-if="status === 'loading'">
-            <div class="w-10 h-10 bg-bg-card rounded-full opacity-50"></div>
+            <div class="w-10 h-10 bg-background-card rounded-full opacity-50"></div>
           </template>
           <template v-else-if="status !== 'authenticated'">
-            <button @click="signIn('github')" class="hidden lg:inline-flex items-center gap-2 px-5 py-2.5 rounded-sm text-sm font-medium cursor-pointer transition-all border-none bg-text text-bg hover:bg-text-muted">
+            <button @click="signIn('github')" class="hidden lg:inline-flex items-center gap-2 px-5 py-2.5 rounded-sm text-sm font-medium cursor-pointer transition-all border-none bg-foreground text-background hover:bg-foreground-muted">
               <svg class="w-[18px] h-[18px]" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
               </svg>
@@ -87,20 +87,20 @@ onUnmounted(() => {
             <div class="hidden lg:block relative user-menu">
               <button @click.stop="userMenuOpen = !userMenuOpen" class="flex items-center gap-2 cursor-pointer bg-transparent border-none">
                 <img :src="data?.user?.image || ''" :alt="data?.user?.name || ''" class="w-9 h-9 rounded-full border-2 border-primary" />
-                <svg :class="['w-4 h-4 text-text-muted transition-transform', userMenuOpen ? 'rotate-180' : '']" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <svg :class="['w-4 h-4 text-foreground-muted transition-transform', userMenuOpen ? 'rotate-180' : '']" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <path d="M6 9l6 6 6-6"/>
                 </svg>
               </button>
-              <div v-if="userMenuOpen" class="absolute right-0 top-full mt-2 w-48 py-2 bg-bg border border-border rounded-lg shadow-xl">
+              <div v-if="userMenuOpen" class="absolute right-0 top-full mt-2 w-48 py-2 bg-background border border-border rounded-lg shadow-xl">
                 <div class="px-4 py-2 border-b border-border">
-                  <p class="font-medium text-sm text-text truncate">{{ data?.user?.name }}</p>
+                  <p class="font-medium text-sm text-foreground truncate">{{ data?.user?.name }}</p>
                 </div>
-                <NuxtLink to="/profil" class="flex items-center gap-2 px-4 py-2 text-sm text-text-muted no-underline hover:bg-border/30 hover:text-text transition-colors">
+                <NuxtLink to="/qg" class="flex items-center gap-2 px-4 py-2 text-sm text-foreground-muted no-underline hover:bg-border/30 hover:text-foreground transition-colors">
                   <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-                    <circle cx="12" cy="7" r="4"/>
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                    <polyline points="9 22 9 12 15 12 15 22"/>
                   </svg>
-                  Mon profil
+                  Mon QG
                 </NuxtLink>
                 <NuxtLink v-if="isAdmin" to="/admin" class="flex items-center gap-2 px-4 py-2 text-sm text-primary no-underline hover:bg-border/30 transition-colors">
                   <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -111,7 +111,7 @@ onUnmounted(() => {
                   </svg>
                   Dashboard
                 </NuxtLink>
-                <button @click="signOut()" class="flex items-center gap-2 w-full px-4 py-2 text-sm text-text-muted bg-transparent border-none cursor-pointer hover:bg-border/30 hover:text-text transition-colors">
+                <button @click="signOut()" class="flex items-center gap-2 w-full px-4 py-2 text-sm text-foreground-muted bg-transparent border-none cursor-pointer hover:bg-border/30 hover:text-foreground transition-colors">
                   <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
                     <polyline points="16 17 21 12 16 7"/>
@@ -127,25 +127,25 @@ onUnmounted(() => {
           </template>
 
           <button @click="menuOpen = !menuOpen" :aria-label="menuOpen ? 'Fermer le menu' : 'Ouvrir le menu'" :aria-expanded="menuOpen" class="lg:hidden flex flex-col justify-center items-center w-10 h-10 gap-1.5 cursor-pointer bg-transparent border-none">
-            <span :class="['h-0.5 w-5 bg-text rounded-sm transition-all duration-300', menuOpen ? 'rotate-45 translate-y-2' : '']"></span>
-            <span :class="['h-0.5 w-5 bg-text rounded-sm transition-all duration-300', menuOpen ? 'opacity-0' : '']"></span>
-            <span :class="['h-0.5 w-5 bg-text rounded-sm transition-all duration-300', menuOpen ? '-rotate-45 -translate-y-2' : '']"></span>
+            <span :class="['h-0.5 w-5 bg-foreground rounded-sm transition-all duration-300', menuOpen ? 'rotate-45 translate-y-2' : '']"></span>
+            <span :class="['h-0.5 w-5 bg-foreground rounded-sm transition-all duration-300', menuOpen ? 'opacity-0' : '']"></span>
+            <span :class="['h-0.5 w-5 bg-foreground rounded-sm transition-all duration-300', menuOpen ? '-rotate-45 -translate-y-2' : '']"></span>
           </button>
         </div>
       </div>
     </header>
 
-    <div v-if="menuOpen" class="fixed inset-0 z-40 bg-bg pt-20 px-6 lg:hidden">
-      <nav class="flex flex-col gap-6 py-8">
-        <NuxtLink v-if="!isHome" to="/" class="text-text-muted no-underline text-2xl font-medium">Accueil</NuxtLink>
-        <NuxtLink to="/annuaire" :class="['no-underline text-2xl font-medium', route.path.startsWith('/annuaire') || route.path.startsWith('/profil/') ? 'text-text' : 'text-text-muted']">Annuaire</NuxtLink>
-        <NuxtLink to="/speakers" :class="['no-underline text-2xl font-medium', route.path === '/speakers' ? 'text-text' : 'text-text-muted']">Speakeuses</NuxtLink>
-        <NuxtLink to="/entreprises" :class="['no-underline text-2xl font-medium', route.path === '/entreprises' ? 'text-text' : 'text-text-muted']">Entreprises</NuxtLink>
-        <NuxtLink to="/experience" :class="['no-underline text-2xl font-medium inline-flex items-center gap-3', route.path === '/experience' ? 'text-primary' : 'text-text-muted']">
+    <div v-if="menuOpen" class="fixed inset-0 z-40 bg-background pt-20 px-6 lg:hidden">
+      <nav aria-label="Navigation mobile" class="flex flex-col gap-6 py-8">
+        <NuxtLink v-if="!isHome" to="/" class="text-foreground-muted no-underline text-2xl font-medium">Accueil</NuxtLink>
+        <NuxtLink to="/annuaire" :class="['no-underline text-2xl font-medium', route.path.startsWith('/annuaire') || route.path.startsWith('/profil/') ? 'text-foreground' : 'text-foreground-muted']">Annuaire</NuxtLink>
+        <NuxtLink to="/speakers" :class="['no-underline text-2xl font-medium', route.path === '/speakers' ? 'text-foreground' : 'text-foreground-muted']">Speakeuses</NuxtLink>
+        <NuxtLink to="/entreprises" :class="['no-underline text-2xl font-medium', route.path === '/entreprises' ? 'text-foreground' : 'text-foreground-muted']">Entreprises</NuxtLink>
+        <NuxtLink to="/experience" :class="['no-underline text-2xl font-medium inline-flex items-center gap-3', route.path === '/experience' ? 'text-primary' : 'text-foreground-muted']">
           Quiz
           <span class="text-xs px-2 py-0.5 rounded-full border border-primary text-primary">Fun</span>
         </NuxtLink>
-        <a href="https://github.com/Kamsou/ousontlesdevs" target="_blank" rel="noopener noreferrer" class="text-text-muted no-underline text-2xl font-medium inline-flex items-center gap-3">
+        <a href="https://github.com/Kamsou/ousontlesdevs" target="_blank" rel="noopener noreferrer" class="text-foreground-muted no-underline text-2xl font-medium inline-flex items-center gap-3">
           <svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
             <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
           </svg>
@@ -154,7 +154,7 @@ onUnmounted(() => {
       </nav>
       <div class="pt-6 border-t border-border">
         <template v-if="status !== 'authenticated'">
-          <button @click="signIn('github')" class="inline-flex items-center gap-2 px-6 py-3 rounded-lg text-base font-medium cursor-pointer transition-all border-none bg-text text-bg hover:bg-text-muted">
+          <button @click="signIn('github')" class="inline-flex items-center gap-2 px-6 py-3 rounded-lg text-base font-medium cursor-pointer transition-all border-none bg-foreground text-background hover:bg-foreground-muted">
             <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
               <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
             </svg>
@@ -163,12 +163,12 @@ onUnmounted(() => {
         </template>
         <template v-else>
           <div class="flex flex-col gap-4">
-            <NuxtLink v-if="isAdmin" to="/admin" class="text-primary no-underline text-xl font-medium">Admin</NuxtLink>
-            <NuxtLink to="/profil" class="flex items-center gap-3 no-underline text-text">
+            <NuxtLink to="/qg" class="flex items-center gap-3 no-underline text-foreground">
               <img :src="data?.user?.image || ''" :alt="data?.user?.name || ''" class="w-10 h-10 rounded-full border-2 border-primary" />
-              <span class="font-medium">{{ data?.user?.name }}</span>
+              <span class="font-medium">Mon QG</span>
             </NuxtLink>
-            <button @click="signOut()" class="inline-flex items-center justify-center px-6 py-3 rounded-lg text-base font-medium cursor-pointer transition-all bg-transparent text-text-muted border border-border hover:bg-bg-card hover:text-text">Déconnexion</button>
+            <NuxtLink v-if="isAdmin" to="/admin" class="text-primary no-underline text-xl font-medium">Admin</NuxtLink>
+            <button @click="signOut()" class="inline-flex items-center justify-center px-6 py-3 rounded-lg text-base font-medium cursor-pointer transition-all bg-transparent text-foreground-muted border border-border hover:bg-background-card hover:text-foreground">Déconnexion</button>
           </div>
         </template>
       </div>
@@ -178,9 +178,15 @@ onUnmounted(() => {
       <NuxtPage />
     </main>
 
-    <footer class="relative z-[1] text-center py-8 text-text-muted text-sm border-t border-border">
-      <p>Fait pour toutes les développeuses par <a href="https://linkedin.com/in/camillecoutens" target="_blank" rel="noopener noreferrer" class="text-text-muted underline underline-offset-2 decoration-border hover:text-primary hover:decoration-primary transition-colors">Camille Coutens</a></p>
+    <footer class="relative z-[1] text-center py-8 text-foreground-muted text-sm border-t border-border">
+      <p>Fait pour toutes les développeuses par <a href="https://linkedin.com/in/camillecoutens" target="_blank" rel="noopener noreferrer" class="text-foreground-muted underline underline-offset-2 decoration-border hover:text-primary hover:decoration-primary transition-colors">Camille Coutens</a></p>
+      <span class="inline-flex gap-4 mt-3">
+        <NuxtLink to="/coc" class="text-foreground-muted underline underline-offset-2 decoration-border hover:text-foreground transition-colors">Code de conduite</NuxtLink>
+        <NuxtLink to="/legal" class="text-foreground-muted underline underline-offset-2 decoration-border hover:text-foreground transition-colors">Mentions légales</NuxtLink>
+      </span>
     </footer>
+
+    <ToastContainer />
   </div>
 </template>
 

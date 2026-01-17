@@ -61,17 +61,23 @@ export default defineNuxtConfig({
   },
 
   sitemap: {
-    enabled: false,
+    sources: ['/api/__sitemap__/urls'],
+    exclude: ['/profil', '/profil/**', '/qg', '/qg/**', '/admin', '/admin/**'],
   },
 
   robots: {
-    disallow: ['/profil', '/api/', '/admin'],
-    allow: ['/profil/*'],
+    disallow: ['/profil', '/qg', '/api/', '/admin'],
+    allow: ['/annuaire/*'],
     blockNonSeoBots: true,
   },
 
   ogImage: {
-    enabled: false
+    enabled: true,
+    defaults: {
+      width: 1200,
+      height: 630,
+      component: 'OgImageDefault'
+    }
   },
   hub: {
     db: 'sqlite'

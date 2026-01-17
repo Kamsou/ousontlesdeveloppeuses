@@ -5,7 +5,7 @@ defineProps<{
 </script>
 
 <template>
-  <div class="flex flex-col gap-4 p-6 bg-bg-card border border-border rounded-2xl animate-pulse" :class="{ 'p-8 gap-5': variant === 'speaker' }">
+  <div class="flex flex-col gap-4 p-6 bg-background-card border border-border rounded-2xl animate-pulse" :class="{ 'p-8 gap-5': variant === 'speaker' }">
     <div class="flex items-center gap-4">
       <div class="rounded-full bg-border" :class="variant === 'speaker' ? 'w-16 h-16' : 'w-12 h-12'" />
       <div class="flex-1">

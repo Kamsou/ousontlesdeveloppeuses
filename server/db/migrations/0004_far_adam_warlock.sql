@@ -1,0 +1,1 @@
+ALTER TABLE `developers` ADD `coc_accepted_at` integer;

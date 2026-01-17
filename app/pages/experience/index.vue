@@ -233,7 +233,7 @@ function restart() {
         <div class="max-w-6xl mx-auto w-full grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-24 items-center">
           <div>
             <div class="overflow-hidden mb-6">
-              <span class="block text-xs uppercase tracking-[0.3em] text-text/80 animate-slide-up">Experience</span>
+              <span class="block text-xs uppercase tracking-[0.3em] text-foreground/80 animate-slide-up">Experience</span>
             </div>
             <div class="overflow-hidden">
               <h1 class="font-display text-5xl md:text-7xl lg:text-8xl font-medium tracking-tight leading-[0.9] animate-slide-up animation-delay-100">
@@ -241,17 +241,17 @@ function restart() {
               </h1>
             </div>
             <div class="overflow-hidden mt-8">
-              <p class="text-lg md:text-xl text-text-muted leading-relaxed max-w-md animate-slide-up animation-delay-200">
-                Pas un CV. Pas un test technique. Juste 5 questions pour révéler qui tu es vraiment quand tu codes.
+              <p class="text-lg md:text-xl text-foreground-muted leading-relaxed max-w-md animate-slide-up animation-delay-200">
+                Juste 5 questions pour révéler qui tu es vraiment quand tu codes.
               </p>
             </div>
             <div class="overflow-hidden mt-12">
               <button
                 @click="start"
-                class="group inline-flex items-center gap-6 text-base font-medium cursor-pointer animate-slide-up animation-delay-300 bg-transparent border-none text-text"
+                class="group inline-flex items-center gap-6 text-base font-medium cursor-pointer animate-slide-up animation-delay-300 bg-transparent border-none text-foreground"
               >
-                <span class="relative after:absolute after:bottom-0 after:left-0 after:w-full after:h-px after:bg-text after:origin-left after:scale-x-100">C'est parti</span>
-                <span class="flex items-center justify-center w-12 h-12 border border-text rounded-full transition-transform group-hover:scale-110">
+                <span class="relative after:absolute after:bottom-0 after:left-0 after:w-full after:h-px after:bg-foreground after:origin-left after:scale-x-100">C'est parti</span>
+                <span class="flex items-center justify-center w-12 h-12 border border-foreground rounded-full transition-transform group-hover:scale-110">
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
                     <path d="M5 12h14M12 5l7 7-7 7"/>
                   </svg>
@@ -261,8 +261,8 @@ function restart() {
           </div>
           <div class="hidden lg:flex items-center justify-center">
             <div class="relative">
-              <span class="font-display text-[280px] font-medium leading-none text-text/5 select-none">5</span>
-              <span class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-sm uppercase tracking-[0.2em] text-text-muted">questions</span>
+              <span class="font-display text-[280px] font-medium leading-none text-foreground/5 select-none">5</span>
+              <span class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-sm uppercase tracking-[0.2em] text-foreground-muted">questions</span>
             </div>
           </div>
         </div>
@@ -275,7 +275,7 @@ function restart() {
           <div class="flex items-center justify-between mb-12 md:mb-20">
             <button
               @click="previousStep"
-              class="flex items-center gap-3 text-text-muted text-sm cursor-pointer bg-transparent border-none hover:text-text transition-colors"
+              class="flex items-center gap-3 text-foreground-muted text-sm cursor-pointer bg-transparent border-none hover:text-foreground transition-colors"
             >
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
                 <path d="M19 12H5M12 19l-7-7 7-7"/>
@@ -283,14 +283,14 @@ function restart() {
               <span class="hidden md:inline">Retour</span>
             </button>
             <div class="flex items-center gap-4">
-              <span class="text-xs uppercase tracking-[0.2em] text-text-muted">{{ currentQuestion }}/5</span>
+              <span class="text-xs uppercase tracking-[0.2em] text-foreground-muted">{{ currentQuestion }}/5</span>
               <div class="flex gap-1.5">
                 <div
                   v-for="i in 5"
                   :key="i"
                   :class="[
                     'w-6 md:w-10 h-0.5 transition-all duration-500',
-                    i <= currentQuestion ? 'bg-text' : 'bg-text/10'
+                    i <= currentQuestion ? 'bg-foreground' : 'bg-foreground/10'
                   ]"
                 ></div>
               </div>
@@ -299,7 +299,7 @@ function restart() {
 
           <div class="grid grid-cols-1 lg:grid-cols-[1fr_1.2fr] gap-12 lg:gap-24">
             <div>
-              <span class="font-display text-[100px] md:text-[150px] font-medium leading-none text-text/5 block mb-4">
+              <span class="font-display text-[100px] md:text-[150px] font-medium leading-none text-foreground/5 block mb-4">
                 {{ String(currentQuestion).padStart(2, '0') }}
               </span>
               <h2 class="font-display text-3xl md:text-5xl font-medium tracking-tight leading-tight">
@@ -312,9 +312,9 @@ function restart() {
                 v-for="(option, index) in (questions[step as keyof typeof questions] as { options: { value: string; label: string }[] }).options"
                 :key="option.value"
                 @click="selectOption(step as keyof typeof answers, option.value)"
-                class="group w-full text-left px-6 md:px-8 py-5 md:py-6 bg-transparent border border-border text-text cursor-pointer transition-all duration-300 hover:bg-text hover:text-bg hover:border-text hover:pl-10 flex items-center gap-4"
+                class="group w-full text-left px-6 md:px-8 py-5 md:py-6 bg-transparent border border-border text-foreground cursor-pointer transition-all duration-300 hover:bg-foreground hover:text-background hover:border-foreground hover:pl-10 flex items-center gap-4"
               >
-                <span class="text-xs text-text-muted group-hover:text-bg/50 font-mono w-6">{{ String.fromCharCode(65 + index) }}</span>
+                <span class="text-xs text-foreground-muted group-hover:text-background/50 font-mono w-6">{{ String.fromCharCode(65 + index) }}</span>
                 <span class="text-base md:text-lg">{{ option.label }}</span>
               </button>
             </div>
@@ -329,7 +329,7 @@ function restart() {
           <div class="flex items-center justify-between mb-12 md:mb-20">
             <button
               @click="previousStep"
-              class="flex items-center gap-3 text-text-muted text-sm cursor-pointer bg-transparent border-none hover:text-text transition-colors"
+              class="flex items-center gap-3 text-foreground-muted text-sm cursor-pointer bg-transparent border-none hover:text-foreground transition-colors"
             >
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
                 <path d="M19 12H5M12 19l-7-7 7-7"/>
@@ -337,14 +337,14 @@ function restart() {
               <span class="hidden md:inline">Retour</span>
             </button>
             <div class="flex items-center gap-4">
-              <span class="text-xs uppercase tracking-[0.2em] text-text-muted">4/5</span>
+              <span class="text-xs uppercase tracking-[0.2em] text-foreground-muted">4/5</span>
               <div class="flex gap-1.5">
                 <div
                   v-for="i in 5"
                   :key="i"
                   :class="[
                     'w-6 md:w-10 h-0.5 transition-all duration-500',
-                    i <= 4 ? 'bg-text' : 'bg-text/10'
+                    i <= 4 ? 'bg-foreground' : 'bg-foreground/10'
                   ]"
                 ></div>
               </div>
@@ -353,7 +353,7 @@ function restart() {
 
           <div class="grid grid-cols-1 lg:grid-cols-[1fr_1.2fr] gap-12 lg:gap-24">
             <div>
-              <span class="font-display text-[100px] md:text-[150px] font-medium leading-none text-text/5 block mb-4">04</span>
+              <span class="font-display text-[100px] md:text-[150px] font-medium leading-none text-foreground/5 block mb-4">04</span>
               <h2 class="font-display text-3xl md:text-5xl font-medium tracking-tight leading-tight">
                 {{ questions.q4.title }}
               </h2>
@@ -364,17 +364,17 @@ function restart() {
                 v-model="answers.q4"
                 :placeholder="questions.q4.placeholder"
                 maxlength="200"
-                class="w-full px-0 py-6 bg-transparent border-0 border-b-2 border-border text-text text-xl md:text-2xl resize-none min-h-[150px] focus:outline-none focus:border-text placeholder:text-text/30 transition-colors"
+                class="w-full px-0 py-6 bg-transparent border-0 border-b-2 border-border text-foreground text-xl md:text-2xl resize-none min-h-[150px] focus:outline-none focus:border-foreground placeholder:text-foreground/30 transition-colors"
               ></textarea>
               <div class="flex justify-between items-center">
-                <span class="text-xs text-text-muted font-mono">{{ answers.q4.length }}/200</span>
+                <span class="text-xs text-foreground-muted font-mono">{{ answers.q4.length }}/200</span>
                 <button
                   @click="nextStep"
                   :disabled="!answers.q4.trim()"
-                  class="group inline-flex items-center gap-4 text-base font-medium cursor-pointer bg-transparent border-none text-text disabled:opacity-20 disabled:cursor-not-allowed transition-opacity"
+                  class="group inline-flex items-center gap-4 text-base font-medium cursor-pointer bg-transparent border-none text-foreground disabled:opacity-20 disabled:cursor-not-allowed transition-opacity"
                 >
                   <span>Continuer</span>
-                  <span class="flex items-center justify-center w-10 h-10 border border-text rounded-full transition-transform group-hover:scale-110 group-disabled:scale-100">
+                  <span class="flex items-center justify-center w-10 h-10 border border-foreground rounded-full transition-transform group-hover:scale-110 group-disabled:scale-100">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
                       <path d="M5 12h14M12 5l7 7-7 7"/>
                     </svg>
@@ -392,9 +392,9 @@ function restart() {
         <div class="text-center max-w-lg">
           <div class="mb-16">
             <div class="inline-flex gap-2">
-              <span class="w-2 h-2 bg-text rounded-full animate-bounce"></span>
-              <span class="w-2 h-2 bg-text rounded-full animate-bounce animation-delay-100"></span>
-              <span class="w-2 h-2 bg-text rounded-full animate-bounce animation-delay-200"></span>
+              <span class="w-2 h-2 bg-foreground rounded-full animate-bounce"></span>
+              <span class="w-2 h-2 bg-foreground rounded-full animate-bounce animation-delay-100"></span>
+              <span class="w-2 h-2 bg-foreground rounded-full animate-bounce animation-delay-200"></span>
             </div>
           </div>
 
@@ -410,46 +410,46 @@ function restart() {
       <div v-if="step === 'result' && generatedProfile && !isTransitioning" class="flex-1 flex items-center justify-center px-4 md:px-16 py-16">
         <div class="max-w-3xl w-full text-center">
           <div class="mb-8">
-            <span class="text-xs uppercase tracking-[0.3em] text-text-muted">Ton profil</span>
+            <span class="text-xs uppercase tracking-[0.3em] text-foreground-muted">Ton profil</span>
           </div>
 
           <div class="mb-12">
-            <p class="text-lg text-text-muted mb-4">Tu es...</p>
+            <p class="text-lg text-foreground-muted mb-4">Tu es...</p>
             <h3 class="font-display text-5xl md:text-7xl lg:text-8xl font-medium tracking-tight animate-slide-up">
               {{ generatedProfile.type }}
             </h3>
           </div>
 
           <div class="max-w-xl mx-auto mb-12">
-            <p class="text-xl md:text-2xl text-text leading-relaxed mb-8 animate-slide-up animation-delay-100">
+            <p class="text-xl md:text-2xl text-foreground leading-relaxed mb-8 animate-slide-up animation-delay-100">
               "{{ generatedProfile.phrase }}"
             </p>
             <div class="w-16 h-px bg-border mx-auto mb-8"></div>
-            <p class="text-sm text-text-muted animate-slide-up animation-delay-200">
+            <p class="text-sm text-foreground-muted animate-slide-up animation-delay-200">
               {{ generatedProfile.insight }}
             </p>
           </div>
 
-          <p v-if="profileSaved" class="text-sm text-text-muted mb-6 animate-slide-up animation-delay-250">
+          <p v-if="profileSaved" class="text-sm text-foreground-muted mb-6 animate-slide-up animation-delay-250">
             Profil sauvegardé dans ton compte
           </p>
 
           <div class="flex flex-col sm:flex-row gap-4 justify-center animate-slide-up animation-delay-300">
             <button
               @click="handleSignUp"
-              class="px-8 py-4 bg-text text-bg border-none text-base font-medium cursor-pointer transition-all hover:opacity-80"
+              class="px-8 py-4 bg-foreground text-background border-none text-base font-medium cursor-pointer transition-all hover:opacity-80"
             >
               {{ status === 'authenticated' ? 'Voir mon profil' : 'Créer mon compte' }}
             </button>
             <button
               @click="shareProfile"
-              class="px-8 py-4 bg-transparent border border-border text-text text-base cursor-pointer transition-all hover:border-text"
+              class="px-8 py-4 bg-transparent border border-border text-foreground text-base cursor-pointer transition-all hover:border-foreground"
             >
               Partager
             </button>
             <button
               @click="restart"
-              class="px-8 py-4 bg-transparent border-none text-text-muted text-base cursor-pointer transition-all hover:text-text"
+              class="px-8 py-4 bg-transparent border-none text-foreground-muted text-base cursor-pointer transition-all hover:text-foreground"
             >
               Recommencer
             </button>

@@ -19,6 +19,7 @@ export const developers = sqliteTable('developers', {
   isAdmin: integer('is_admin', { mode: 'boolean' }).default(false),
   emailOptIn: integer('email_opt_in', { mode: 'boolean' }).default(false),
   emailOptInDate: integer('email_opt_in_date', { mode: 'timestamp' }),
+  cocAcceptedAt: integer('coc_accepted_at', { mode: 'timestamp' }),
   createdAt: integer('created_at', { mode: 'timestamp' }).$defaultFn(() => new Date()),
   updatedAt: integer('updated_at', { mode: 'timestamp' }).$defaultFn(() => new Date())
 })
@@ -67,11 +68,32 @@ export const companyReviews = sqliteTable('company_reviews', {
   createdAt: integer('created_at', { mode: 'timestamp' }).$defaultFn(() => new Date())
 })
 
+export const helpRequests = sqliteTable('help_requests', {
+  id: integer('id').primaryKey({ autoIncrement: true }),
+  developerId: integer('developer_id').notNull().references(() => developers.id, { onDelete: 'cascade' }),
+  title: text('title').notNull(),
+  description: text('description'),
+  helpType: text('help_type', {
+    enum: ['bug', 'review', 'advice', 'pair', 'other']
+  }).notNull(),
+  status: text('status', {
+    enum: ['open', 'in_progress', 'closed']
+  }).notNull().default('open'),
+  createdAt: integer('created_at', { mode: 'timestamp' }).$defaultFn(() => new Date())
+})
+
+export const helpRequestTechs = sqliteTable('help_request_techs', {
+  id: integer('id').primaryKey({ autoIncrement: true }),
+  helpRequestId: integer('help_request_id').notNull().references(() => helpRequests.id, { onDelete: 'cascade' }),
+  techName: text('tech_name').notNull()
+})
+
 export const developersRelations = relations(developers, ({ many, one }) => ({
   skills: many(developerSkills),
   openTo: many(developerOpenTo),
   speakerProfile: one(speakerProfiles),
-  reviews: many(companyReviews)
+  reviews: many(companyReviews),
+  helpRequests: many(helpRequests)
 }))
 
 export const developerSkillsRelations = relations(developerSkills, ({ one }) => ({
@@ -107,5 +129,49 @@ export const companyReviewsRelations = relations(companyReviews, ({ one }) => ({
   developer: one(developers, {
     fields: [companyReviews.developerId],
     references: [developers.id]
+  })
+}))
+
+export const helpRequestsRelations = relations(helpRequests, ({ one, many }) => ({
+  developer: one(developers, {
+    fields: [helpRequests.developerId],
+    references: [developers.id]
+  }),
+  techs: many(helpRequestTechs)
+}))
+
+export const helpRequestTechsRelations = relations(helpRequestTechs, ({ one }) => ({
+  helpRequest: one(helpRequests, {
+    fields: [helpRequestTechs.helpRequestId],
+    references: [helpRequests.id]
+  })
+}))
+
+export const contactRequests = sqliteTable('contact_requests', {
+  id: integer('id').primaryKey({ autoIncrement: true }),
+  senderId: integer('sender_id').notNull().references(() => developers.id, { onDelete: 'cascade' }),
+  recipientId: integer('recipient_id').notNull().references(() => developers.id, { onDelete: 'cascade' }),
+  helpRequestId: integer('help_request_id').references(() => helpRequests.id, { onDelete: 'set null' }),
+  message: text('message').notNull(),
+  status: text('status', {
+    enum: ['sent', 'read', 'replied']
+  }).notNull().default('sent'),
+  createdAt: integer('created_at', { mode: 'timestamp' }).$defaultFn(() => new Date())
+})
+
+export const contactRequestsRelations = relations(contactRequests, ({ one }) => ({
+  sender: one(developers, {
+    fields: [contactRequests.senderId],
+    references: [developers.id],
+    relationName: 'sentContacts'
+  }),
+  recipient: one(developers, {
+    fields: [contactRequests.recipientId],
+    references: [developers.id],
+    relationName: 'receivedContacts'
+  }),
+  helpRequest: one(helpRequests, {
+    fields: [contactRequests.helpRequestId],
+    references: [helpRequests.id]
   })
 }))

@@ -218,11 +218,11 @@ const { data, status } = useLazyFetch('/api/stats')
 ### Couleurs (TailwindCSS)
 
 ```
-bg         → Fond principal (#0a0a0f)
-text       → Texte principal (#f8fafc)
-text-muted → Texte secondaire (#94a3b8)
-border     → Bordures (#1e293b)
-primary    → Accent (#a78bfa)
+background       → Fond principal (#0a0a0f)
+foreground       → Texte principal (#f8fafc)
+foreground-muted → Texte secondaire (#94a3b8)
+border           → Bordures (rgba 10%)
+primary          → Accent (#8b5cf6)
 ```
 
 ### Fonts
@@ -234,10 +234,10 @@ primary    → Accent (#a78bfa)
 
 ```html
 <!-- Bouton principal -->
-<button class="px-6 py-4 bg-text text-bg rounded-full font-medium">
+<button class="px-6 py-4 bg-foreground text-background rounded-full font-medium">
 
 <!-- Bouton secondaire -->
-<button class="px-6 py-4 border border-border rounded-full hover:border-text">
+<button class="px-6 py-4 border border-border rounded-full hover:border-foreground">
 
 <!-- Card -->
 <div class="p-6 border border-border rounded-2xl">

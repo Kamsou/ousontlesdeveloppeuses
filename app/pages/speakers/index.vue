@@ -92,13 +92,13 @@ watch(() => filters.travel, () => { updateUrl(); trackSearch() })
   <div class="max-w-7xl mx-auto px-4 md:px-16">
     <header class="py-16 border-b border-border">
       <div class="overflow-hidden">
-        <span class="text-xs uppercase tracking-[0.2em] text-text/80 mb-6 block animate-slide-up">Speakeuses</span>
+        <span class="text-xs uppercase tracking-[0.2em] text-foreground/80 mb-6 block animate-slide-up">Speakeuses</span>
       </div>
       <div class="overflow-hidden">
         <h1 class="font-display text-4xl md:text-7xl font-medium tracking-tight mb-2 animate-slide-up animation-delay-100">Speakeuses</h1>
       </div>
       <div class="overflow-hidden">
-        <p class="text-text-muted text-base animate-slide-up animation-delay-200">
+        <p class="text-foreground-muted text-base animate-slide-up animation-delay-200">
           <span v-if="isLoading" class="inline-block w-64 h-5 bg-border rounded animate-pulse align-middle" />
           <span v-else>{{ speakers?.length || 0 }} speakeuses disponibles pour vos conférences</span>
         </p>
@@ -108,39 +108,39 @@ watch(() => filters.travel, () => { updateUrl(); trackSearch() })
     <section class="py-8 border-b border-border">
       <div class="flex flex-col md:flex-row gap-6 items-stretch md:items-end mb-6">
         <div class="flex-1 max-w-none md:max-w-[250px]">
-          <label class="block text-xs uppercase tracking-widest text-text-muted mb-2">Ville</label>
+          <label class="block text-xs uppercase tracking-widest text-foreground-muted mb-2">Ville</label>
           <input
             v-model="filters.location"
             type="text"
             placeholder="Paris, Lyon..."
-            class="w-full px-4 py-3 bg-bg-card border border-border rounded-lg text-text text-sm transition-colors focus:outline-none focus:border-text-muted placeholder:text-text-muted"
+            class="w-full px-4 py-3 bg-background-card border border-border rounded-lg text-foreground text-sm transition-colors focus:outline-none focus:border-foreground-muted placeholder:text-foreground-muted"
           />
         </div>
 
         <div class="flex-1 max-w-none md:max-w-[250px]">
-          <label class="block text-xs uppercase tracking-widest text-text-muted mb-2">Sujet</label>
+          <label class="block text-xs uppercase tracking-widest text-foreground-muted mb-2">Sujet</label>
           <input
             v-model="filters.topic"
             type="text"
             placeholder="Vue.js, Leadership..."
-            class="w-full px-4 py-3 bg-bg-card border border-border rounded-lg text-text text-sm transition-colors focus:outline-none focus:border-text-muted placeholder:text-text-muted"
+            class="w-full px-4 py-3 bg-background-card border border-border rounded-lg text-foreground text-sm transition-colors focus:outline-none focus:border-foreground-muted placeholder:text-foreground-muted"
           />
         </div>
 
-        <button v-if="filters.location || filters.topic || filters.remote || filters.travel" @click="clearFilters" class="px-6 py-3 bg-transparent border border-border rounded-lg text-text-muted text-sm cursor-pointer transition-all hover:border-text hover:text-text">
+        <button v-if="filters.location || filters.topic || filters.remote || filters.travel" @click="clearFilters" class="px-6 py-3 bg-transparent border border-border rounded-lg text-foreground-muted text-sm cursor-pointer transition-all hover:border-foreground hover:text-foreground">
           Effacer
         </button>
       </div>
 
       <div class="flex gap-8">
         <label class="flex items-center gap-3 cursor-pointer">
-          <input type="checkbox" v-model="filters.remote" class="w-[18px] h-[18px] accent-text" />
-          <span class="text-sm text-text-muted">Remote possible</span>
+          <input type="checkbox" v-model="filters.remote" class="w-[18px] h-[18px] accent-foreground" />
+          <span class="text-sm text-foreground-muted">Remote possible</span>
         </label>
 
         <label class="flex items-center gap-3 cursor-pointer">
-          <input type="checkbox" v-model="filters.travel" class="w-[18px] h-[18px] accent-text" />
-          <span class="text-sm text-text-muted">Se déplace</span>
+          <input type="checkbox" v-model="filters.travel" class="w-[18px] h-[18px] accent-foreground" />
+          <span class="text-sm text-foreground-muted">Se déplace</span>
         </label>
       </div>
     </section>
@@ -150,17 +150,17 @@ watch(() => filters.travel, () => { updateUrl(); trackSearch() })
         <CardSkeleton v-for="i in 4" :key="i" variant="speaker" />
       </div>
 
-      <div v-else-if="!speakers?.length" class="text-center py-16 text-text-muted">
+      <div v-else-if="!speakers?.length" class="text-center py-16 text-foreground-muted">
         <p class="mb-4">Aucune speakeuse trouvée</p>
-        <button @click="clearFilters" class="px-6 py-3 bg-transparent border border-border rounded-lg text-text cursor-pointer">Effacer les filtres</button>
+        <button @click="clearFilters" class="px-6 py-3 bg-transparent border border-border rounded-lg text-foreground cursor-pointer">Effacer les filtres</button>
       </div>
 
       <div v-else class="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <NuxtLink
           v-for="speaker in speakers"
           :key="speaker.id"
-          :to="`/profil/${speaker.id}`"
-          class="flex flex-col gap-5 p-8 bg-bg-card border border-border rounded-2xl no-underline text-text transition-all hover:bg-bg-card-hover hover:border-text-muted hover:-translate-y-0.5"
+          :to="`/annuaire/${speaker.id}`"
+          class="flex flex-col gap-5 p-8 bg-background-card border border-border rounded-2xl no-underline text-foreground transition-all hover:bg-background-card-hover hover:border-foreground-muted hover:-translate-y-0.5"
         >
           <div class="flex items-center gap-4">
             <img
@@ -170,31 +170,31 @@ watch(() => filters.travel, () => { updateUrl(); trackSearch() })
             />
             <div class="flex-1">
               <h2 class="font-display text-xl font-medium">{{ speaker.name }}</h2>
-              <p v-if="speaker.location" class="text-sm text-text-muted mt-1">{{ speaker.location }}</p>
+              <p v-if="speaker.location" class="text-sm text-foreground-muted mt-1">{{ speaker.location }}</p>
             </div>
           </div>
 
-          <p v-if="speaker.bio" class="text-sm text-text-muted leading-relaxed line-clamp-2">{{ speaker.bio }}</p>
+          <p v-if="speaker.bio" class="text-sm text-foreground-muted leading-relaxed line-clamp-2">{{ speaker.bio }}</p>
 
           <div v-if="speaker.speakerProfile?.topics?.length" class="flex flex-col gap-2">
-            <span class="text-[0.7rem] uppercase tracking-widest text-text-muted">Sujets</span>
+            <span class="text-[0.7rem] uppercase tracking-widest text-foreground-muted">Sujets</span>
             <div class="flex flex-wrap gap-2">
-              <span v-for="topic in speaker.speakerProfile.topics" :key="topic" class="px-4 py-2 bg-text text-bg rounded-full text-sm font-medium">
+              <span v-for="topic in speaker.speakerProfile.topics" :key="topic" class="px-4 py-2 bg-foreground text-background rounded-full text-sm font-medium">
                 {{ topic }}
               </span>
             </div>
           </div>
 
           <div class="flex gap-3">
-            <span v-if="speaker.speakerProfile?.remoteOk" class="px-3 py-1.5 bg-bg-card border border-border rounded-full text-xs text-text-muted">Remote possible</span>
-            <span v-if="speaker.speakerProfile?.travelWilling" class="px-3 py-1.5 bg-bg-card border border-border rounded-full text-xs text-text-muted">Se déplace</span>
+            <span v-if="speaker.speakerProfile?.remoteOk" class="px-3 py-1.5 bg-background-card border border-border rounded-full text-xs text-foreground-muted">Remote possible</span>
+            <span v-if="speaker.speakerProfile?.travelWilling" class="px-3 py-1.5 bg-background-card border border-border rounded-full text-xs text-foreground-muted">Se déplace</span>
           </div>
 
           <div v-if="speaker.skills?.length" class="flex flex-wrap gap-2 pt-3 border-t border-border">
-            <span v-for="skill in speaker.skills.slice(0, 4)" :key="skill" class="px-3 py-1 bg-bg-card border border-border rounded-full text-xs text-text-muted">
+            <span v-for="skill in speaker.skills.slice(0, 4)" :key="skill" class="px-3 py-1 bg-background-card border border-border rounded-full text-xs text-foreground-muted">
               {{ skill }}
             </span>
-            <span v-if="speaker.skills.length > 4" class="px-2 py-1 text-xs text-text-muted">
+            <span v-if="speaker.skills.length > 4" class="px-2 py-1 text-xs text-foreground-muted">
               +{{ speaker.skills.length - 4 }}
             </span>
           </div>

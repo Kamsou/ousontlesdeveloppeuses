@@ -22,6 +22,10 @@ export default defineEventHandler(async (event) => {
   if (!body.linkedinUrl) {
     throw createError({ statusCode: 400, message: 'LinkedIn est requis' })
   }
+
+  if (!body.cocAccepted) {
+    throw createError({ statusCode: 400, message: 'Tu dois accepter le code de conduite' })
+  }
   const db = useDrizzle()
 
   const existing = await db.query.developers.findFirst({
@@ -43,7 +47,8 @@ export default defineEventHandler(async (event) => {
     website: body.website || null,
     githubUrl: githubLogin ? `https://github.com/${githubLogin}` : null,
     linkedinUrl: body.linkedinUrl || null,
-    twitterUrl: body.twitterUrl || null
+    twitterUrl: body.twitterUrl || null,
+    cocAcceptedAt: new Date()
   }).returning()
 
   if (body.skills?.length) {

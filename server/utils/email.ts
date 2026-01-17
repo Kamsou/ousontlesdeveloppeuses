@@ -100,3 +100,63 @@ export async function sendNewsletterEmail(to: string[], subject: string, content
     }))
   )
 }
+
+interface ContactEmailParams {
+  senderName: string
+  senderEmail: string
+  recipientName: string
+  recipientEmail: string
+  message: string
+  helpRequestTitle?: string
+}
+
+export async function sendContactEmail({
+  senderName,
+  senderEmail,
+  recipientName,
+  recipientEmail,
+  message,
+  helpRequestTitle
+}: ContactEmailParams) {
+  const resend = getResend()
+
+  const context = helpRequestTitle
+    ? `<p style="font-size: 14px; color: #6b7280; margin-bottom: 24px; padding: 12px 16px; background: #f9fafb; border-radius: 8px;">
+        Concernant : <strong>${helpRequestTitle}</strong>
+      </p>`
+    : ''
+
+  return resend.emails.send({
+    from: FROM_EMAIL,
+    to: recipientEmail,
+    replyTo: senderEmail,
+    subject: `${senderName} veut te contacter sur OSLD`,
+    html: `
+      <div style="font-family: system-ui, -apple-system, sans-serif; max-width: 600px; margin: 0 auto; padding: 40px 20px; background: #ffffff; color: #1a1a1a;">
+
+        <h1 style="font-size: 24px; font-weight: 600; margin-bottom: 8px; color: #1a1a1a;">
+          Hey ${recipientName}
+        </h1>
+
+        <p style="font-size: 16px; line-height: 1.7; color: #374151; margin-bottom: 24px;">
+          <strong>${senderName}</strong> t'a envoy\u00e9 un message via OSLD.
+        </p>
+
+        ${context}
+
+        <div style="padding: 20px; background: #fafafa; border-left: 3px solid #1a1a1a; margin-bottom: 28px;">
+          <p style="font-size: 16px; line-height: 1.7; color: #374151; margin: 0; white-space: pre-wrap;">${message}</p>
+        </div>
+
+        <p style="font-size: 15px; line-height: 1.6; color: #374151; margin-bottom: 8px;">
+          Pour r\u00e9pondre, r\u00e9ponds directement \u00e0 cet email.
+        </p>
+
+        <p style="font-size: 14px; line-height: 1.6; color: #6b7280; margin-top: 32px; padding-top: 24px; border-top: 1px solid #e5e7eb;">
+          Ce message a \u00e9t\u00e9 envoy\u00e9 via <a href="https://ousontlesdeveloppeuses.fr" style="color: #6b7280;">OSLD</a>.
+          Si tu ne veux plus recevoir de messages, modifie tes pr\u00e9f\u00e9rences dans ton profil.
+        </p>
+      </div>
+    `
+  })
+}

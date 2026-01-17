@@ -83,9 +83,9 @@ watch(() => filters.skill, () => { updateUrl(); trackSearch() })
 <template>
   <div class="max-w-7xl mx-auto px-4 md:px-16">
     <header class="py-16 border-b border-border">
-      <span class="text-xs uppercase tracking-[0.2em] text-text-muted mb-6 block">Annuaire</span>
+      <span class="text-xs uppercase tracking-[0.2em] text-foreground-muted mb-6 block">Annuaire</span>
       <h1 class="font-display text-4xl md:text-7xl font-medium tracking-tight mb-2">Développeuses</h1>
-      <p class="text-text-muted text-base">
+      <p class="text-foreground-muted text-base">
         <span v-if="isLoading" class="inline-block w-20 h-5 bg-border rounded animate-pulse align-middle" />
         <span v-else>{{ developers?.length || 0 }} profils</span>
       </p>
@@ -94,32 +94,32 @@ watch(() => filters.skill, () => { updateUrl(); trackSearch() })
     <section class="py-8 border-b border-border">
       <div class="flex flex-col md:flex-row gap-6 items-stretch md:items-end mb-6">
         <div class="flex-1 max-w-none md:max-w-[250px]">
-          <label class="block text-xs uppercase tracking-widest text-text-muted mb-2">Ville</label>
+          <label class="block text-xs uppercase tracking-widest text-foreground-muted mb-2">Ville</label>
           <input
             v-model="filters.location"
             type="text"
             placeholder="Paris, Lyon..."
-            class="w-full px-4 py-3 bg-bg-card border border-border rounded-lg text-text text-sm transition-colors focus:outline-none focus:border-text-muted placeholder:text-text-muted"
+            class="w-full px-4 py-3 bg-background-card border border-border rounded-lg text-foreground text-sm transition-colors focus:outline-none focus:border-foreground-muted placeholder:text-foreground-muted"
           />
         </div>
 
         <div class="flex-1 max-w-none md:max-w-[250px]">
-          <label class="block text-xs uppercase tracking-widest text-text-muted mb-2">Technologie</label>
+          <label class="block text-xs uppercase tracking-widest text-foreground-muted mb-2">Technologie</label>
           <input
             v-model="filters.skill"
             type="text"
             placeholder="Vue.js, Python..."
-            class="w-full px-4 py-3 bg-bg-card border border-border rounded-lg text-text text-sm transition-colors focus:outline-none focus:border-text-muted placeholder:text-text-muted"
+            class="w-full px-4 py-3 bg-background-card border border-border rounded-lg text-foreground text-sm transition-colors focus:outline-none focus:border-foreground-muted placeholder:text-foreground-muted"
           />
         </div>
 
-        <button v-if="filters.location || filters.skill || filters.openTo.length" @click="clearFilters" class="px-6 py-3 bg-transparent border border-border rounded-lg text-text-muted text-sm cursor-pointer transition-all hover:border-text hover:text-text">
+        <button v-if="filters.location || filters.skill || filters.openTo.length" @click="clearFilters" class="px-6 py-3 bg-transparent border border-border rounded-lg text-foreground-muted text-sm cursor-pointer transition-all hover:border-foreground hover:text-foreground">
           Effacer
         </button>
       </div>
 
       <div class="flex flex-col md:flex-row items-start md:items-center gap-6">
-        <span class="text-xs uppercase tracking-widest text-text-muted">Disponible pour</span>
+        <span class="text-xs uppercase tracking-widest text-foreground-muted">Disponible pour</span>
         <div class="flex flex-wrap gap-2">
           <button
             v-for="option in openToOptions"
@@ -127,8 +127,8 @@ watch(() => filters.skill, () => { updateUrl(); trackSearch() })
             :class="[
               'px-4 py-2 border rounded-full text-sm cursor-pointer transition-all',
               filters.openTo.includes(option.value)
-                ? 'bg-text border-text text-bg'
-                : 'bg-transparent border-border text-text-muted hover:border-text hover:text-text'
+                ? 'bg-foreground border-foreground text-background'
+                : 'bg-transparent border-border text-foreground-muted hover:border-foreground hover:text-foreground'
             ]"
             @click="toggleOpenTo(option.value)"
           >
@@ -143,17 +143,17 @@ watch(() => filters.skill, () => { updateUrl(); trackSearch() })
         <CardSkeleton v-for="i in 6" :key="i" />
       </div>
 
-      <div v-else-if="!developers?.length" class="text-center py-16 text-text-muted">
+      <div v-else-if="!developers?.length" class="text-center py-16 text-foreground-muted">
         <p class="mb-4">Aucun profil trouvé</p>
-        <button @click="clearFilters" class="px-6 py-3 bg-transparent border border-border rounded-lg text-text cursor-pointer">Effacer les filtres</button>
+        <button @click="clearFilters" class="px-6 py-3 bg-transparent border border-border rounded-lg text-foreground cursor-pointer">Effacer les filtres</button>
       </div>
 
       <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <NuxtLink
           v-for="dev in developers"
           :key="dev.id"
-          :to="`/profil/${dev.id}`"
-          class="flex flex-col gap-4 p-6 bg-bg-card border border-border rounded-2xl no-underline text-text transition-all hover:bg-bg-card-hover hover:border-text-muted hover:-translate-y-0.5"
+          :to="`/annuaire/${dev.id}`"
+          class="flex flex-col gap-4 p-6 bg-background-card border border-border rounded-2xl no-underline text-foreground transition-all hover:bg-background-card-hover hover:border-foreground-muted hover:-translate-y-0.5"
         >
           <div class="flex items-center gap-4">
             <img
@@ -163,24 +163,24 @@ watch(() => filters.skill, () => { updateUrl(); trackSearch() })
             />
             <div class="flex-1">
               <h3 class="font-display text-lg font-medium">{{ dev.name }}</h3>
-              <p v-if="dev.location" class="text-sm text-text-muted">{{ dev.location }}</p>
+              <p v-if="dev.location" class="text-sm text-foreground-muted">{{ dev.location }}</p>
             </div>
-            <span v-if="dev.isSpeaker" class="px-3 py-1 bg-bg-card border border-border rounded-full text-[0.7rem] uppercase tracking-widest text-text-muted">Speakeuse</span>
+            <span v-if="dev.isSpeaker" class="px-3 py-1 bg-background-card border border-border rounded-full text-[0.7rem] uppercase tracking-widest text-foreground-muted">Speakeuse</span>
           </div>
 
-          <p v-if="dev.bio" class="text-sm text-text-muted leading-relaxed line-clamp-2">{{ dev.bio }}</p>
+          <p v-if="dev.bio" class="text-sm text-foreground-muted leading-relaxed line-clamp-2">{{ dev.bio }}</p>
 
           <div v-if="dev.skills?.length" class="flex flex-wrap gap-2">
-            <span v-for="skill in dev.skills.slice(0, 5)" :key="skill" class="px-3 py-1 bg-bg-card border border-border rounded-full text-xs text-text-muted">
+            <span v-for="skill in dev.skills.slice(0, 5)" :key="skill" class="px-3 py-1 bg-background-card border border-border rounded-full text-xs text-foreground-muted">
               {{ skill }}
             </span>
-            <span v-if="dev.skills.length > 5" class="px-2 py-1 text-xs text-text-muted">
+            <span v-if="dev.skills.length > 5" class="px-2 py-1 text-xs text-foreground-muted">
               +{{ dev.skills.length - 5 }}
             </span>
           </div>
 
           <div v-if="dev.openTo?.length" class="flex flex-wrap gap-2 pt-2 border-t border-border">
-            <span v-for="(tag, index) in dev.openTo" :key="tag" class="text-[0.7rem] text-text-muted">
+            <span v-for="(tag, index) in dev.openTo" :key="tag" class="text-[0.7rem] text-foreground-muted">
               {{ openToOptions.find(o => o.value === tag)?.label || tag }}{{ index < dev.openTo.length - 1 ? ' ·' : '' }}
             </span>
           </div>
