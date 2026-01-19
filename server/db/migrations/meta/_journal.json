@@ -50,6 +50,27 @@
       "when": 1768664234146,
       "tag": "0006_green_quasimodo",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "6",
+      "when": 1768829436005,
+      "tag": "0007_cute_red_ghost",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "6",
+      "when": 1768831490262,
+      "tag": "0008_lovely_gravity",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "6",
+      "when": 1768841629183,
+      "tag": "0009_moaning_firelord",
+      "breakpoints": true
     }
   ]
 }

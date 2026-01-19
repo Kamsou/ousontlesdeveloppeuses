@@ -93,7 +93,8 @@ export const developersRelations = relations(developers, ({ many, one }) => ({
   openTo: many(developerOpenTo),
   speakerProfile: one(speakerProfiles),
   reviews: many(companyReviews),
-  helpRequests: many(helpRequests)
+  helpRequests: many(helpRequests),
+  sideProjects: many(sideProjects)
 }))
 
 export const developerSkillsRelations = relations(developerSkills, ({ one }) => ({
@@ -137,7 +138,8 @@ export const helpRequestsRelations = relations(helpRequests, ({ one, many }) => 
     fields: [helpRequests.developerId],
     references: [developers.id]
   }),
-  techs: many(helpRequestTechs)
+  techs: many(helpRequestTechs),
+  comments: many(comments)
 }))
 
 export const helpRequestTechsRelations = relations(helpRequestTechs, ({ one }) => ({
@@ -207,3 +209,64 @@ export const programs = sqliteTable('programs', {
   active: integer('active', { mode: 'boolean' }).default(true),
   createdAt: integer('created_at', { mode: 'timestamp' }).$defaultFn(() => new Date())
 })
+
+export const sideProjects = sqliteTable('side_projects', {
+  id: integer('id').primaryKey({ autoIncrement: true }),
+  developerId: integer('developer_id').notNull().references(() => developers.id, { onDelete: 'cascade' }),
+  title: text('title').notNull(),
+  description: text('description').notNull(),
+  repoUrl: text('repo_url'),
+  websiteUrl: text('website_url'),
+  status: text('status', {
+    enum: ['idea', 'open_to_contributors', 'looking_for_cofounder', 'completed']
+  }).notNull().default('open_to_contributors'),
+  createdAt: integer('created_at', { mode: 'timestamp' }).$defaultFn(() => new Date()),
+  updatedAt: integer('updated_at', { mode: 'timestamp' }).$defaultFn(() => new Date())
+})
+
+export const sideProjectTechs = sqliteTable('side_project_techs', {
+  id: integer('id').primaryKey({ autoIncrement: true }),
+  sideProjectId: integer('side_project_id').notNull().references(() => sideProjects.id, { onDelete: 'cascade' }),
+  techName: text('tech_name').notNull()
+})
+
+export const sideProjectsRelations = relations(sideProjects, ({ one, many }) => ({
+  developer: one(developers, {
+    fields: [sideProjects.developerId],
+    references: [developers.id]
+  }),
+  techs: many(sideProjectTechs),
+  comments: many(comments)
+}))
+
+export const sideProjectTechsRelations = relations(sideProjectTechs, ({ one }) => ({
+  sideProject: one(sideProjects, {
+    fields: [sideProjectTechs.sideProjectId],
+    references: [sideProjects.id]
+  })
+}))
+
+export const comments = sqliteTable('comments', {
+  id: integer('id').primaryKey({ autoIncrement: true }),
+  developerId: integer('developer_id').notNull().references(() => developers.id, { onDelete: 'cascade' }),
+  helpRequestId: integer('help_request_id').references(() => helpRequests.id, { onDelete: 'cascade' }),
+  sideProjectId: integer('side_project_id').references(() => sideProjects.id, { onDelete: 'cascade' }),
+  content: text('content').notNull(),
+  createdAt: integer('created_at', { mode: 'timestamp' }).$defaultFn(() => new Date()),
+  updatedAt: integer('updated_at', { mode: 'timestamp' }).$defaultFn(() => new Date())
+})
+
+export const commentsRelations = relations(comments, ({ one }) => ({
+  developer: one(developers, {
+    fields: [comments.developerId],
+    references: [developers.id]
+  }),
+  helpRequest: one(helpRequests, {
+    fields: [comments.helpRequestId],
+    references: [helpRequests.id]
+  }),
+  sideProject: one(sideProjects, {
+    fields: [comments.sideProjectId],
+    references: [sideProjects.id]
+  })
+}))

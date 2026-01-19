@@ -52,12 +52,19 @@ const router = useRouter()
 const { $clientPosthog } = useNuxtApp()
 const { data: session } = useAuth()
 
-const activeTab = ref<'dashboard' | 'profil'>(
-  route.query.tab === 'profil' ? 'profil' : 'dashboard'
+type TabType = 'entraide' | 'projects' | 'profil'
+
+const activeTab = ref<TabType>(
+  route.query.tab === 'profil' ? 'profil' :
+  route.query.tab === 'projects' ? 'projects' : 'entraide'
 )
 
+watch(() => route.query.tab, (tab) => {
+  activeTab.value = tab === 'profil' ? 'profil' : tab === 'projects' ? 'projects' : 'entraide'
+})
+
 watch(activeTab, (tab) => {
-  router.replace({ query: tab === 'profil' ? { tab: 'profil' } : {} })
+  router.replace({ query: tab === 'entraide' ? {} : { tab } })
 })
 
 const { data: requests, status: requestsStatus, refresh: refreshRequests } = useLazyFetch('/api/help-requests')
@@ -72,6 +79,9 @@ const openRequests = computed(() =>
 const closedRequests = computed(() =>
   requests.value?.filter((r: any) => r.status === 'closed') || []
 )
+
+const { data: myProjects, status: projectsStatus, refresh: refreshProjects } = useLazyFetch<any[]>('/api/side-projects/mine')
+const isLoadingProjects = computed(() => projectsStatus.value === 'pending')
 
 const { data: profile, refresh: refreshProfile } = await useFetch<Profile | null>('/api/developers/me')
 const isNewProfile = computed(() => !profile.value)
@@ -116,7 +126,19 @@ async function handleMarkResolved(requestId: number) {
 
 async function handleProfileSaved() {
   await Promise.all([refreshProfile(), refreshActivity()])
-  activeTab.value = 'dashboard'
+  activeTab.value = 'entraide'
+}
+
+async function handleMarkProjectCompleted(projectId: number) {
+  try {
+    await $fetch(`/api/side-projects/${projectId}`, {
+      method: 'PATCH',
+      body: { status: 'completed' }
+    })
+    await refreshProjects()
+  } catch (error) {
+    console.error('Erreur:', error)
+  }
 }
 </script>
 
@@ -127,20 +149,39 @@ async function handleProfileSaved() {
 
   <div class="min-h-screen bg-background">
     <div class="max-w-3xl mx-auto px-6 py-16">
+      <QgWeeklyActivity
+        v-if="!isLoadingActivity && activity && !activity.isNew"
+        :activity="activity"
+        class="mb-10"
+        @go-to-profile="activeTab = 'profil'"
+      />
+
       <nav class="flex items-center gap-8 mb-16 border-b border-border/20 -mx-6 px-6">
         <h1 class="font-display text-lg font-medium pb-4">Mon QG</h1>
         <div class="flex gap-6">
           <button
-            @click="activeTab = 'dashboard'"
+            @click="activeTab = 'entraide'"
             :class="[
               'pb-4 text-sm font-medium transition-colors relative',
-              activeTab === 'dashboard'
+              activeTab === 'entraide'
                 ? 'text-foreground'
                 : 'text-foreground-muted hover:text-foreground'
             ]"
           >
             Entraide
-            <span v-if="activeTab === 'dashboard'" class="absolute bottom-0 left-0 right-0 h-px bg-foreground"></span>
+            <span v-if="activeTab === 'entraide'" class="absolute bottom-0 left-0 right-0 h-px bg-foreground"></span>
+          </button>
+          <button
+            @click="activeTab = 'projects'"
+            :class="[
+              'pb-4 text-sm font-medium transition-colors relative',
+              activeTab === 'projects'
+                ? 'text-foreground'
+                : 'text-foreground-muted hover:text-foreground'
+            ]"
+          >
+            Side Projects
+            <span v-if="activeTab === 'projects'" class="absolute bottom-0 left-0 right-0 h-px bg-foreground"></span>
           </button>
           <button
             @click="activeTab = 'profil'"
@@ -157,7 +198,7 @@ async function handleProfileSaved() {
         </div>
       </nav>
 
-      <div v-if="activeTab === 'dashboard'">
+      <div v-if="activeTab === 'entraide'">
         <div v-if="!isLoadingActivity && activity?.profileComplete === false" class="mb-8 p-4 bg-amber-500/10 border border-amber-500/30 rounded-xl">
           <div class="flex items-start gap-3">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-amber-400 shrink-0 mt-0.5">
@@ -179,12 +220,6 @@ async function handleProfileSaved() {
             </div>
           </div>
         </div>
-
-        <QgWeeklyActivity
-          v-if="!isLoadingActivity && activity && !activity.isNew"
-          :activity="activity"
-          @go-to-profile="activeTab = 'profil'"
-        />
 
         <section class="mb-16">
           <NuxtLink
@@ -238,6 +273,60 @@ async function handleProfileSaved() {
         />
 
         <QgFeed />
+      </div>
+
+      <div v-else-if="activeTab === 'projects'">
+        <section class="mb-16">
+          <NuxtLink
+            v-if="activity?.profileComplete !== false"
+            to="/qg/new-project"
+            class="group block p-6 md:p-8 border border-border/30 rounded-2xl transition-all hover:border-green-500/30 hover:bg-green-500/[0.02]"
+          >
+            <div class="flex items-start justify-between gap-4">
+              <div>
+                <h2 class="text-xl md:text-2xl font-display font-medium mb-2">
+                  Propose ton side project
+                </h2>
+                <p class="text-foreground-muted text-sm">
+                  Trouve des contributrices pour ton projet.
+                </p>
+              </div>
+              <span class="w-10 h-10 flex items-center justify-center rounded-full bg-green-500/10 group-hover:bg-green-500/20 transition-colors shrink-0">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-green-400">
+                  <path d="M12 5v14M5 12h14" />
+                </svg>
+              </span>
+            </div>
+          </NuxtLink>
+          <div
+            v-else
+            class="block p-6 md:p-8 border border-border/20 rounded-2xl cursor-not-allowed"
+          >
+            <div class="flex items-start justify-between gap-4">
+              <div>
+                <h2 class="text-xl md:text-2xl font-display font-medium mb-2 text-foreground-muted">
+                  Propose ton side project
+                </h2>
+                <p class="text-foreground-muted/60 text-sm">
+                  Complète ton profil pour proposer un projet
+                </p>
+              </div>
+              <span class="w-10 h-10 flex items-center justify-center rounded-full bg-border/20 shrink-0">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-foreground-muted/50">
+                  <path d="M12 5v14M5 12h14" />
+                </svg>
+              </span>
+            </div>
+          </div>
+        </section>
+
+        <QgMyProjectsList
+          :projects="myProjects || []"
+          :is-loading="isLoadingProjects"
+          @mark-completed="handleMarkProjectCompleted"
+        />
+
+        <QgSideProjectsList />
       </div>
 
       <div v-else>

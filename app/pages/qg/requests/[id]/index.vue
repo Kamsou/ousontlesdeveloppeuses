@@ -27,6 +27,8 @@ const { data: matchesData, status: matchesStatus } = useLazyFetch<{
   total: number
   hasMore: boolean
 }>(`/api/help-requests/${requestId}/matches`)
+const { data: currentUser } = useLazyFetch<{ id: number } | null>('/api/developers/me')
+const currentUserId = computed(() => currentUser.value?.id ?? null)
 
 const isLoadingMatches = computed(() => matchesStatus.value === 'pending')
 const matches = computed(() => matchesData.value?.matches || [])
@@ -261,6 +263,8 @@ async function sendContact() {
             Supprimer
           </button>
         </div>
+
+        <QgComments :help-request-id="Number(requestId)" :current-user-id="currentUserId" />
       </div>
 
       <div v-else class="text-center py-16">

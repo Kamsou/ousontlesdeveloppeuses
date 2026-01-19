@@ -5,12 +5,12 @@ const { status, signIn } = useAuth()
 useSeoMeta({
   title: 'Où Sont Les Développeuses',
   description: 'La communauté des développeuses en France. Annuaire de talents tech, speakeuses pour vos events, et entreprises inclusives.',
-  ogTitle: 'OSLD — Où Sont Les Développeuses',
+  ogTitle: 'OSLD / Où Sont Les Développeuses',
   ogDescription: 'La communauté des développeuses en France. Annuaire de talents tech, speakeuses pour vos events, et entreprises inclusives.',
   ogImage: 'https://ousontlesdeveloppeuses.fr/og-image.png',
   ogType: 'website',
   twitterCard: 'summary_large_image',
-  twitterTitle: 'OSLD — Où Sont Les Développeuses',
+  twitterTitle: 'OSLD / Où Sont Les Développeuses',
   twitterDescription: 'La communauté des développeuses en France. Annuaire de talents tech, speakeuses pour vos events.',
   twitterImage: 'https://ousontlesdeveloppeuses.fr/og-image.png',
 })
@@ -209,7 +209,7 @@ const features = [
             </svg>
           </NuxtLink>
         </div>
-        <div class="grid grid-cols-3 gap-4">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
           <div class="p-5 border border-border rounded-2xl text-center">
             <div class="w-10 h-10 flex items-center justify-center border border-border rounded-full mb-3 mx-auto">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
@@ -240,6 +240,15 @@ const features = [
             </div>
             <h3 class="font-display text-sm font-medium mb-1">Entraide</h3>
             <p class="text-foreground-muted text-xs">Demande un coup de main</p>
+          </div>
+          <div class="p-5 border border-border rounded-2xl text-center">
+            <div class="w-10 h-10 flex items-center justify-center border border-border rounded-full mb-3 mx-auto">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+              </svg>
+            </div>
+            <h3 class="font-display text-sm font-medium mb-1">Side Projects</h3>
+            <p class="text-foreground-muted text-xs">Trouve des contributrices</p>
           </div>
         </div>
       </div>
