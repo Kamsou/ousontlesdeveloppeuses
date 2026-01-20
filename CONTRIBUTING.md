@@ -53,7 +53,31 @@ openssl rand -base64 32
 
 > **Note**: In local development, NuxtHub uses a local SQLite database. No additional database setup required.
 
-### 4. Start the Server
+## About the Database
+
+**Important**: You won't have access to the production database. When you run the project locally:
+
+- A **local SQLite database** is created automatically
+- **Migrations are applied** on first run
+- The database starts **empty** — no profiles, no projects, no data
+
+This means you'll need to:
+1. Log in with GitHub (creates your local user)
+2. Create your own test profile
+3. Create test data (help requests, side projects, etc.)
+
+This is intentional — it keeps production data safe and lets you experiment freely.
+
+## Useful Commands
+
+| Command | Description |
+|---------|-------------|
+| `npm run dev` | Start dev server |
+| `npm run build` | Build for production |
+| `npx drizzle-kit generate` | Generate new migration |
+| `npx drizzle-kit studio` | Open Drizzle Studio (DB GUI) |
+
+## Start the Server
 
 ```bash
 npm run dev
