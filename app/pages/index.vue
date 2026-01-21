@@ -162,17 +162,23 @@ const features = [
           <span class="text-[0.7rem] text-foreground-muted tracking-widest">0{{ index + 1 }}</span>
           <div class="flex flex-col gap-1">
             <ClientOnly>
-              <span v-if="statsLoading" class="font-display text-4xl md:text-6xl font-medium tracking-tight">
-                <span class="inline-block w-16 h-10 md:h-14 bg-border/50 rounded animate-pulse"></span>
-              </span>
-              <span v-else class="font-display text-4xl md:text-6xl font-medium tracking-tight">{{ stat.value }}</span>
+              <template v-if="statsLoading">
+                <span class="font-display text-4xl md:text-6xl font-medium tracking-tight">
+                  <span class="inline-block w-16 h-10 md:h-14 bg-border/50 rounded animate-pulse"></span>
+                </span>
+                <span class="inline-block w-24 h-4 bg-border/50 rounded animate-pulse"></span>
+              </template>
+              <template v-else>
+                <span class="font-display text-4xl md:text-6xl font-medium tracking-tight">{{ stat.value }}</span>
+                <span class="text-foreground-muted text-sm">{{ stat.label }}</span>
+              </template>
               <template #fallback>
                 <span class="font-display text-4xl md:text-6xl font-medium tracking-tight">
                   <span class="inline-block w-16 h-10 md:h-14 bg-border/50 rounded animate-pulse"></span>
                 </span>
+                <span class="inline-block w-24 h-4 bg-border/50 rounded animate-pulse"></span>
               </template>
             </ClientOnly>
-            <span class="text-foreground-muted text-sm">{{ stat.label }}</span>
           </div>
         </div>
       </div>
