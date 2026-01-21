@@ -148,21 +148,23 @@ async function handleMarkProjectCompleted(projectId: number) {
   </ClientOnly>
 
   <div class="min-h-screen bg-background">
-    <div class="max-w-3xl mx-auto px-6 py-16">
+    <div class="max-w-3xl mx-auto px-6 pt-4 md:pt-8">
       <QgWeeklyActivity
         v-if="!isLoadingActivity && activity && !activity.isNew"
         :activity="activity"
-        class="mb-10"
+        class="mb-4 md:mb-6"
         @go-to-profile="activeTab = 'profil'"
       />
+    </div>
 
-      <nav class="flex items-center gap-8 mb-16 border-b border-border/20 -mx-6 px-6">
-        <h1 class="font-display text-lg font-medium pb-4">Mon QG</h1>
-        <div class="flex gap-6">
+    <nav class="sticky top-14 z-40 bg-background md:relative md:top-0 border-b border-border/20">
+      <div class="max-w-3xl mx-auto px-6 flex items-center gap-4 md:gap-6 pt-3 md:pt-0">
+        <h1 class="font-display text-lg font-medium pb-3 md:pb-4">Mon QG</h1>
+        <div class="flex gap-4 md:gap-6">
           <button
             @click="activeTab = 'entraide'"
             :class="[
-              'pb-4 text-sm font-medium transition-colors relative',
+              'pb-3 md:pb-4 text-sm font-medium transition-colors relative',
               activeTab === 'entraide'
                 ? 'text-foreground'
                 : 'text-foreground-muted hover:text-foreground'
@@ -174,7 +176,7 @@ async function handleMarkProjectCompleted(projectId: number) {
           <button
             @click="activeTab = 'projects'"
             :class="[
-              'pb-4 text-sm font-medium transition-colors relative',
+              'pb-3 md:pb-4 text-sm font-medium transition-colors relative',
               activeTab === 'projects'
                 ? 'text-foreground'
                 : 'text-foreground-muted hover:text-foreground'
@@ -186,7 +188,7 @@ async function handleMarkProjectCompleted(projectId: number) {
           <button
             @click="activeTab = 'profil'"
             :class="[
-              'pb-4 text-sm font-medium transition-colors relative',
+              'pb-3 md:pb-4 text-sm font-medium transition-colors relative',
               activeTab === 'profil'
                 ? 'text-foreground'
                 : 'text-foreground-muted hover:text-foreground'
@@ -196,10 +198,12 @@ async function handleMarkProjectCompleted(projectId: number) {
             <span v-if="activeTab === 'profil'" class="absolute bottom-0 left-0 right-0 h-px bg-foreground"></span>
           </button>
         </div>
-      </nav>
+      </div>
+    </nav>
 
+    <div class="max-w-3xl mx-auto px-6 py-4 md:py-8">
       <div v-if="activeTab === 'entraide'">
-        <div v-if="!isLoadingActivity && activity?.profileComplete === false" class="mb-8 p-4 bg-amber-500/10 border border-amber-500/30 rounded-xl">
+        <div v-if="!isLoadingActivity && activity?.profileComplete === false" class="mb-6 md:mb-8 p-4 bg-amber-500/10 border border-amber-500/30 rounded-xl">
           <div class="flex items-start gap-3">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-amber-400 shrink-0 mt-0.5">
               <circle cx="12" cy="12" r="10" />
@@ -221,11 +225,11 @@ async function handleMarkProjectCompleted(projectId: number) {
           </div>
         </div>
 
-        <section class="mb-16">
+        <section class="mb-8 md:mb-16">
           <NuxtLink
             v-if="activity?.profileComplete !== false"
             to="/qg/ask"
-            class="group block p-6 md:p-8 border border-border/30 rounded-2xl transition-all hover:border-primary/30 hover:bg-primary/[0.02]"
+            class="group block p-5 md:p-8 border border-border/30 rounded-2xl transition-all hover:border-primary/30 hover:bg-primary/[0.02]"
           >
             <div class="flex items-start justify-between gap-4">
               <div>
@@ -245,7 +249,7 @@ async function handleMarkProjectCompleted(projectId: number) {
           </NuxtLink>
           <div
             v-else
-            class="block p-6 md:p-8 border border-border/20 rounded-2xl cursor-not-allowed"
+            class="block p-5 md:p-8 border border-border/20 rounded-2xl cursor-not-allowed"
           >
             <div class="flex items-start justify-between gap-4">
               <div>
@@ -276,11 +280,11 @@ async function handleMarkProjectCompleted(projectId: number) {
       </div>
 
       <div v-else-if="activeTab === 'projects'">
-        <section class="mb-16">
+        <section class="mb-8 md:mb-16">
           <NuxtLink
             v-if="activity?.profileComplete !== false"
             to="/qg/new-project"
-            class="group block p-6 md:p-8 border border-border/30 rounded-2xl transition-all hover:border-green-500/30 hover:bg-green-500/[0.02]"
+            class="group block p-5 md:p-8 border border-border/30 rounded-2xl transition-all hover:border-green-500/30 hover:bg-green-500/[0.02]"
           >
             <div class="flex items-start justify-between gap-4">
               <div>
@@ -300,7 +304,7 @@ async function handleMarkProjectCompleted(projectId: number) {
           </NuxtLink>
           <div
             v-else
-            class="block p-6 md:p-8 border border-border/20 rounded-2xl cursor-not-allowed"
+            class="block p-5 md:p-8 border border-border/20 rounded-2xl cursor-not-allowed"
           >
             <div class="flex items-start justify-between gap-4">
               <div>

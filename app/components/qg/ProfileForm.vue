@@ -210,7 +210,7 @@ async function deleteProfile() {
     <ClientOnly>
       <template #fallback>
         <div class="animate-pulse space-y-8">
-          <div class="py-8 border-b border-border">
+          <div class="py-5 border-b border-border">
             <div class="h-6 bg-border/50 rounded w-24 mb-6"></div>
             <div class="space-y-6">
               <div class="h-12 bg-border/50 rounded"></div>
@@ -223,10 +223,10 @@ async function deleteProfile() {
       <form @submit.prevent="save">
         <div v-if="error" class="p-4 bg-red-500/10 border border-red-500/30 rounded-lg text-red-500 mb-8">{{ error }}</div>
 
-        <section class="py-8 border-b border-border">
-          <h2 class="font-display text-xl font-medium mb-6">Identité</h2>
+        <section class="py-5 border-b border-border">
+          <h2 class="font-display text-xl font-medium mb-4">Identité</h2>
 
-          <div class="flex flex-col gap-6">
+          <div class="flex flex-col gap-4">
             <div class="flex flex-col gap-2">
               <label for="name" class="text-xs uppercase tracking-wide text-foreground-muted">Nom *</label>
               <input id="name" v-model="form.name" type="text" required class="px-4 py-3 bg-background-card border border-border rounded-lg text-foreground text-sm transition-colors focus:outline-none focus:border-foreground-muted" />
@@ -239,10 +239,10 @@ async function deleteProfile() {
           </div>
         </section>
 
-        <section class="py-8 border-b border-border">
-          <h2 class="font-display text-xl font-medium mb-6">Localisation & Expérience</h2>
+        <section class="py-5 border-b border-border">
+          <h2 class="font-display text-xl font-medium mb-4">Localisation & Expérience</h2>
 
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div class="flex flex-col gap-2">
               <label for="location" class="text-xs uppercase tracking-wide text-foreground-muted">Ville</label>
               <input id="location" v-model="form.location" type="text" placeholder="Paris" class="px-4 py-3 bg-background-card border border-border rounded-lg text-foreground text-sm transition-colors focus:outline-none focus:border-foreground-muted placeholder:text-foreground-muted" />
@@ -255,8 +255,8 @@ async function deleteProfile() {
           </div>
         </section>
 
-        <section class="py-8 border-b border-border">
-          <h2 id="competences-label" class="font-display text-xl font-medium mb-6">Compétences</h2>
+        <section class="py-5 border-b border-border">
+          <h2 id="competences-label" class="font-display text-xl font-medium mb-4">Compétences</h2>
 
           <div class="flex gap-2 mb-4">
             <input
@@ -280,7 +280,7 @@ async function deleteProfile() {
           </div>
         </section>
 
-        <section class="py-8 border-b border-border">
+        <section class="py-5 border-b border-border">
           <h2 class="font-display text-xl font-medium mb-2">Disponible pour</h2>
           <p class="text-foreground-muted text-sm mb-6">Qu'est-ce qui t'intéresse ?</p>
 
@@ -340,7 +340,7 @@ async function deleteProfile() {
           </div>
         </section>
 
-        <section class="py-8 border-b border-border">
+        <section class="py-5 border-b border-border">
           <h2 class="font-display text-xl font-medium mb-2">Liens</h2>
           <p class="text-foreground-muted text-sm mb-6">Où te trouver sur le web</p>
 
@@ -362,8 +362,8 @@ async function deleteProfile() {
           </div>
         </section>
 
-        <section class="py-8 border-b border-border">
-          <h2 class="font-display text-xl font-medium mb-6">Préférences</h2>
+        <section class="py-5 border-b border-border">
+          <h2 class="font-display text-xl font-medium mb-4">Préférences</h2>
 
           <label class="flex items-start gap-3 cursor-pointer group">
             <input
