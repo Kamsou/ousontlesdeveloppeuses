@@ -1,9 +1,16 @@
 <script setup lang="ts">
+interface UnreadComment {
+  type: 'project' | 'request'
+  id: number
+  title: string
+  count: number
+}
+
 interface Activity {
   isNew: boolean
   weeklyContactsReceived?: number
   weeklyContactsSent?: number
-  weeklyCommentsReceived?: number
+  unreadComments?: UnreadComment[]
   totalHelpGiven?: number
   profileComplete?: boolean
   communityNewMembers?: number
@@ -44,15 +51,20 @@ const emit = defineEmits<{
         </span>
       </div>
 
-      <div v-if="activity.weeklyCommentsReceived && activity.weeklyCommentsReceived > 0" class="flex items-center gap-2 px-3 py-1.5 bg-primary/5 border border-primary/10 rounded-full">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-primary">
+      <NuxtLink
+        v-for="comment in activity.unreadComments"
+        :key="`${comment.type}-${comment.id}`"
+        :to="comment.type === 'project' ? `/qg/projects/${comment.id}` : `/qg/requests/${comment.id}`"
+        class="flex items-center gap-2 px-3 py-1.5 bg-primary/5 border border-primary/10 rounded-full no-underline hover:bg-primary/10 transition-colors"
+      >
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-primary shrink-0">
           <path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z" />
         </svg>
         <span class="text-xs text-foreground">
-          <span class="font-medium">{{ activity.weeklyCommentsReceived }}</span>
-          {{ activity.weeklyCommentsReceived === 1 ? 'nouveau commentaire' : 'nouveaux commentaires' }}
+          <span class="font-medium">{{ comment.count }}</span>
+          {{ comment.count === 1 ? 'commentaire' : 'commentaires' }} sur {{ comment.title }}
         </span>
-      </div>
+      </NuxtLink>
 
       <div v-if="activity.profileComplete === false" class="flex items-center gap-2 px-3 py-1.5 bg-amber-500/5 border border-amber-500/10 rounded-full">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-amber-400">

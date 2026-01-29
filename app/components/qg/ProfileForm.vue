@@ -54,7 +54,8 @@ const hasValidExperienceProfile = computed(() => {
 })
 
 const form = reactive({
-  name: '',
+  firstName: '',
+  lastName: '',
   bio: '',
   location: '',
   yearsExperience: null as number | null,
@@ -78,7 +79,9 @@ const deleting = ref(false)
 
 watch(() => props.profile, (p) => {
   if (p) {
-    form.name = p.name || ''
+    const nameParts = (p.name || '').split(' ')
+    form.firstName = nameParts[0] || ''
+    form.lastName = nameParts.slice(1).join(' ') || ''
     form.bio = p.bio || ''
     form.location = p.location || ''
     form.yearsExperience = p.yearsExperience
@@ -92,7 +95,9 @@ watch(() => props.profile, (p) => {
     form.travelWilling = p.speakerProfile?.travelWilling ?? false
     form.emailOptIn = p.emailOptIn ?? false
   } else if (props.sessionUserName) {
-    form.name = props.sessionUserName
+    const nameParts = props.sessionUserName.split(' ')
+    form.firstName = nameParts[0] || ''
+    form.lastName = nameParts.slice(1).join(' ') || ''
   }
 }, { immediate: true })
 
@@ -131,11 +136,16 @@ async function save() {
   saving.value = true
   error.value = ''
 
+  const payload = {
+    ...form,
+    name: `${form.firstName.trim()} ${form.lastName.trim()}`.trim()
+  }
+
   try {
     if (isNewProfile.value) {
       await $fetch('/api/developers', {
         method: 'POST',
-        body: form
+        body: payload
       })
       $clientPosthog?.capture('profile_created', {
         location: form.location,
@@ -145,7 +155,7 @@ async function save() {
     } else {
       await $fetch(`/api/developers/${props.profile!.id}`, {
         method: 'PUT',
-        body: form
+        body: payload
       })
       $clientPosthog?.capture('profile_updated')
     }
@@ -227,9 +237,15 @@ async function deleteProfile() {
           <h2 class="font-display text-xl font-medium mb-4">Identité</h2>
 
           <div class="flex flex-col gap-4">
-            <div class="flex flex-col gap-2">
-              <label for="name" class="text-xs uppercase tracking-wide text-foreground-muted">Nom *</label>
-              <input id="name" v-model="form.name" type="text" required class="px-4 py-3 bg-background-card border border-border rounded-lg text-foreground text-sm transition-colors focus:outline-none focus:border-foreground-muted" />
+            <div class="grid grid-cols-2 gap-4">
+              <div class="flex flex-col gap-2">
+                <label for="lastName" class="text-xs uppercase tracking-wide text-foreground-muted">Nom *</label>
+                <input id="lastName" v-model="form.lastName" type="text" required class="px-4 py-3 bg-background-card border border-border rounded-lg text-foreground text-sm transition-colors focus:outline-none focus:border-foreground-muted" />
+              </div>
+              <div class="flex flex-col gap-2">
+                <label for="firstName" class="text-xs uppercase tracking-wide text-foreground-muted">Prénom *</label>
+                <input id="firstName" v-model="form.firstName" type="text" required class="px-4 py-3 bg-background-card border border-border rounded-lg text-foreground text-sm transition-colors focus:outline-none focus:border-foreground-muted" />
+              </div>
             </div>
 
             <div class="flex flex-col gap-2">

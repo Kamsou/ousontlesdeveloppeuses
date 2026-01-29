@@ -113,12 +113,11 @@ export default defineEventHandler(async (event) => {
         gte(tables.sideProjects.createdAt, weekStart),
         ne(tables.sideProjects.developerId, developer.id)
       )),
-    db.select({ count: count() }).from(tables.comments)
-      .where(and(
+    db.query.comments.findMany({
+      where: and(
         ne(tables.comments.developerId, developer.id),
         gte(tables.comments.createdAt, weekStart),
         or(
-          // Comments on my own content
           inArray(tables.comments.helpRequestId,
             db.select({ id: tables.helpRequests.id }).from(tables.helpRequests)
               .where(eq(tables.helpRequests.developerId, developer.id))
@@ -127,7 +126,6 @@ export default defineEventHandler(async (event) => {
             db.select({ id: tables.sideProjects.id }).from(tables.sideProjects)
               .where(eq(tables.sideProjects.developerId, developer.id))
           ),
-          // Comments on content where I also commented (replies)
           inArray(tables.comments.helpRequestId,
             db.select({ id: tables.comments.helpRequestId }).from(tables.comments)
               .where(and(
@@ -147,8 +145,57 @@ export default defineEventHandler(async (event) => {
           db.select({ id: tables.commentReads.commentId }).from(tables.commentReads)
             .where(eq(tables.commentReads.developerId, developer.id))
         )
-      ))
+      ),
+      columns: { id: true, helpRequestId: true, sideProjectId: true }
+    })
   ])
+
+  // Group unread comments by content
+  const commentsByContent = new Map<string, { type: 'project' | 'request'; id: number; count: number }>()
+  for (const c of weeklyCommentsReceived) {
+    const key = c.sideProjectId ? `project-${c.sideProjectId}` : `request-${c.helpRequestId}`
+    const existing = commentsByContent.get(key)
+    if (existing) {
+      existing.count++
+    } else {
+      commentsByContent.set(key, {
+        type: c.sideProjectId ? 'project' : 'request',
+        id: (c.sideProjectId || c.helpRequestId)!,
+        count: 1
+      })
+    }
+  }
+
+  // Fetch titles for commented content
+  const contentEntries = [...commentsByContent.values()]
+  const projectIds = contentEntries.filter(e => e.type === 'project').map(e => e.id)
+  const requestIds = contentEntries.filter(e => e.type === 'request').map(e => e.id)
+
+  const [projects, requests] = await Promise.all([
+    projectIds.length
+      ? db.query.sideProjects.findMany({
+          where: inArray(tables.sideProjects.id, projectIds),
+          columns: { id: true, title: true }
+        })
+      : [],
+    requestIds.length
+      ? db.query.helpRequests.findMany({
+          where: inArray(tables.helpRequests.id, requestIds),
+          columns: { id: true, title: true }
+        })
+      : []
+  ])
+
+  const titleMap = new Map<string, string>()
+  for (const p of projects) titleMap.set(`project-${p.id}`, p.title)
+  for (const r of requests) titleMap.set(`request-${r.id}`, r.title)
+
+  const unreadComments = contentEntries.map(e => ({
+    type: e.type,
+    id: e.id,
+    title: titleMap.get(`${e.type}-${e.id}`) || '',
+    count: e.count
+  }))
 
   return {
     isNew: false,
@@ -159,7 +206,7 @@ export default defineEventHandler(async (event) => {
     profileComplete,
     missingFields: profileComplete ? [] : missingFields,
     memberSince: developer.createdAt,
-    weeklyCommentsReceived: weeklyCommentsReceived[0].count,
+    unreadComments,
     communityNewMembers: weeklyNewMembers[0].count,
     communityHelpRequests: weeklyHelpRequests[0].count,
     communityNewProjects: weeklyNewProjects[0].count
