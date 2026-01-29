@@ -1,16 +1,20 @@
 import { eq } from 'drizzle-orm'
 
 export default defineEventHandler(async (event) => {
-  const id = Number(getRouterParam(event, 'id'))
+  const param = getRouterParam(event, 'slug')
 
-  if (isNaN(id)) {
-    throw createError({ statusCode: 400, message: 'ID invalide' })
+  if (!param) {
+    throw createError({ statusCode: 400, message: 'Paramètre requis' })
   }
 
   const db = useDrizzle()
 
+  const isNumeric = /^\d+$/.test(param)
+
   const developer = await db.query.developers.findFirst({
-    where: eq(tables.developers.id, id),
+    where: isNumeric
+      ? eq(tables.developers.id, Number(param))
+      : eq(tables.developers.slug, param),
     with: {
       skills: true,
       openTo: true,
@@ -24,6 +28,7 @@ export default defineEventHandler(async (event) => {
 
   return {
     id: developer.id,
+    slug: developer.slug,
     name: developer.name,
     avatarUrl: developer.avatarUrl,
     bio: developer.bio,

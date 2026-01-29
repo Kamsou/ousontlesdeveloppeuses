@@ -12,7 +12,7 @@ export default defineEventHandler(async (event) => {
 
   const githubId = (token?.id || token?.sub) as string
 
-  const id = Number(getRouterParam(event, 'id'))
+  const id = Number(getRouterParam(event, 'slug'))
   const body = await readBody(event)
 
   const urlError = validateProfileUrls(body)
@@ -40,8 +40,15 @@ export default defineEventHandler(async (event) => {
     emailOptInUpdate.emailOptInDate = new Date()
   }
 
+  const newName = body.name ?? developer.name
+  const slugUpdate: { slug?: string } = {}
+  if (body.name && body.name !== developer.name) {
+    slugUpdate.slug = await generateUniqueSlug(body.name, developer.id)
+  }
+
   await db.update(tables.developers).set({
-    name: body.name ?? developer.name,
+    name: newName,
+    ...slugUpdate,
     bio: body.bio ?? developer.bio,
     location: body.location ?? developer.location,
     yearsExperience: body.yearsExperience ?? developer.yearsExperience,

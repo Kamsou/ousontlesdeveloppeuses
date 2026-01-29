@@ -42,6 +42,7 @@ export default defineEventHandler(async (event) => {
     ...comment,
     developer: {
       id: developer.id,
+      slug: developer.slug,
       name: developer.name,
       avatarUrl: developer.avatarUrl
     }

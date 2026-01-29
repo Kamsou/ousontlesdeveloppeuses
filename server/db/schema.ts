@@ -5,6 +5,7 @@ export const developers = sqliteTable('developers', {
   id: integer('id').primaryKey({ autoIncrement: true }),
   githubId: text('github_id').unique().notNull(),
   name: text('name').notNull(),
+  slug: text('slug').unique(),
   email: text('email'),
   avatarUrl: text('avatar_url'),
   bio: text('bio'),
@@ -290,6 +291,24 @@ export const comments = sqliteTable('comments', {
   createdAt: integer('created_at', { mode: 'timestamp' }).$defaultFn(() => new Date()),
   updatedAt: integer('updated_at', { mode: 'timestamp' }).$defaultFn(() => new Date())
 })
+
+export const commentReads = sqliteTable('comment_reads', {
+  id: integer('id').primaryKey({ autoIncrement: true }),
+  developerId: integer('developer_id').notNull().references(() => developers.id, { onDelete: 'cascade' }),
+  commentId: integer('comment_id').notNull().references(() => comments.id, { onDelete: 'cascade' }),
+  readAt: integer('read_at', { mode: 'timestamp' }).$defaultFn(() => new Date())
+})
+
+export const commentReadsRelations = relations(commentReads, ({ one }) => ({
+  developer: one(developers, {
+    fields: [commentReads.developerId],
+    references: [developers.id]
+  }),
+  comment: one(comments, {
+    fields: [commentReads.commentId],
+    references: [comments.id]
+  })
+}))
 
 export const commentsRelations = relations(comments, ({ one }) => ({
   developer: one(developers, {

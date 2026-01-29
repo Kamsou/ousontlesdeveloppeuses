@@ -51,6 +51,7 @@ export default defineEventHandler(async (event) => {
 
   return results.map(dev => ({
     id: dev.id,
+    slug: dev.slug,
     name: dev.name,
     avatarUrl: dev.avatarUrl,
     bio: dev.bio,

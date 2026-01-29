@@ -108,5 +108,7 @@ export default defineNuxtConfig({
     '/experience': { prerender: true },
     '/experience/**': { prerender: true },
     '/programmes': { prerender: true },
+    '/podcasts': { prerender: true },
+    '/speakers': { prerender: true },
   }
 })

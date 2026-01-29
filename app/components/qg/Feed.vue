@@ -4,6 +4,7 @@ interface FeedRequest {
   title: string
   developer?: {
     id: number
+    slug: string
     name: string
     avatarUrl?: string
     linkedinUrl?: string
@@ -83,7 +84,7 @@ onMounted(() => {
       >
         <div class="flex items-center justify-between gap-3 mb-3">
           <NuxtLink
-            :to="`/annuaire/${request.developer?.id}`"
+            :to="`/annuaire/${request.developer?.slug}`"
             class="flex items-center gap-3 min-w-0 group/dev"
           >
             <img

@@ -1,5 +1,5 @@
 import { getServerSession, getToken } from '#auth'
-import { eq, and, gte, desc, ne, count } from 'drizzle-orm'
+import { eq, and, gte, desc, ne, count, or, inArray, notInArray, isNotNull } from 'drizzle-orm'
 
 export default defineEventHandler(async (event) => {
   const session = await getServerSession(event)
@@ -97,7 +97,7 @@ export default defineEventHandler(async (event) => {
   ].sort((a, b) => new Date(b.date!).getTime() - new Date(a.date!).getTime())
     .slice(0, 3)
 
-  const [weeklyNewMembers, weeklyHelpRequests, weeklyNewProjects] = await Promise.all([
+  const [weeklyNewMembers, weeklyHelpRequests, weeklyNewProjects, weeklyCommentsReceived] = await Promise.all([
     db.select({ count: count() }).from(tables.developers)
       .where(and(
         gte(tables.developers.createdAt, weekStart),
@@ -112,6 +112,41 @@ export default defineEventHandler(async (event) => {
       .where(and(
         gte(tables.sideProjects.createdAt, weekStart),
         ne(tables.sideProjects.developerId, developer.id)
+      )),
+    db.select({ count: count() }).from(tables.comments)
+      .where(and(
+        ne(tables.comments.developerId, developer.id),
+        gte(tables.comments.createdAt, weekStart),
+        or(
+          // Comments on my own content
+          inArray(tables.comments.helpRequestId,
+            db.select({ id: tables.helpRequests.id }).from(tables.helpRequests)
+              .where(eq(tables.helpRequests.developerId, developer.id))
+          ),
+          inArray(tables.comments.sideProjectId,
+            db.select({ id: tables.sideProjects.id }).from(tables.sideProjects)
+              .where(eq(tables.sideProjects.developerId, developer.id))
+          ),
+          // Comments on content where I also commented (replies)
+          inArray(tables.comments.helpRequestId,
+            db.select({ id: tables.comments.helpRequestId }).from(tables.comments)
+              .where(and(
+                eq(tables.comments.developerId, developer.id),
+                isNotNull(tables.comments.helpRequestId)
+              ))
+          ),
+          inArray(tables.comments.sideProjectId,
+            db.select({ id: tables.comments.sideProjectId }).from(tables.comments)
+              .where(and(
+                eq(tables.comments.developerId, developer.id),
+                isNotNull(tables.comments.sideProjectId)
+              ))
+          )
+        ),
+        notInArray(tables.comments.id,
+          db.select({ id: tables.commentReads.commentId }).from(tables.commentReads)
+            .where(eq(tables.commentReads.developerId, developer.id))
+        )
       ))
   ])
 
@@ -124,6 +159,7 @@ export default defineEventHandler(async (event) => {
     profileComplete,
     missingFields: profileComplete ? [] : missingFields,
     memberSince: developer.createdAt,
+    weeklyCommentsReceived: weeklyCommentsReceived[0].count,
     communityNewMembers: weeklyNewMembers[0].count,
     communityHelpRequests: weeklyHelpRequests[0].count,
     communityNewProjects: weeklyNewProjects[0].count

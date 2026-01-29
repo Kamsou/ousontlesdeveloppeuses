@@ -5,6 +5,7 @@ interface Comment {
   createdAt: string
   developer: {
     id: number
+    slug: string
     name: string
     avatarUrl: string | null
   }
@@ -14,6 +15,7 @@ const props = defineProps<{
   helpRequestId?: number
   sideProjectId?: number
   currentUserId?: number | null
+  isOwner?: boolean
 }>()
 
 const { status: authStatus } = useAuth()
@@ -32,6 +34,21 @@ const { data: comments, status } = useLazyFetch<Comment[]>('/api/comments', {
   query: queryParams
 })
 const isLoading = computed(() => status.value === 'pending')
+
+// Mark comments as read when owner or participant views them
+watch(() => comments.value, (newComments) => {
+  if (!newComments?.length) return
+  const isParticipant = props.isOwner || newComments.some(c => c.developer.id === props.currentUserId)
+  if (isParticipant) {
+    $fetch('/api/comments/mark-read', {
+      method: 'POST',
+      body: {
+        helpRequestId: props.helpRequestId || null,
+        sideProjectId: props.sideProjectId || null
+      }
+    }).catch(() => {})
+  }
+}, { once: true })
 
 const newComment = ref('')
 const isSending = ref(false)
@@ -113,7 +130,7 @@ function formatDate(date: string) {
           :key="comment.id"
           class="flex gap-3 group"
         >
-          <NuxtLink :to="`/annuaire/${comment.developer.id}`">
+          <NuxtLink :to="`/annuaire/${comment.developer.slug}`">
             <img
               v-if="comment.developer.avatarUrl"
               :src="comment.developer.avatarUrl"
@@ -128,7 +145,7 @@ function formatDate(date: string) {
           <div class="flex-1 min-w-0">
             <div class="flex items-center gap-2 mb-1">
               <NuxtLink
-                :to="`/annuaire/${comment.developer.id}`"
+                :to="`/annuaire/${comment.developer.slug}`"
                 class="text-sm font-medium hover:text-foreground-muted transition-colors"
               >
                 {{ comment.developer.name }}

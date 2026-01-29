@@ -34,9 +34,13 @@ export default defineEventHandler(async (event) => {
 
   const db = useDrizzle()
 
+  const name = body.name || session.user.name || ''
+  const slug = await generateUniqueSlug(name)
+
   const result = await db.insert(tables.developers).values({
     githubId,
-    name: body.name || session.user.name || '',
+    name,
+    slug,
     email: session.user.email || null,
     avatarUrl: session.user.image || null,
     bio: body.bio || null,

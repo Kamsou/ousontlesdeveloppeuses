@@ -1,6 +1,7 @@
 <script setup lang="ts">
 interface Developer {
   id: number
+  slug: string
   name: string
   avatarUrl: string | null
   bio: string | null
@@ -22,7 +23,7 @@ interface Developer {
 
 const { $clientPosthog } = useNuxtApp()
 const route = useRoute()
-const id = route.params.id
+const slug = route.params.slug as string
 
 const openToLabels: Record<string, string> = {
   conference: 'Conférence',
@@ -34,10 +35,14 @@ const openToLabels: Record<string, string> = {
   cv_review: 'Relecture CV'
 }
 
-const { data: developer, error } = await useFetch<Developer>(`/api/developers/${id}`)
+const { data: developer, error } = await useFetch<Developer>(`/api/developers/${slug}`)
 
 if (error.value) {
   throw createError({ statusCode: 404, message: 'Profil non trouvé' })
+}
+
+if (developer.value && slug !== developer.value.slug) {
+  await navigateTo(`/annuaire/${developer.value.slug}`, { redirectCode: 301 })
 }
 
 // SEO dynamique enrichi

@@ -11,6 +11,7 @@ interface SideProject {
   createdAt: string
   developer: {
     id: number
+    slug: string
     name: string
     avatarUrl: string | null
     location: string | null
@@ -132,7 +133,7 @@ function formatDate(date: string) {
         </div>
 
         <NuxtLink
-          :to="`/annuaire/${project.developer.id}`"
+          :to="`/annuaire/${project.developer.slug}`"
           class="flex items-center gap-3 mb-8 group"
         >
           <img
@@ -189,7 +190,7 @@ function formatDate(date: string) {
           </button>
         </div>
 
-        <QgComments :side-project-id="Number(projectId)" :current-user-id="currentUserId" />
+        <QgComments :side-project-id="Number(projectId)" :current-user-id="currentUserId" :is-owner="isOwner" />
       </div>
 
       <div v-else class="text-center py-16">

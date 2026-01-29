@@ -50,6 +50,7 @@ export default defineEventHandler(async (event) => {
   return {
     developers: paginated.map(d => ({
       id: d.id,
+      slug: d.slug,
       name: d.name,
       avatarUrl: d.avatarUrl,
       bio: d.bio,

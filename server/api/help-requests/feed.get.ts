@@ -45,6 +45,7 @@ export default defineEventHandler(async (event) => {
       developer: {
         columns: {
           id: true,
+          slug: true,
           name: true,
           avatarUrl: true,
           linkedinUrl: true

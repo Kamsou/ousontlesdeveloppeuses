@@ -32,6 +32,7 @@ export default defineEventHandler(async (event) => {
 
   return {
     id: developer.id,
+    slug: developer.slug,
     name: developer.name,
     email: developer.email,
     avatarUrl: developer.avatarUrl,

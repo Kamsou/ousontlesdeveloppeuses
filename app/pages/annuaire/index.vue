@@ -12,6 +12,7 @@ import { openToOptions } from '~/utils/constants'
 
 interface Developer {
   id: number
+  slug: string
   name: string
   avatarUrl: string | null
   bio: string | null
@@ -197,7 +198,7 @@ watch(() => filters.skill, () => { updateUrl(); trackSearch() })
         <NuxtLink
           v-for="dev in developers"
           :key="dev.id"
-          :to="`/annuaire/${dev.id}`"
+          :to="`/annuaire/${dev.slug}`"
           class="flex flex-col gap-4 p-6 bg-background-card border border-border rounded-2xl no-underline text-foreground transition-all hover:bg-background-card-hover hover:border-foreground-muted hover:-translate-y-0.5"
         >
           <div class="flex items-center gap-4">

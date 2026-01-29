@@ -10,6 +10,7 @@ useSeoMeta({
 
 interface Speaker {
   id: number
+  slug: string
   name: string
   avatarUrl: string | null
   bio: string | null
@@ -159,7 +160,7 @@ watch(() => filters.travel, () => { updateUrl(); trackSearch() })
         <NuxtLink
           v-for="speaker in speakers"
           :key="speaker.id"
-          :to="`/annuaire/${speaker.id}`"
+          :to="`/annuaire/${speaker.slug}`"
           class="flex flex-col gap-5 p-8 bg-background-card border border-border rounded-2xl no-underline text-foreground transition-all hover:bg-background-card-hover hover:border-foreground-muted hover:-translate-y-0.5"
         >
           <div class="flex items-center gap-4">
