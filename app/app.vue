@@ -2,6 +2,7 @@
 const { $clientPosthog } = useNuxtApp()
 const { data, status, signIn, signOut } = useAuth()
 const route = useRoute()
+const isQg = computed(() => route.path.startsWith('/qg'))
 
 const { data: isAdmin, refresh: refreshAdmin } = useFetch('/api/admin/check', {
   immediate: false,
@@ -58,7 +59,7 @@ onUnmounted(() => {
 
 <template>
   <div class="min-h-screen flex flex-col relative bg-background text-foreground">
-    <header class="fixed top-0 left-0 right-0 z-50 px-4 md:px-8 py-4 backdrop-blur-xl bg-background/80 border-b border-border">
+    <header v-if="!isQg" class="fixed top-0 left-0 right-0 z-50 px-4 md:px-8 py-4 backdrop-blur-xl bg-background/80 border-b border-border">
       <div class="max-w-7xl mx-auto flex items-center justify-between">
         <NuxtLink to="/" class="flex items-center gap-3 no-underline text-foreground group z-10">
           <span class="flex flex-col gap-[3px] w-[18px]">
@@ -170,7 +171,7 @@ onUnmounted(() => {
       </div>
     </header>
 
-    <div v-if="menuOpen" class="fixed inset-0 z-40 bg-background pt-20 px-6 lg:hidden">
+    <div v-if="menuOpen && !isQg" class="fixed inset-0 z-40 bg-background pt-20 px-6 lg:hidden">
       <nav aria-label="Navigation mobile" class="flex flex-col gap-6 py-8">
         <NuxtLink to="/annuaire" :class="['no-underline text-2xl font-medium', route.path.startsWith('/annuaire') || route.path.startsWith('/profil/') ? 'text-foreground' : 'text-foreground-muted']">Annuaire</NuxtLink>
         <NuxtLink to="/speakers" :class="['no-underline text-2xl font-medium', route.path === '/speakers' ? 'text-foreground' : 'text-foreground-muted']">Speakeuses</NuxtLink>
@@ -214,11 +215,11 @@ onUnmounted(() => {
       </div>
     </div>
 
-    <main class="flex-1 relative z-[1] pt-20">
+    <main :class="['flex-1 relative z-[1]', isQg ? '' : 'pt-20']">
       <NuxtPage />
     </main>
 
-    <footer class="relative z-[1] text-center py-8 text-foreground-muted text-sm border-t border-border">
+    <footer v-if="!isQg" class="relative z-[1] text-center py-8 text-foreground-muted text-sm border-t border-border">
       <p>Fait pour toutes les développeuses par <a href="https://linkedin.com/in/camillecoutens" target="_blank" rel="noopener noreferrer" class="text-foreground-muted underline underline-offset-2 decoration-border hover:text-primary hover:decoration-primary transition-colors">Camille Coutens</a></p>
       <span class="inline-flex gap-4 mt-3">
         <NuxtLink to="/coc" class="text-foreground-muted underline underline-offset-2 decoration-border hover:text-foreground transition-colors">Code de conduite</NuxtLink>

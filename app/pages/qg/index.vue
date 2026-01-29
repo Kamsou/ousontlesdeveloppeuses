@@ -36,6 +36,9 @@ interface Activity {
   profileComplete?: boolean
   missingFields?: string[]
   memberSince?: string
+  communityNewMembers?: number
+  communityHelpRequests?: number
+  communityNewProjects?: number
 }
 
 definePageMeta({
@@ -148,6 +151,20 @@ async function handleMarkProjectCompleted(projectId: number) {
   </ClientOnly>
 
   <div class="min-h-screen bg-background">
+    <header class="sticky top-0 z-50 px-4 md:px-8 py-3 backdrop-blur-xl bg-background/80 border-b border-border/20">
+      <div class="max-w-3xl mx-auto flex items-center justify-between">
+        <NuxtLink to="/annuaire" class="flex items-center gap-2 no-underline text-foreground-muted hover:text-foreground transition-colors text-sm">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M19 12H5M12 19l-7-7 7-7"/>
+          </svg>
+          Retour
+        </NuxtLink>
+        <h1 class="font-display text-sm font-semibold tracking-widest text-foreground-muted m-0">MON QG</h1>
+        <img v-if="session?.user?.image" :src="session.user.image" :alt="session.user.name || ''" class="w-8 h-8 rounded-full border border-border" />
+        <span v-else class="w-8 h-8 rounded-full bg-border/50"></span>
+      </div>
+    </header>
+
     <div class="max-w-3xl mx-auto px-6 pt-4 md:pt-8">
       <QgWeeklyActivity
         v-if="!isLoadingActivity && activity && !activity.isNew"
@@ -157,51 +174,89 @@ async function handleMarkProjectCompleted(projectId: number) {
       />
     </div>
 
-    <nav class="sticky top-14 z-40 bg-background md:relative md:top-0 border-b border-border/20">
-      <div class="max-w-3xl mx-auto px-6 flex items-center gap-4 md:gap-6 pt-3 md:pt-0">
-        <h1 class="font-display text-lg font-medium pb-3 md:pb-4">Mon QG</h1>
-        <div class="flex gap-4 md:gap-6">
-          <button
-            @click="activeTab = 'entraide'"
-            :class="[
-              'pb-3 md:pb-4 text-sm font-medium transition-colors relative',
-              activeTab === 'entraide'
-                ? 'text-foreground'
-                : 'text-foreground-muted hover:text-foreground'
-            ]"
-          >
-            Entraide
-            <span v-if="activeTab === 'entraide'" class="absolute bottom-0 left-0 right-0 h-px bg-foreground"></span>
-          </button>
-          <button
-            @click="activeTab = 'projects'"
-            :class="[
-              'pb-3 md:pb-4 text-sm font-medium transition-colors relative',
-              activeTab === 'projects'
-                ? 'text-foreground'
-                : 'text-foreground-muted hover:text-foreground'
-            ]"
-          >
-            Side Projects
-            <span v-if="activeTab === 'projects'" class="absolute bottom-0 left-0 right-0 h-px bg-foreground"></span>
-          </button>
-          <button
-            @click="activeTab = 'profil'"
-            :class="[
-              'pb-3 md:pb-4 text-sm font-medium transition-colors relative',
-              activeTab === 'profil'
-                ? 'text-foreground'
-                : 'text-foreground-muted hover:text-foreground'
-            ]"
-          >
-            Profil
-            <span v-if="activeTab === 'profil'" class="absolute bottom-0 left-0 right-0 h-px bg-foreground"></span>
-          </button>
-        </div>
+    <nav class="hidden md:block sticky top-[49px] z-40 bg-background border-b border-border/20">
+      <div class="max-w-3xl mx-auto px-6 flex gap-6">
+        <button
+          @click="activeTab = 'entraide'"
+          :class="[
+            'pt-3 pb-3 text-sm font-medium transition-colors relative',
+            activeTab === 'entraide'
+              ? 'text-foreground'
+              : 'text-foreground-muted hover:text-foreground'
+          ]"
+        >
+          Entraide
+          <span v-if="activeTab === 'entraide'" class="absolute bottom-0 left-0 right-0 h-px bg-foreground"></span>
+        </button>
+        <button
+          @click="activeTab = 'projects'"
+          :class="[
+            'pt-3 pb-3 text-sm font-medium transition-colors relative',
+            activeTab === 'projects'
+              ? 'text-foreground'
+              : 'text-foreground-muted hover:text-foreground'
+          ]"
+        >
+          Side Projects
+          <span v-if="activeTab === 'projects'" class="absolute bottom-0 left-0 right-0 h-px bg-foreground"></span>
+        </button>
+        <button
+          @click="activeTab = 'profil'"
+          :class="[
+            'pt-3 pb-3 text-sm font-medium transition-colors relative',
+            activeTab === 'profil'
+              ? 'text-foreground'
+              : 'text-foreground-muted hover:text-foreground'
+          ]"
+        >
+          Profil
+          <span v-if="activeTab === 'profil'" class="absolute bottom-0 left-0 right-0 h-px bg-foreground"></span>
+        </button>
       </div>
     </nav>
 
-    <div class="max-w-3xl mx-auto px-6 py-4 md:py-8">
+    <nav class="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-xl border-t border-border/20 pb-[env(safe-area-inset-bottom)]">
+      <div class="flex justify-around">
+        <button
+          @click="activeTab = 'entraide'"
+          :class="[
+            'flex flex-col items-center gap-1 pt-2.5 pb-2 px-4 text-[11px] font-medium transition-colors',
+            activeTab === 'entraide' ? 'text-foreground' : 'text-foreground-muted'
+          ]"
+        >
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" :stroke="activeTab === 'entraide' ? 'currentColor' : 'currentColor'" stroke-width="1.5">
+            <path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/>
+          </svg>
+          Entraide
+        </button>
+        <button
+          @click="activeTab = 'projects'"
+          :class="[
+            'flex flex-col items-center gap-1 pt-2.5 pb-2 px-4 text-[11px] font-medium transition-colors',
+            activeTab === 'projects' ? 'text-foreground' : 'text-foreground-muted'
+          ]"
+        >
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/>
+          </svg>
+          Projects
+        </button>
+        <button
+          @click="activeTab = 'profil'"
+          :class="[
+            'flex flex-col items-center gap-1 pt-2.5 pb-2 px-4 text-[11px] font-medium transition-colors',
+            activeTab === 'profil' ? 'text-foreground' : 'text-foreground-muted'
+          ]"
+        >
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+          </svg>
+          Profil
+        </button>
+      </div>
+    </nav>
+
+    <div class="max-w-3xl mx-auto px-6 py-4 md:py-8 pb-24 md:pb-8">
       <div v-if="activeTab === 'entraide'">
         <div v-if="!isLoadingActivity && activity?.profileComplete === false" class="mb-6 md:mb-8 p-4 bg-amber-500/10 border border-amber-500/30 rounded-xl">
           <div class="flex items-start gap-3">

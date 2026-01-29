@@ -1,5 +1,5 @@
 import { getServerSession, getToken } from '#auth'
-import { eq, and, gte, desc } from 'drizzle-orm'
+import { eq, and, gte, desc, ne, count } from 'drizzle-orm'
 
 export default defineEventHandler(async (event) => {
   const session = await getServerSession(event)
@@ -97,6 +97,24 @@ export default defineEventHandler(async (event) => {
   ].sort((a, b) => new Date(b.date!).getTime() - new Date(a.date!).getTime())
     .slice(0, 3)
 
+  const [weeklyNewMembers, weeklyHelpRequests, weeklyNewProjects] = await Promise.all([
+    db.select({ count: count() }).from(tables.developers)
+      .where(and(
+        gte(tables.developers.createdAt, weekStart),
+        ne(tables.developers.id, developer.id)
+      )),
+    db.select({ count: count() }).from(tables.helpRequests)
+      .where(and(
+        gte(tables.helpRequests.createdAt, weekStart),
+        ne(tables.helpRequests.developerId, developer.id)
+      )),
+    db.select({ count: count() }).from(tables.sideProjects)
+      .where(and(
+        gte(tables.sideProjects.createdAt, weekStart),
+        ne(tables.sideProjects.developerId, developer.id)
+      ))
+  ])
+
   return {
     isNew: false,
     weeklyContactsReceived: receivedContacts.length,
@@ -105,6 +123,9 @@ export default defineEventHandler(async (event) => {
     totalHelpGiven: totalHelpGiven.filter(c => c.helpRequestId).length,
     profileComplete,
     missingFields: profileComplete ? [] : missingFields,
-    memberSince: developer.createdAt
+    memberSince: developer.createdAt,
+    communityNewMembers: weeklyNewMembers[0].count,
+    communityHelpRequests: weeklyHelpRequests[0].count,
+    communityNewProjects: weeklyNewProjects[0].count
   }
 })
