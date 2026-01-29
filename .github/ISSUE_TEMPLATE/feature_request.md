@@ -1,27 +1,27 @@
 ---
 name: Feature Request
-about: Propose une nouvelle fonctionnalite pour OSLD
+about: Suggest a new feature for OSLD
 title: '[Feature] '
 labels: enhancement
 assignees: ''
 ---
 
-## Description de la feature
+## Feature Description
 
-Decris clairement la fonctionnalite que tu proposes.
+Clearly describe the feature you are proposing.
 
-## Probleme a resoudre
+## Problem to Solve
 
-Quel probleme cette feature resout-elle ? Ex : "Je suis frustree quand..."
+What problem does this feature solve? E.g. "I'm frustrated when..."
 
-## Solution proposee
+## Proposed Solution
 
-Decris comment tu imagines cette fonctionnalite.
+Describe how you envision this feature.
 
-## Alternatives considerees
+## Alternatives Considered
 
-As-tu pense a d'autres solutions ?
+Have you thought of other solutions?
 
-## Contexte supplementaire
+## Additional Context
 
-Ajoute tout autre contexte, maquettes ou screenshots.
+Add any other context, mockups, or screenshots.

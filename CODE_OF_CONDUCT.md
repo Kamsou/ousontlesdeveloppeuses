@@ -1,41 +1,41 @@
-# Code de Conduite
+# Code of Conduct
 
-## Notre engagement
+## Our Pledge
 
-Dans l'interet de favoriser un environnement ouvert et accueillant, nous nous engageons a faire de la participation a notre projet une experience exempte de harcelement pour toutes et tous, quel que soit l'age, la taille, le handicap, l'origine ethnique, l'identite et l'expression de genre, le niveau d'experience, la nationalite, l'apparence, la religion, ou l'orientation sexuelle.
+In the interest of fostering an open and welcoming environment, we pledge to make participation in our project a harassment-free experience for everyone, regardless of age, body size, disability, ethnicity, gender identity and expression, level of experience, nationality, appearance, religion, or sexual orientation.
 
-## Nos standards
+## Our Standards
 
-**Comportements positifs :**
+**Positive behaviors:**
 
-- Utiliser un langage accueillant et inclusif
-- Respecter les points de vue et experiences differents
-- Accepter les critiques constructives avec grace
-- Se concentrer sur ce qui est le mieux pour la communaute
-- Faire preuve d'empathie envers les autres membres
+- Using welcoming and inclusive language
+- Respecting differing viewpoints and experiences
+- Accepting constructive criticism gracefully
+- Focusing on what is best for the community
+- Showing empathy towards other community members
 
-**Comportements inacceptables :**
+**Unacceptable behaviors:**
 
-- Utilisation de langage ou d'images a caractere sexuel
-- Trolling, commentaires insultants ou desobligeants, attaques personnelles ou politiques
-- Harcelement public ou prive
-- Publication d'informations privees d'autrui sans autorisation
-- Toute conduite inappropriee dans un cadre professionnel
+- Use of sexualized language or imagery
+- Trolling, insulting or derogatory comments, personal or political attacks
+- Public or private harassment
+- Publishing others' private information without permission
+- Any conduct inappropriate in a professional setting
 
-## Nos responsabilites
+## Our Responsibilities
 
-Les mainteneurs du projet sont responsables de clarifier les standards de comportement et de prendre des mesures correctives appropriees en reponse a tout comportement inacceptable.
+Project maintainers are responsible for clarifying standards of behavior and are expected to take appropriate corrective action in response to any instances of unacceptable behavior.
 
-Les mainteneurs ont le droit de supprimer, modifier ou rejeter les commentaires, commits, code, modifications du wiki, issues et autres contributions qui ne respectent pas ce Code de Conduite.
+Maintainers have the right to remove, edit, or reject comments, commits, code, wiki edits, issues, and other contributions that do not align with this Code of Conduct.
 
-## Portee
+## Scope
 
-Ce Code de Conduite s'applique dans tous les espaces du projet, ainsi que dans les espaces publics lorsqu'une personne represente le projet ou sa communaute.
+This Code of Conduct applies in all project spaces, as well as in public spaces when an individual is representing the project or its community.
 
-## Application
+## Enforcement
 
-Les cas de comportement abusif, harcelant ou inacceptable peuvent etre signales en contactant l'equipe du projet. Toutes les plaintes seront examinees et investiguees, et donneront lieu a une reponse appropriee aux circonstances.
+Instances of abusive, harassing, or otherwise unacceptable behavior may be reported by contacting the project team. All complaints will be reviewed and investigated and will result in a response appropriate to the circumstances.
 
 ## Attribution
 
-Ce Code de Conduite est adapte du [Contributor Covenant](https://www.contributor-covenant.org), version 2.1.
+This Code of Conduct is adapted from the [Contributor Covenant](https://www.contributor-covenant.org), version 2.1.

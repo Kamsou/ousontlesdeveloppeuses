@@ -1,36 +1,36 @@
 ---
 name: Bug Report
-about: Signale un bug pour nous aider a ameliorer OSLD
+about: Report a bug to help us improve OSLD
 title: '[Bug] '
 labels: bug
 assignees: ''
 ---
 
-## Description du bug
+## Bug Description
 
-Decris clairement le probleme rencontre.
+Clearly describe the issue you encountered.
 
-## Comment reproduire
+## How to Reproduce
 
-1. Va sur '...'
-2. Clique sur '...'
-3. Scroll jusqu'a '...'
-4. Le bug apparait
+1. Go to '...'
+2. Click on '...'
+3. Scroll to '...'
+4. The bug appears
 
-## Comportement attendu
+## Expected Behavior
 
-Decris ce qui devrait se passer normalement.
+Describe what should happen normally.
 
 ## Screenshots
 
-Si applicable, ajoute des captures d'ecran.
+If applicable, add screenshots.
 
-## Environnement
+## Environment
 
-- Navigateur : [ex: Chrome 120, Firefox 121]
-- OS : [ex: macOS, Windows, Linux]
-- Mobile/Desktop : [ex: Desktop]
+- Browser: [e.g. Chrome 120, Firefox 121]
+- OS: [e.g. macOS, Windows, Linux]
+- Mobile/Desktop: [e.g. Desktop]
 
-## Informations supplementaires
+## Additional Information
 
-Ajoute tout autre contexte utile.
+Add any other useful context.

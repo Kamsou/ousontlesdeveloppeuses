@@ -1,20 +1,20 @@
 ## Description
 
-Decris les changements apportes par cette PR.
+Describe the changes made in this PR.
 
-## Type de changement
+## Type of Change
 
 - [ ] Bug fix
-- [ ] Nouvelle feature
+- [ ] New feature
 - [ ] Refactoring
 - [ ] Documentation
-- [ ] Autre (preciser)
+- [ ] Other (specify)
 
-## Issue liee
+## Related Issue
 
-Fixes #(numero de l'issue)
+Fixes #(issue number)
 
-## Comment tester
+## How to Test
 
 1. ...
 2. ...
@@ -22,7 +22,7 @@ Fixes #(numero de l'issue)
 
 ## Checklist
 
-- [ ] J'ai teste mes modifications localement
-- [ ] Le code respecte le style du projet
-- [ ] J'ai ajoute les types TypeScript si necessaire
-- [ ] La PR est prete pour review
+- [ ] I have tested my changes locally
+- [ ] The code follows the project's style guidelines
+- [ ] I have added TypeScript types if necessary
+- [ ] The PR is ready for review
