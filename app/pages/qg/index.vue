@@ -39,6 +39,7 @@ interface Activity {
   communityNewMembers?: number
   communityHelpRequests?: number
   communityNewProjects?: number
+  unreadComments?: { type: 'project' | 'request'; id: number; title: string; count: number }[]
 }
 
 definePageMeta({
@@ -90,6 +91,10 @@ const { data: offers, status: offersStatus, refresh: refreshOffers } = useLazyFe
 const isLoadingOffers = computed(() => offersStatus.value === 'pending')
 
 const { data: profile, refresh: refreshProfile } = await useFetch<Profile | null>('/api/developers/me')
+
+const myOffers = computed(() =>
+  offers.value?.filter((o: any) => o.developer?.id === profile.value?.id) || []
+)
 const isNewProfile = computed(() => !profile.value)
 
 const showOptInModal = ref(false)
@@ -380,16 +385,28 @@ async function handleMarkProjectCompleted(projectId: number) {
           :offers="offers || []"
           :is-loading="isLoadingOffers"
           :current-user-id="profile?.id"
-          @deleted="refreshOffers()"
-        />
-
-        <QgMyProjectsList
-          :projects="myProjects || []"
-          :is-loading="isLoadingProjects"
-          @mark-completed="handleMarkProjectCompleted"
         />
 
         <QgSideProjectsList />
+
+        <div v-if="myOffers.length > 0 || (myProjects || []).length > 0" class="mt-16">
+          <div class="flex items-center gap-3 mb-8">
+            <h2 class="text-lg font-display font-medium">Tes publications</h2>
+            <span class="flex-1 h-px bg-border/20"></span>
+          </div>
+
+          <QgMyOffersList
+            :offers="myOffers"
+            :is-loading="isLoadingOffers"
+            @deleted="refreshOffers()"
+          />
+
+          <QgMyProjectsList
+            :projects="myProjects || []"
+            :is-loading="isLoadingProjects"
+            @mark-completed="handleMarkProjectCompleted"
+          />
+        </div>
       </div>
 
       <div v-else>

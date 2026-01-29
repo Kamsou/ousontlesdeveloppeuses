@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { typeLabels, typeColors } from '~/utils/offerTypes'
+
 interface Offer {
   id: number
   title: string
@@ -21,26 +23,9 @@ const props = defineProps<{
   currentUserId?: number
 }>()
 
-const emit = defineEmits<{
-  deleted: []
-}>()
-const deleting = ref<number | null>(null)
-
-const typeLabels: Record<string, string> = {
-  alternance: 'Alternance',
-  stage: 'Stage',
-  cdi: 'CDI',
-  freelance: 'Freelance',
-  other: 'Autre'
-}
-
-const typeColors: Record<string, string> = {
-  alternance: 'border-primary/30 text-primary',
-  stage: 'border-blue-400/30 text-blue-400',
-  cdi: 'border-green-400/30 text-green-400',
-  freelance: 'border-amber-400/30 text-amber-400',
-  other: 'border-border text-foreground-muted'
-}
+const communityOffers = computed(() =>
+  props.offers.filter(o => o.developer.id !== props.currentUserId)
+)
 
 function formatDate(date: string) {
   return new Date(date).toLocaleDateString('fr-FR', {
@@ -48,23 +33,11 @@ function formatDate(date: string) {
     month: 'short'
   })
 }
-
-async function deleteOffer(id: number) {
-  if (!confirm('Supprimer cette offre ?')) return
-  deleting.value = id
-  try {
-    await $fetch(`/api/offers/${id}`, { method: 'DELETE' })
-    emit('deleted')
-  } catch {
-  } finally {
-    deleting.value = null
-  }
-}
 </script>
 
 <template>
-  <section v-if="isLoading || offers.length > 0" class="mb-8 md:mb-12">
-    <h2 class="text-sm font-medium text-foreground-muted mb-4">Offres</h2>
+  <section v-if="isLoading || communityOffers.length > 0" class="mb-16">
+    <h2 class="text-lg font-display font-medium mb-6">Offres de la communauté</h2>
 
     <div v-if="isLoading" class="space-y-3">
       <div v-for="i in 3" :key="i" class="p-4 border border-border/20 rounded-xl animate-pulse">
@@ -75,7 +48,7 @@ async function deleteOffer(id: number) {
 
     <div v-else class="space-y-3">
       <div
-        v-for="offer in offers"
+        v-for="offer in communityOffers"
         :key="offer.id"
         class="p-4 border border-border/20 rounded-xl transition-colors hover:border-border/40"
       >
@@ -93,12 +66,6 @@ async function deleteOffer(id: number) {
                 class="px-2 py-0.5 text-[11px] font-medium border border-green-500/30 text-green-400 rounded-full"
               >
                 Vérifié
-              </span>
-              <span
-                v-else
-                class="px-2 py-0.5 text-[11px] font-medium border border-amber-500/30 text-amber-400 rounded-full"
-              >
-                Non vérifié
               </span>
             </div>
             <h3 class="font-medium text-sm text-foreground">
@@ -130,17 +97,6 @@ async function deleteOffer(id: number) {
               <span>{{ formatDate(offer.createdAt) }}</span>
             </div>
           </div>
-          <button
-            v-if="currentUserId === offer.developer.id"
-            @click="deleteOffer(offer.id)"
-            :disabled="deleting === offer.id"
-            class="text-foreground-muted hover:text-red-400 transition-colors shrink-0 bg-transparent border-none cursor-pointer p-1"
-            aria-label="Supprimer l'offre"
-          >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M18 6L6 18M6 6l12 12" />
-            </svg>
-          </button>
         </div>
       </div>
     </div>

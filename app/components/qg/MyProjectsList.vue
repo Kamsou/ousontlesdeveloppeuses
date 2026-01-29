@@ -39,28 +39,16 @@ async function markAsCompleted(projectId: number, e: Event) {
 </script>
 
 <template>
-  <section class="mb-16">
-    <div class="flex items-center justify-between mb-6">
-      <h2 class="text-lg font-display font-medium">Tes side projects</h2>
+  <div class="mb-10">
+    <div class="flex items-center justify-between mb-5">
+      <h3 class="text-sm font-medium text-foreground-muted uppercase tracking-wide">Side projects</h3>
       <span v-if="activeProjects.length > 0" class="flex items-center gap-2 px-2.5 py-1 bg-green-500/10 rounded-full">
         <span class="w-1.5 h-1.5 bg-green-400 rounded-full"></span>
         <span class="text-xs text-green-400">{{ activeProjects.length }} actif{{ activeProjects.length > 1 ? 's' : '' }}</span>
       </span>
     </div>
 
-    <div v-if="isLoading" class="space-y-3">
-      <div v-for="i in 2" :key="i" class="p-4 border border-border/30 rounded-xl animate-pulse">
-        <div class="h-4 bg-border/20 rounded w-1/2 mb-2"></div>
-        <div class="h-3 bg-border/20 rounded w-1/4"></div>
-      </div>
-    </div>
-
-    <div v-else-if="projects.length === 0" class="py-10 text-center border border-dashed border-border/30 rounded-xl">
-      <p class="text-foreground-muted text-sm mb-1">Tu n'as pas encore de side project</p>
-      <p class="text-foreground-muted text-xs">Propose le tien pour trouver des contributrices</p>
-    </div>
-
-    <div v-else class="space-y-2">
+    <div class="space-y-2">
       <NuxtLink
         v-for="project in activeProjects"
         :key="project.id"
@@ -74,7 +62,7 @@ async function markAsCompleted(projectId: number, e: Event) {
           <span class="text-sm font-medium text-foreground group-hover:text-foreground-muted transition-colors truncate block">
             {{ project.title }}
           </span>
-          <div v-if="project.techs?.length" class="flex items-center gap-1.5 mt-1.5">
+          <div v-if="project.techs?.length" class="flex items-center flex-wrap gap-1.5 mt-1.5">
             <span
               v-for="tech in project.techs.slice(0, 3)"
               :key="tech"
@@ -142,5 +130,5 @@ async function markAsCompleted(projectId: number, e: Event) {
         {{ showCompleted ? 'Masquer' : `Voir ${completedProjects.length} terminé${completedProjects.length > 1 ? 's' : ''}` }}
       </button>
     </div>
-  </section>
+  </div>
 </template>
