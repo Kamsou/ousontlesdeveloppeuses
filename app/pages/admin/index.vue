@@ -4,9 +4,11 @@ definePageMeta({
 })
 
 const { data: developers, status, error, refresh } = await useFetch('/api/admin/developers')
+const { data: pendingOffers, refresh: refreshOffers } = useLazyFetch<any[]>('/api/offers')
 
 const searchQuery = ref('')
 const deleting = ref<number | null>(null)
+const verifying = ref<number | null>(null)
 
 async function deleteDeveloper(id: number, name: string) {
   if (!confirm(`Supprimer ${name} de l'annuaire ?`)) return
@@ -45,6 +47,22 @@ const openToLabels: Record<string, string> = {
   cv_review: 'Relecture CV'
 }
 
+const unverifiedOffers = computed(() =>
+  pendingOffers.value?.filter((o: any) => !o.verified) || []
+)
+
+async function toggleVerified(offerId: number) {
+  verifying.value = offerId
+  try {
+    await $fetch(`/api/admin/offers/${offerId}`, { method: 'PATCH' })
+    await refreshOffers()
+  } catch {
+    alert('Erreur lors de la vérification')
+  } finally {
+    verifying.value = null
+  }
+}
+
 function formatDate(date: string | Date | null) {
   if (!date) return '-'
   return new Date(date).toLocaleDateString('fr-FR', {
@@ -76,6 +94,34 @@ function formatDate(date: string | Date | null) {
       >
         Programmes
       </NuxtLink>
+    </div>
+
+    <div v-if="unverifiedOffers.length > 0" class="mb-8 p-6 border border-amber-500/30 bg-amber-500/5 rounded-xl">
+      <h2 class="font-display text-lg font-medium mb-4">
+        Offres à vérifier
+        <span class="ml-2 px-2 py-0.5 text-xs font-medium bg-amber-500/20 text-amber-400 rounded-full">{{ unverifiedOffers.length }}</span>
+      </h2>
+      <div class="space-y-3">
+        <div
+          v-for="offer in unverifiedOffers"
+          :key="offer.id"
+          class="flex items-center justify-between gap-4 p-4 bg-background border border-border/30 rounded-lg"
+        >
+          <div class="min-w-0">
+            <p class="font-medium text-sm text-foreground truncate">{{ offer.title }}</p>
+            <p class="text-xs text-foreground-muted mt-0.5">
+              {{ offer.developer?.name }} · {{ offer.type }} · {{ formatDate(offer.createdAt) }}
+            </p>
+          </div>
+          <button
+            @click="toggleVerified(offer.id)"
+            :disabled="verifying === offer.id"
+            class="px-3 py-1.5 text-xs border border-green-500/30 text-green-400 rounded-lg bg-transparent cursor-pointer transition-all hover:bg-green-500/10 disabled:opacity-50 shrink-0"
+          >
+            {{ verifying === offer.id ? '...' : 'Vérifier' }}
+          </button>
+        </div>
+      </div>
     </div>
 
     <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">

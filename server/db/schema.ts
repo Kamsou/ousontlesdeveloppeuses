@@ -88,13 +88,35 @@ export const helpRequestTechs = sqliteTable('help_request_techs', {
   techName: text('tech_name').notNull()
 })
 
+export const offers = sqliteTable('offers', {
+  id: integer('id').primaryKey({ autoIncrement: true }),
+  developerId: integer('developer_id').notNull().references(() => developers.id, { onDelete: 'cascade' }),
+  title: text('title').notNull(),
+  description: text('description'),
+  url: text('url'),
+  type: text('type', {
+    enum: ['alternance', 'stage', 'cdi', 'freelance', 'other']
+  }).notNull(),
+  location: text('location'),
+  verified: integer('verified', { mode: 'boolean' }).default(false),
+  createdAt: integer('created_at', { mode: 'timestamp' }).$defaultFn(() => new Date())
+})
+
+export const offersRelations = relations(offers, ({ one }) => ({
+  developer: one(developers, {
+    fields: [offers.developerId],
+    references: [developers.id]
+  })
+}))
+
 export const developersRelations = relations(developers, ({ many, one }) => ({
   skills: many(developerSkills),
   openTo: many(developerOpenTo),
   speakerProfile: one(speakerProfiles),
   reviews: many(companyReviews),
   helpRequests: many(helpRequests),
-  sideProjects: many(sideProjects)
+  sideProjects: many(sideProjects),
+  offers: many(offers)
 }))
 
 export const developerSkillsRelations = relations(developerSkills, ({ one }) => ({

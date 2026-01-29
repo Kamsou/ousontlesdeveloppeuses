@@ -55,15 +55,15 @@ const router = useRouter()
 const { $clientPosthog } = useNuxtApp()
 const { data: session } = useAuth()
 
-type TabType = 'entraide' | 'projects' | 'profil'
+type TabType = 'entraide' | 'offres' | 'profil'
 
 const activeTab = ref<TabType>(
   route.query.tab === 'profil' ? 'profil' :
-  route.query.tab === 'projects' ? 'projects' : 'entraide'
+  (route.query.tab === 'offres' || route.query.tab === 'projects') ? 'offres' : 'entraide'
 )
 
 watch(() => route.query.tab, (tab) => {
-  activeTab.value = tab === 'profil' ? 'profil' : tab === 'projects' ? 'projects' : 'entraide'
+  activeTab.value = tab === 'profil' ? 'profil' : (tab === 'offres' || tab === 'projects') ? 'offres' : 'entraide'
 })
 
 watch(activeTab, (tab) => {
@@ -85,6 +85,9 @@ const closedRequests = computed(() =>
 
 const { data: myProjects, status: projectsStatus, refresh: refreshProjects } = useLazyFetch<any[]>('/api/side-projects/mine')
 const isLoadingProjects = computed(() => projectsStatus.value === 'pending')
+
+const { data: offers, status: offersStatus, refresh: refreshOffers } = useLazyFetch<any[]>('/api/offers')
+const isLoadingOffers = computed(() => offersStatus.value === 'pending')
 
 const { data: profile, refresh: refreshProfile } = await useFetch<Profile | null>('/api/developers/me')
 const isNewProfile = computed(() => !profile.value)
@@ -189,16 +192,16 @@ async function handleMarkProjectCompleted(projectId: number) {
           <span v-if="activeTab === 'entraide'" class="absolute bottom-0 left-0 right-0 h-px bg-foreground"></span>
         </button>
         <button
-          @click="activeTab = 'projects'"
+          @click="activeTab = 'offres'"
           :class="[
             'pt-3 pb-3 text-sm font-medium transition-colors relative',
-            activeTab === 'projects'
+            activeTab === 'offres'
               ? 'text-foreground'
               : 'text-foreground-muted hover:text-foreground'
           ]"
         >
-          Side Projects
-          <span v-if="activeTab === 'projects'" class="absolute bottom-0 left-0 right-0 h-px bg-foreground"></span>
+          Offres
+          <span v-if="activeTab === 'offres'" class="absolute bottom-0 left-0 right-0 h-px bg-foreground"></span>
         </button>
         <button
           @click="activeTab = 'profil'"
@@ -230,16 +233,16 @@ async function handleMarkProjectCompleted(projectId: number) {
           Entraide
         </button>
         <button
-          @click="activeTab = 'projects'"
+          @click="activeTab = 'offres'"
           :class="[
             'flex flex-col items-center gap-1 pt-2.5 pb-2 px-4 text-[11px] font-medium transition-colors',
-            activeTab === 'projects' ? 'text-foreground' : 'text-foreground-muted'
+            activeTab === 'offres' ? 'text-foreground' : 'text-foreground-muted'
           ]"
         >
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-            <path d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/>
+            <rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/>
           </svg>
-          Projects
+          Offres
         </button>
         <button
           @click="activeTab = 'profil'"
@@ -334,50 +337,51 @@ async function handleMarkProjectCompleted(projectId: number) {
         <QgFeed />
       </div>
 
-      <div v-else-if="activeTab === 'projects'">
-        <section class="mb-8 md:mb-16">
+      <div v-else-if="activeTab === 'offres'">
+        <div v-if="activity?.profileComplete !== false" class="flex flex-col sm:flex-row gap-3 mb-8 md:mb-12">
           <NuxtLink
-            v-if="activity?.profileComplete !== false"
-            to="/qg/new-project"
-            class="group block p-5 md:p-8 border border-border/30 rounded-2xl transition-all hover:border-green-500/30 hover:bg-green-500/[0.02]"
+            to="/qg/new-offer"
+            class="group flex-1 block p-5 border border-border/30 rounded-2xl transition-all hover:border-primary/30 hover:bg-primary/[0.02] no-underline"
           >
-            <div class="flex items-start justify-between gap-4">
-              <div>
-                <h2 class="text-xl md:text-2xl font-display font-medium mb-2">
-                  Propose ton side project
-                </h2>
-                <p class="text-foreground-muted text-sm">
-                  Trouve des contributrices pour ton projet.
-                </p>
-              </div>
-              <span class="w-10 h-10 flex items-center justify-center rounded-full bg-green-500/10 group-hover:bg-green-500/20 transition-colors shrink-0">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-green-400">
-                  <path d="M12 5v14M5 12h14" />
+            <div class="flex items-center gap-3">
+              <span class="w-9 h-9 flex items-center justify-center rounded-full bg-primary/10 group-hover:bg-primary/20 transition-colors shrink-0">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-primary">
+                  <rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/>
                 </svg>
               </span>
+              <div>
+                <span class="block text-sm font-medium text-foreground">Poster une offre</span>
+                <span class="block text-xs text-foreground-muted">Alternance, stage, CDI...</span>
+              </div>
             </div>
           </NuxtLink>
-          <div
-            v-else
-            class="block p-5 md:p-8 border border-border/20 rounded-2xl cursor-not-allowed"
+          <NuxtLink
+            to="/qg/new-project"
+            class="group flex-1 block p-5 border border-border/30 rounded-2xl transition-all hover:border-green-500/30 hover:bg-green-500/[0.02] no-underline"
           >
-            <div class="flex items-start justify-between gap-4">
-              <div>
-                <h2 class="text-xl md:text-2xl font-display font-medium mb-2 text-foreground-muted">
-                  Propose ton side project
-                </h2>
-                <p class="text-foreground-muted/60 text-sm">
-                  Complète ton profil pour proposer un projet
-                </p>
-              </div>
-              <span class="w-10 h-10 flex items-center justify-center rounded-full bg-border/20 shrink-0">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-foreground-muted/50">
-                  <path d="M12 5v14M5 12h14" />
+            <div class="flex items-center gap-3">
+              <span class="w-9 h-9 flex items-center justify-center rounded-full bg-green-500/10 group-hover:bg-green-500/20 transition-colors shrink-0">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-green-400">
+                  <path d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/>
                 </svg>
               </span>
+              <div>
+                <span class="block text-sm font-medium text-foreground">Side project</span>
+                <span class="block text-xs text-foreground-muted">Trouve des contributrices</span>
+              </div>
             </div>
-          </div>
-        </section>
+          </NuxtLink>
+        </div>
+        <div v-else class="mb-8 md:mb-12 p-5 border border-border/20 rounded-2xl cursor-not-allowed">
+          <p class="text-sm text-foreground-muted">Complète ton profil pour poster des offres ou des projets</p>
+        </div>
+
+        <QgOffersList
+          :offers="offers || []"
+          :is-loading="isLoadingOffers"
+          :current-user-id="profile?.id"
+          @deleted="refreshOffers()"
+        />
 
         <QgMyProjectsList
           :projects="myProjects || []"

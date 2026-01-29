@@ -56,7 +56,7 @@ async function submit() {
       }
     })
 
-    router.push('/qg?tab=projects')
+    router.push('/qg?tab=offres')
   } catch (e: any) {
     error.value = e.data?.message || 'Erreur lors de la création'
   } finally {
@@ -68,11 +68,11 @@ async function submit() {
 <template>
   <div class="min-h-screen bg-background">
     <div class="max-w-2xl mx-auto px-6 py-16">
-      <NuxtLink to="/qg?tab=projects" class="inline-flex items-center gap-2 text-foreground-muted hover:text-foreground transition-colors mb-8">
+      <NuxtLink to="/qg?tab=offres" class="inline-flex items-center gap-2 text-foreground-muted hover:text-foreground transition-colors mb-8">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M19 12H5M12 19l-7-7 7-7" />
         </svg>
-        Side Projects
+        Offres
       </NuxtLink>
 
       <h1 class="font-display text-3xl md:text-4xl font-medium mb-3">
