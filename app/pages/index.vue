@@ -4,18 +4,35 @@ import { openToOptions } from '~/utils/constants'
 const { $clientPosthog } = useNuxtApp()
 const { status, signIn } = useAuth()
 
+useHead({
+  titleTemplate: '%s',
+})
+
 useSeoMeta({
-  title: 'Où Sont Les Développeuses',
-  description: 'La communauté des développeuses en France. Annuaire de talents tech, speakeuses pour vos events, et entreprises inclusives.',
-  ogTitle: 'OSLD / Où Sont Les Développeuses',
-  ogDescription: 'La communauté des développeuses en France. Annuaire de talents tech, speakeuses pour vos events, et entreprises inclusives.',
+  title: 'Où Sont Les Développeuses (OSLD) — Annuaire des développeuses tech en France',
+  description: 'Annuaire des développeuses tech en France : profils, speakeuses pour vos conférences, entreprises inclusives et entraide communautaire. Rejoignez OSLD.',
+  ogTitle: 'Où Sont Les Développeuses — Annuaire & communauté tech',
+  ogDescription: 'Annuaire des développeuses en France. Trouvez des profils tech, des speakeuses pour vos événements et des entreprises inclusives.',
   ogImage: 'https://ousontlesdeveloppeuses.fr/og-image.png',
   ogType: 'website',
   twitterCard: 'summary_large_image',
-  twitterTitle: 'OSLD / Où Sont Les Développeuses',
-  twitterDescription: 'La communauté des développeuses en France. Annuaire de talents tech, speakeuses pour vos events.',
+  twitterTitle: 'Où Sont Les Développeuses — Annuaire & communauté tech',
+  twitterDescription: 'Annuaire des développeuses en France. Profils tech, speakeuses, entreprises inclusives et entraide communautaire.',
   twitterImage: 'https://ousontlesdeveloppeuses.fr/og-image.png',
 })
+
+useSchemaOrg([
+  defineWebSite({
+    name: 'Où Sont Les Développeuses',
+    alternateName: 'OSLD',
+    description: 'Annuaire des développeuses tech en France',
+    inLanguage: 'fr-FR',
+  }),
+  defineWebPage({
+    name: 'Où Sont Les Développeuses — Annuaire des développeuses tech en France',
+    description: 'Annuaire des développeuses tech en France : profils, speakeuses pour vos conférences, entreprises inclusives et entraide communautaire.',
+  }),
+])
 
 const { data: statsData, status: statsStatus } = useLazyFetch('/api/stats', {
   server: false

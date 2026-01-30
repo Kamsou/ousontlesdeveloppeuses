@@ -1,8 +1,8 @@
 <script setup lang="ts">
 useSeoMeta({
-  title: 'Speakeuses Tech',
-  description: 'Trouvez des speakeuses tech pour vos conférences. Filtrez par sujet, remote ou présentiel.',
-  ogTitle: 'Speakeuses Tech',
+  title: 'Speakeuses Tech pour vos Conférences',
+  description: 'Trouvez des speakeuses tech pour vos conférences et événements. Filtrez par sujet, ville, remote ou présentiel. Développeuses disponibles en France.',
+  ogTitle: 'Speakeuses Tech pour vos Conférences',
   ogDescription: 'Trouvez des speakeuses tech pour vos conférences. Filtrez par sujet, remote ou présentiel.',
   ogImage: 'https://ousontlesdeveloppeuses.fr/og-image.png',
   twitterCard: 'summary_large_image',

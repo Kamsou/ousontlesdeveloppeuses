@@ -1,9 +1,11 @@
 <script setup lang="ts">
 useSeoMeta({
-  title: 'Programmes & Ressources',
-  description: 'Programmes de mentorat, bourses, communautés et opportunités pour les développeuses en France.',
-  ogTitle: 'Programmes & Ressources — OSLD',
-  ogDescription: 'Programmes de mentorat, bourses, communautés et opportunités pour les développeuses en France.',
+  title: 'Programmes pour Développeuses',
+  description: 'Programmes de mentorat, communautés tech et formations pour les développeuses en France. Duchess, conférences, ressources et opportunités.',
+  ogTitle: 'Programmes pour Développeuses',
+  ogDescription: 'Mentorat, communautés tech, formations et conférences pour les développeuses en France.',
+  ogImage: 'https://ousontlesdeveloppeuses.fr/og-image.png',
+  twitterCard: 'summary_large_image',
 })
 
 interface Program {

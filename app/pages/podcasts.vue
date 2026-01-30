@@ -1,9 +1,11 @@
 <script setup lang="ts">
 useSeoMeta({
-  title: 'Podcasts',
-  description: 'Podcasts par et pour les développeuses. Épisodes, interviews et discussions tech.',
-  ogTitle: 'Podcasts — OSLD',
-  ogDescription: 'Podcasts par et pour les développeuses. Épisodes, interviews et discussions tech.',
+  title: 'Podcasts Tech & Développeuses',
+  description: 'Podcasts tech par et pour les développeuses. Interviews, retours d\'expérience et discussions sur le dev, la tech et les parcours féminins.',
+  ogTitle: 'Podcasts Tech & Développeuses',
+  ogDescription: 'Podcasts tech par et pour les développeuses. Interviews, retours d\'expérience et discussions tech.',
+  ogImage: 'https://ousontlesdeveloppeuses.fr/og-image.png',
+  twitterCard: 'summary_large_image',
 })
 
 interface Podcast {

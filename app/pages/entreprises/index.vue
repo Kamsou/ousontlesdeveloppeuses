@@ -1,8 +1,8 @@
 <script setup lang="ts">
 useSeoMeta({
-  title: 'Entreprises Inclusives',
-  description: 'Les entreprises tech où il fait bon travailler. Avis et notes par la communauté des développeuses.',
-  ogTitle: 'Entreprises Inclusives',
+  title: 'Entreprises Tech Inclusives',
+  description: 'Trouvez des entreprises tech inclusives en France. Avis et notes par la communauté des développeuses. Parité, management, culture tech.',
+  ogTitle: 'Entreprises Tech Inclusives',
   ogDescription: 'Les entreprises tech où il fait bon travailler. Avis et notes par la communauté des développeuses.',
   ogImage: 'https://ousontlesdeveloppeuses.fr/og-image.png',
   twitterCard: 'summary_large_image',
