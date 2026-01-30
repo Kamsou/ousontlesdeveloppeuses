@@ -1,55 +1,61 @@
 <div align="center">
 
-# OSLD - Ou Sont Les Developpeuses ?
+<br />
 
-**The platform that makes women developers visible in France.**
+# Ou Sont Les Developpeuses ?
 
-[![Site](https://img.shields.io/badge/Site-ousontlesdeveloppeuses.fr-8B5CF6?style=for-the-badge)](https://ousontlesdeveloppeuses.fr)
-[![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](LICENSE)
-[![Contribute](https://img.shields.io/badge/Contribute-Welcome-orange?style=for-the-badge)](CONTRIBUTING.md)
+The platform that makes women developers visible in France.
+
+<br />
+
+[![Site](https://img.shields.io/badge/ousontlesdeveloppeuses.fr-3B82F6?style=for-the-badge&logo=googlechrome&logoColor=white)](https://ousontlesdeveloppeuses.fr)
+[![License](https://img.shields.io/badge/MIT-green?style=for-the-badge&label=license)](LICENSE)
+[![Contribute](https://img.shields.io/badge/welcome-orange?style=for-the-badge&label=contributions)](CONTRIBUTING.md)
 
 </div>
 
----
+<br />
 
-## Why OSLD?
+## The problem
 
-Women developers are here. They code, they innovate, they inspire. But they often remain invisible.
+Women developers are here. They code, they innovate, they inspire. But they often remain invisible: missing from conference lineups, overlooked in expert lists, underrepresented in tech communities.
 
-**OSLD** changes that. A community platform to:
-- Build visibility and grow your network
-- Find speakers for your tech events
-- Identify truly inclusive companies
-- Help each other (QG / member area)
+**OSLD** changes that.
 
----
+<br />
 
-## Features
+## What OSLD does
 
-| Feature | Description |
-|---|---|
-| **Directory** | Developer profiles with skills, location and availability |
-| **Speakers** | Speaker bureau for conferences and meetups |
-| **Companies** | Community reviews and ratings on company inclusivity |
-| **QG** | Member area: mutual help, side projects, help requests |
-| **Side Projects** | Share your project and find contributors |
-| **Profile Quiz** | Discover your developer profile with an interactive quiz |
+**Directory** Developer profiles with skills, location and availability. Find the right person for your project or event.
 
----
+**Speakers** A speaker bureau for conferences and meetups. No more excuses for all-male panels.
 
-## Tech Stack
+**Companies** Community reviews on real company inclusivity. Ratings and feedback from the women who work there.
 
-```
-Frontend     →  Nuxt 4 · Vue 3 · TypeScript · Tailwind CSS
-Backend      →  Nitro (Nuxt Server)
-Database     →  NuxtHub (Cloudflare D1) + Drizzle ORM
-Auth         →  GitHub OAuth via @sidebase/nuxt-auth
-Deployment   →  Netlify
-```
+**QG** The member area. Mutual help, side projects, help requests, job offers. A safe space for women developers to collaborate.
 
----
+**Side Projects** Share your projects, find contributors, build together.
 
-## Quick Start
+**Profile Quiz** Discover your developer profile with an AI-powered interactive quiz.
+
+<br />
+
+## Tech stack
+
+| Layer | Technologies |
+|-------|-------------|
+| **Frontend** | Nuxt 4 · Vue 3 · TypeScript · Tailwind CSS |
+| **Backend** | Nitro (Nuxt Server) |
+| **Database** | NuxtHub (Cloudflare D1) · Drizzle ORM |
+| **Auth** | GitHub OAuth · @sidebase/nuxt-auth |
+| **Analytics** | PostHog |
+| **Emails** | Resend |
+| **AI** | Anthropic (profile quiz) |
+| **Deployment** | Netlify |
+
+<br />
+
+## Quick start
 
 ### Prerequisites
 
@@ -60,43 +66,38 @@ Deployment   →  Netlify
 ### Installation
 
 ```bash
-# Clone the repo
 git clone https://github.com/Kamsou/ousontlesdevs.git
 cd ousontlesdevs
-
-# Install dependencies
 npm install
-
-# Configure environment
 cp .env.example .env
 ```
 
-Fill in the variables in `.env`:
+Fill in `.env`:
 
 | Variable | Description |
 |----------|-------------|
-| `AUTH_SECRET` | Session secret (generate with `openssl rand -base64 32`) |
+| `AUTH_SECRET` | Session secret (`openssl rand -base64 32`) |
 | `GITHUB_CLIENT_ID` | GitHub OAuth App Client ID |
 | `GITHUB_CLIENT_SECRET` | GitHub OAuth App Client Secret |
 | `NUXT_PUBLIC_AUTH_BASE_URL` | `http://localhost:3000` for local dev |
 
 ### Database
 
-NuxtHub automatically creates a local SQLite database. **You do not have access to the production database.**
+NuxtHub automatically creates a local SQLite database. You do not have access to the production database.
 
-This means:
-- The database starts empty (no profiles, no projects)
-- Migrations are applied automatically on first `npm run dev`
-- You need to create your own test data
+- The database starts empty
+- Migrations are applied on first `npm run dev`
+- Create your own test data
+
+### Run the project
 
 ```bash
-# Start the server
 npm run dev
 ```
 
 The app runs on **http://localhost:3000**
 
----
+<br />
 
 ## Scripts
 
@@ -107,38 +108,50 @@ The app runs on **http://localhost:3000**
 | `npx drizzle-kit generate` | Generate Drizzle migrations |
 | `npx drizzle-kit studio` | Visual interface for local DB |
 
----
+<br />
 
-## Project Structure
+## Project structure
 
 ```
-ousontlesdevs/
-├── app/
-│   ├── pages/           # Pages (directory, speakers, companies, qg)
-│   ├── components/      # Vue components
-│   ├── composables/     # Reusable logic (useTechInput, etc.)
-│   └── utils/           # Constants and helpers (sideProjectStatus, etc.)
-├── server/
-│   ├── api/             # REST endpoints
-│   │   ├── developers/  # Profile CRUD
-│   │   ├── companies/   # Company CRUD
-│   │   ├── speakers/    # Speakers list
-│   │   ├── side-projects/ # Side projects CRUD
-│   │   ├── help-requests/ # Help requests
-│   │   └── qg/          # QG activity
-│   ├── db/
-│   │   ├── schema.ts    # Drizzle schema (tables)
-│   │   └── migrations/  # SQL migrations
-│   └── utils/           # Helpers (db, validation)
-├── nuxt.config.ts       # Nuxt config
-└── drizzle.config.ts    # Drizzle config
+app/
+├── pages/                # Pages (file-based routing)
+│   ├── index.vue         # Homepage
+│   ├── annuaire/         # Developer directory
+│   ├── speakers/         # Speakers list
+│   ├── entreprises/      # Companies & reviews
+│   ├── qg/               # Member area (QG)
+│   │   ├── requests/     # Help requests
+│   │   └── projects/     # Side projects
+│   ├── profil/           # User profile
+│   └── experience/       # Developer quiz
+├── components/           # Vue components
+│   └── qg/               # QG components
+├── composables/          # Reusable logic
+└── utils/                # Constants and helpers
+
+server/
+├── api/                  # REST endpoints
+│   ├── developers/       # Profile CRUD
+│   ├── companies/        # Company CRUD + reviews
+│   ├── speakers/         # Speakers list
+│   ├── help-requests/    # Help requests
+│   ├── side-projects/    # Side projects
+│   ├── offers/           # Job offers
+│   ├── comments/         # Comments
+│   ├── contact/          # Contact requests
+│   ├── qg/               # QG activity
+│   └── admin/            # Administration
+├── db/
+│   ├── schema.ts         # Drizzle schema (15 tables)
+│   └── migrations/       # SQL migrations
+└── utils/                # Helpers (db, validation, slugs)
 ```
 
----
+<br />
 
 ## Contributing
 
-Contributions are welcome!
+Contributions are welcome. This project is built for and by the community.
 
 1. Fork the project
 2. Create your branch (`git checkout -b feature/my-feature`)
@@ -146,20 +159,21 @@ Contributions are welcome!
 4. Push (`git push origin feature/my-feature`)
 5. Open a Pull Request
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for more details.
+See [CONTRIBUTING.md](CONTRIBUTING.md) for details and project conventions.
 
----
+<br />
 
 ## Community
 
-This project follows the [Contributor Covenant](CODE_OF_CONDUCT.md).
-By participating, you commit to creating a welcoming and inclusive space.
+This project follows the [Contributor Covenant](CODE_OF_CONDUCT.md). By participating, you commit to creating a welcoming and inclusive space.
+
+<br />
 
 ---
 
 <div align="center">
 
-**Made for all women developers by [Camille Coutens](https://linkedin.com/in/camillecoutens)**
+Made for all women developers by [Camille Coutens](https://linkedin.com/in/camillecoutens)
 
 MIT License
 

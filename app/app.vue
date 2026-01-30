@@ -115,7 +115,7 @@ onUnmounted(() => {
               </NuxtLink>
             </div>
           </div>
-          <NuxtLink to="/experience" :class="['no-underline text-sm font-medium transition-all whitespace-nowrap px-3 py-1 rounded-full border', route.path === '/experience' ? 'text-primary border-primary' : 'text-foreground-muted border-border hover:text-primary hover:border-primary']">Quiz</NuxtLink>
+          <NuxtLink to="/experience" :class="['no-underline text-sm font-medium transition-all whitespace-nowrap px-3 py-1 rounded-full border', route.path === '/experience' ? 'text-foreground border-foreground/40' : 'text-foreground-muted border-border hover:text-foreground hover:border-foreground/40']">Quiz</NuxtLink>
           <a href="https://github.com/Kamsou/ousontlesdevs" target="_blank" rel="noopener noreferrer" class="text-foreground-muted no-underline text-sm font-medium transition-colors hover:text-foreground whitespace-nowrap flex items-center gap-1.5">
             <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
               <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
@@ -139,7 +139,7 @@ onUnmounted(() => {
           <template v-else>
             <div class="hidden lg:block relative user-menu">
               <button @click.stop="userMenuOpen = !userMenuOpen" class="flex items-center gap-2 cursor-pointer bg-transparent border-none">
-                <img :src="data?.user?.image || ''" :alt="data?.user?.name || ''" class="w-9 h-9 rounded-full border-2 border-primary" />
+                <img :src="data?.user?.image || ''" :alt="data?.user?.name || ''" class="w-9 h-9 rounded-full border-2 border-foreground/30" />
                 <svg :class="['w-4 h-4 text-foreground-muted transition-transform', userMenuOpen ? 'rotate-180' : '']" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <path d="M6 9l6 6 6-6"/>
                 </svg>
@@ -155,7 +155,7 @@ onUnmounted(() => {
                   </svg>
                   Mon QG
                 </NuxtLink>
-                <NuxtLink v-if="isAdmin" to="/admin" class="flex items-center gap-2 px-4 py-2 text-sm text-primary no-underline hover:bg-border/30 transition-colors">
+                <NuxtLink v-if="isAdmin" to="/admin" class="flex items-center gap-2 px-4 py-2 text-sm text-foreground-muted no-underline hover:bg-border/30 hover:text-foreground transition-colors">
                   <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <rect x="3" y="3" width="7" height="7"/>
                     <rect x="14" y="3" width="7" height="7"/>
@@ -175,7 +175,7 @@ onUnmounted(() => {
               </div>
             </div>
             <NuxtLink to="/profil" class="lg:hidden">
-              <img :src="data?.user?.image || ''" :alt="data?.user?.name || ''" class="w-9 h-9 rounded-full border-2 border-primary" />
+              <img :src="data?.user?.image || ''" :alt="data?.user?.name || ''" class="w-9 h-9 rounded-full border-2 border-foreground/30" />
             </NuxtLink>
           </template>
 
@@ -200,9 +200,9 @@ onUnmounted(() => {
             <NuxtLink to="/podcasts" :class="['no-underline text-base px-3 py-2 rounded-xl transition-colors', route.path === '/podcasts' ? 'text-foreground bg-white/5' : 'text-foreground-muted']">Podcasts</NuxtLink>
           </div>
         </div>
-        <NuxtLink to="/experience" :class="['no-underline text-lg font-medium px-3 py-2.5 rounded-xl transition-colors inline-flex items-center gap-2 mt-1', route.path === '/experience' ? 'text-primary bg-primary/5' : 'text-foreground-muted']">
+        <NuxtLink to="/experience" :class="['no-underline text-lg font-medium px-3 py-2.5 rounded-xl transition-colors inline-flex items-center gap-2 mt-1', route.path === '/experience' ? 'text-foreground bg-white/5' : 'text-foreground-muted']">
           Quiz
-          <span class="text-[10px] px-1.5 py-0.5 rounded-full border border-primary/40 text-primary leading-none">Fun</span>
+          <span class="text-[10px] px-1.5 py-0.5 rounded-full border border-foreground/20 text-foreground-muted leading-none">Fun</span>
         </NuxtLink>
         <a href="https://github.com/Kamsou/ousontlesdevs" target="_blank" rel="noopener noreferrer" class="text-foreground-muted no-underline text-lg font-medium px-3 py-2.5 rounded-xl inline-flex items-center gap-2.5">
           <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
@@ -224,14 +224,14 @@ onUnmounted(() => {
         <template v-else>
           <div class="flex flex-col gap-3">
             <NuxtLink to="/qg" class="flex items-center gap-3 no-underline text-foreground px-3 py-2.5 rounded-xl hover:bg-white/5 transition-colors">
-              <img :src="data?.user?.image || ''" :alt="data?.user?.name || ''" class="w-10 h-10 rounded-full border-2 border-primary" />
+              <img :src="data?.user?.image || ''" :alt="data?.user?.name || ''" class="w-10 h-10 rounded-full border-2 border-foreground/30" />
               <div class="flex flex-col min-w-0">
                 <span class="font-medium text-sm truncate">{{ displayName }}</span>
                 <span class="text-xs text-foreground-muted">Mon QG</span>
               </div>
             </NuxtLink>
-            <NuxtLink v-if="isAdmin" to="/admin" class="text-primary no-underline text-sm font-medium px-3 py-2 rounded-xl hover:bg-primary/5 transition-colors">Admin</NuxtLink>
-            <button @click="signOut()" class="w-full inline-flex items-center justify-center px-6 py-3 rounded-full text-sm cursor-pointer transition-all border border-b-[3px] border-primary/20 border-b-primary/60 bg-transparent text-foreground-muted hover:text-foreground hover:border-primary/40 hover:bg-primary/[0.03] hover:shadow-glow hover:-translate-y-0.5 active:translate-y-px active:border-b active:shadow-none">Déconnexion</button>
+            <NuxtLink v-if="isAdmin" to="/admin" class="text-foreground-muted no-underline text-sm font-medium px-3 py-2 rounded-xl hover:bg-white/5 hover:text-foreground transition-colors">Admin</NuxtLink>
+            <button @click="signOut()" class="w-full inline-flex items-center justify-center px-6 py-3 rounded-full text-sm cursor-pointer transition-all border border-b-[3px] border-border border-b-foreground-muted/50 bg-transparent text-foreground-muted hover:text-foreground hover:border-foreground-muted/40 hover:bg-foreground/[0.03] hover:-translate-y-0.5 active:translate-y-px active:border-b active:shadow-none">Déconnexion</button>
           </div>
         </template>
       </div>
@@ -242,7 +242,7 @@ onUnmounted(() => {
     </main>
 
     <footer v-if="!isQg" class="relative z-[1] text-center py-8 text-foreground-muted text-sm border-t border-border">
-      <p>Fait pour toutes les développeuses par <a href="https://linkedin.com/in/camillecoutens" target="_blank" rel="noopener noreferrer" class="text-foreground-muted underline underline-offset-2 decoration-border hover:text-primary hover:decoration-primary transition-colors">Camille Coutens</a></p>
+      <p>Fait pour toutes les développeuses par <a href="https://linkedin.com/in/camillecoutens" target="_blank" rel="noopener noreferrer" class="text-foreground-muted underline underline-offset-2 decoration-border hover:text-foreground hover:decoration-foreground transition-colors">Camille Coutens</a></p>
       <span class="inline-flex gap-4 mt-3">
         <NuxtLink to="/coc" class="text-foreground-muted underline underline-offset-2 decoration-border hover:text-foreground transition-colors">Code de conduite</NuxtLink>
         <NuxtLink to="/legal" class="text-foreground-muted underline underline-offset-2 decoration-border hover:text-foreground transition-colors">Mentions légales</NuxtLink>

@@ -15,27 +15,22 @@ const route = useRoute()
 const router = useRouter()
 const { $clientPosthog } = useNuxtApp()
 const { data: session } = useAuth()
-
+const { data: requests, status: requestsStatus, refresh: refreshRequests } = useLazyFetch<HelpRequest[]>('/api/help-requests')
+const { data: activity, status: activityStatus, refresh: refreshActivity } = useLazyFetch<QgActivity>('/api/qg/activity')
+const { data: myProjects, status: projectsStatus, refresh: refreshProjects } = useLazyFetch<any[]>('/api/side-projects/mine')
+const { data: offers, status: offersStatus, refresh: refreshOffers } = useLazyFetch<Offer[]>('/api/offers')
+const { data: profile, refresh: refreshProfile } = await useFetch<QgProfile | null>('/api/developers/me')
 type TabType = 'entraide' | 'offres' | 'profil'
 
 const activeTab = ref<TabType>(
   route.query.tab === 'profil' ? 'profil' :
   (route.query.tab === 'offres' || route.query.tab === 'projects') ? 'offres' : 'entraide'
 )
-
-watch(() => route.query.tab, (tab) => {
-  activeTab.value = tab === 'profil' ? 'profil' : (tab === 'offres' || tab === 'projects') ? 'offres' : 'entraide'
-})
-
-watch(activeTab, (tab) => {
-  router.replace({ query: tab === 'entraide' ? {} : { tab } })
-})
-
-const { data: requests, status: requestsStatus, refresh: refreshRequests } = useLazyFetch<HelpRequest[]>('/api/help-requests')
+const showOptInModal = ref(false)
 const isLoadingRequests = computed(() => requestsStatus.value === 'pending')
-
-const { data: activity, status: activityStatus, refresh: refreshActivity } = useLazyFetch<QgActivity>('/api/qg/activity')
 const isLoadingActivity = computed(() => activityStatus.value === 'pending')
+const isLoadingProjects = computed(() => projectsStatus.value === 'pending')
+const isLoadingOffers = computed(() => offersStatus.value === 'pending')
 
 const openRequests = computed(() =>
   requests.value?.filter(r => r.status === 'open') || []
@@ -43,29 +38,10 @@ const openRequests = computed(() =>
 const closedRequests = computed(() =>
   requests.value?.filter(r => r.status === 'closed') || []
 )
-
-const { data: myProjects, status: projectsStatus, refresh: refreshProjects } = useLazyFetch<any[]>('/api/side-projects/mine')
-const isLoadingProjects = computed(() => projectsStatus.value === 'pending')
-
-const { data: offers, status: offersStatus, refresh: refreshOffers } = useLazyFetch<Offer[]>('/api/offers')
-const isLoadingOffers = computed(() => offersStatus.value === 'pending')
-
-const { data: profile, refresh: refreshProfile } = await useFetch<QgProfile | null>('/api/developers/me')
-
 const myOffers = computed(() =>
   offers.value?.filter(o => o.developer?.id === profile.value?.id) || []
 )
 const isNewProfile = computed(() => !profile.value)
-
-const showOptInModal = ref(false)
-
-onMounted(() => {
-  const shouldShow = isNewProfile.value || (profile.value && !profile.value.emailOptInAsked)
-  if (shouldShow) {
-    showOptInModal.value = true
-  }
-})
-
 async function handleOptInChoice(choice: boolean) {
   showOptInModal.value = false
   $clientPosthog?.capture('email_optin_response', { accepted: choice })
@@ -96,8 +72,11 @@ async function handleMarkResolved(requestId: number) {
 }
 
 async function handleProfileSaved() {
+  const wasNew = isNewProfile.value
   await Promise.all([refreshProfile(), refreshActivity()])
-  activeTab.value = 'entraide'
+  if (wasNew) {
+    activeTab.value = 'entraide'
+  }
 }
 
 async function handleMarkProjectCompleted(projectId: number) {
@@ -111,6 +90,19 @@ async function handleMarkProjectCompleted(projectId: number) {
     console.error('Erreur:', error)
   }
 }
+watch(() => route.query.tab, (tab) => {
+  activeTab.value = tab === 'profil' ? 'profil' : (tab === 'offres' || tab === 'projects') ? 'offres' : 'entraide'
+})
+
+watch(activeTab, (tab) => {
+  router.replace({ query: tab === 'entraide' ? {} : { tab } })
+})
+onMounted(() => {
+  const shouldShow = isNewProfile.value || (profile.value && !profile.value.emailOptInAsked)
+  if (shouldShow) {
+    showOptInModal.value = true
+  }
+})
 </script>
 
 <template>

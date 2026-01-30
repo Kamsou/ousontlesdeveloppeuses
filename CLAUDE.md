@@ -1,11 +1,11 @@
 # CLAUDE.md
 
-Ce fichier guide Claude Code pour travailler sur ce projet.
+Project guide for Claude Code.
 
-## Vue d'ensemble
+## Overview
 
-**OSLD - Où Sont Les Développeuses** : Annuaire des développeuses en France.
-Nuxt 4 + TypeScript, déployé sur Netlify avec NuxtHub (SQLite/D1).
+**OSLD - Où Sont Les Développeuses**: Directory of women developers in France.
+Nuxt 4 + TypeScript, deployed on Netlify with NuxtHub (SQLite/D1).
 
 ## Architecture
 
@@ -13,20 +13,45 @@ Nuxt 4 + TypeScript, déployé sur Netlify avec NuxtHub (SQLite/D1).
 app/
 ├── pages/               → Pages (file-based routing)
 │   ├── index.vue       → Homepage
-│   ├── annuaire/       → Annuaire développeuses
-│   ├── speakers/       → Liste speakeuses
-│   ├── entreprises/    → Entreprises certifiées
-│   ├── profil/         → Profil utilisateur (auth required)
-│   └── experience/     → Quiz "Quel dev es-tu?"
-├── app.vue             → Layout principal
+│   ├── annuaire/       → Developer directory (public)
+│   ├── speakers/       → Speakers list (public)
+│   ├── entreprises/    → Companies + reviews (public)
+│   ├── programmes.vue  → Programs & communities (public)
+│   ├── podcasts.vue    → Podcasts (public)
+│   ├── experience/     → Quiz "Quel dev es-tu?" (public)
+│   ├── qg/             → Private dashboard (auth required)
+│   │   ├── index.vue   → QG hub (tabs: entraide, offres, profil)
+│   │   ├── ask.vue     → Create help request
+│   │   ├── new-offer.vue → Create offer
+│   │   ├── new-project.vue → Create side project
+│   │   ├── requests/   → Help request detail + edit
+│   │   └── projects/   → Side project detail + edit
+│   ├── profil/         → Auth redirect (animated loading → QG)
+│   ├── feedback/       → Contact feedback (token-based)
+│   ├── admin/          → Admin dashboard
+│   ├── legal.vue       → Legal notices
+│   └── coc.vue         → Code of conduct
+├── components/
+│   └── qg/             → QG components (Feed, Comments, ProfileForm,
+│                          RequestsList, OffersList, SideProjectsList, etc.)
+├── app.vue             → Main layout (public header/footer + QG routing)
 server/
 ├── api/                → API routes (Nitro)
 │   ├── auth/[...].ts   → Auth.js (GitHub OAuth)
-│   ├── developers/     → CRUD développeuses
-│   ├── companies/      → CRUD entreprises + reviews
-│   ├── speakers/       → Liste speakeuses
-│   ├── experience/     → Quiz AI (Anthropic)
-│   └── stats.get.ts    → Stats homepage
+│   ├── developers/     → CRUD developers
+│   ├── companies/      → CRUD companies + reviews
+│   ├── speakers/       → Speakers list
+│   ├── help-requests/  → Help requests + matches + comments
+│   ├── side-projects/  → Side projects CRUD
+│   ├── offers/         → Job offers CRUD
+│   ├── comments/       → Comments + mark-read
+│   ├── qg/             → QG activity feed
+│   ├── contact/        → Contact requests + email (Resend)
+│   ├── experience/     → AI quiz (Anthropic)
+│   ├── programs/       → Programs list
+│   ├── podcasts/       → Podcasts list
+│   ├── admin/          → Admin endpoints
+│   └── stats.get.ts    → Homepage stats
 ├── db/
 │   ├── schema.ts       → Drizzle schema
 │   └── migrations/     → SQL migrations
@@ -34,41 +59,53 @@ server/
     └── drizzle.ts      → DB helper
 ```
 
-## Commandes
+## Commands
 
 ```bash
 npm run dev              # Dev server
-npm run build            # Build production (Netlify)
-npx drizzle-kit generate # Générer migrations
-npx nuxthub database migrations list   # Voir migrations
-npx nuxthub database migrations apply  # Appliquer en prod
+npm run build            # Production build (Netlify)
+npx drizzle-kit generate # Generate migrations
+npx nuxthub database migrations list   # List migrations
+npx nuxthub database migrations apply  # Apply in prod
 ```
 
-## Stack technique
+## Tech stack
 
 - **Nuxt 4** - Vue 3 + Nitro, compatibilityVersion 4
 - **TypeScript** - Strict mode
-- **Drizzle ORM** - SQLite (NuxtHub D1 en prod)
+- **Drizzle ORM** - SQLite (NuxtHub D1 in prod)
 - **Auth.js** - GitHub OAuth via @sidebase/nuxt-auth
 - **TailwindCSS** - Styling
-- **@nuxtjs/seo** - SEO, schemaOrg, robots
-- **@nuxtjs/google-fonts** - Inter + Space Grotesk
-- **Anthropic SDK** - Quiz AI
+- **@nuxtjs/seo** - SEO, schemaOrg, robots, sitemap, ogImage
+- **PostHog** - Analytics (nuxt-posthog)
+- **Resend** - Transactional emails (contact requests, feedback)
+- **Anthropic SDK** - AI quiz
 
-## Base de données (Drizzle)
+## Database (Drizzle)
 
-### Tables principales
+### Main tables
 
 ```typescript
-developers        // Profils développeuses
+developers        // Developer profiles (slug, bio, location, skills, profileType)
 developerSkills   // Skills (many-to-many)
-developerOpenTo   // Disponibilités (conference, mentoring, freelance, cdi, etc.)
-speakerProfiles   // Infos speaker (topics, travel, remote)
-companies         // Entreprises
-companyReviews    // Avis sur entreprises
+developerOpenTo   // Availability (conference, mentoring, freelance, cdi, etc.)
+speakerProfiles   // Speaker info (topics, travel, remote)
+companies         // Companies
+companyReviews    // Company reviews
+helpRequests      // QG help requests (bug, review, advice, pair)
+helpRequestTechs  // Techs per help request
+offers            // Job offers (alternance, stage, cdi, freelance)
+sideProjects      // Side projects (idea, open_to_contributors, completed)
+sideProjectTechs  // Techs per side project
+comments          // Comments on help requests & side projects
+commentReads      // Read tracking per user per comment
+contactRequests   // Contact messages between developers
+contactFeedbacks  // Feedback on contact exchanges
+programs          // External programs & communities
+podcasts          // Podcast episodes
 ```
 
-### Pattern API
+### API pattern
 
 ```typescript
 // server/api/[resource]/index.get.ts
@@ -90,34 +127,34 @@ export default defineEventHandler(async (event) => {
 })
 ```
 
-## Patterns Nuxt
+## Nuxt patterns
 
 ### Data fetching
 
 ```typescript
-// SSR bloquant
+// SSR blocking
 const { data } = await useFetch('/api/developers')
 
-// Client-side non-bloquant (avec loader)
+// Client-side non-blocking (with loader)
 const { data, status } = useLazyFetch('/api/stats')
 const isLoading = computed(() => status.value === 'pending')
 ```
 
-### Authentification
+### Authentication
 
 ```typescript
 const { status, data: session, signIn, signOut } = useAuth()
 
-// Vérifier si connecté
+// Check if authenticated
 if (status.value === 'authenticated') {
-  // session.value.user contient les infos
+  // session.value.user contains user info
 }
 
-// Login GitHub
+// GitHub login
 signIn('github')
 ```
 
-### SEO par page
+### Per-page SEO
 
 ```typescript
 useSeoMeta({
@@ -129,29 +166,41 @@ useSeoMeta({
 })
 ```
 
-## Conventions de code
+## Code conventions
 
-### Pages Vue
+### Vue `<script setup>` order
+
+Always follow this order in `<script setup>`. Do not add section comments.
 
 ```vue
 <script setup lang="ts">
-// 1. Auth
-const { status, signIn } = useAuth()
+// 1. Imports
+import { openToOptions } from '~/utils/constants'
 
-// 2. Data fetching
+// 2. Props & emits
+const props = defineProps<{ ... }>()
+const emit = defineEmits<{ ... }>()
+
+// 3. Composables (auth, router, etc.)
+const { status, signIn } = useAuth()
+const toast = useToast()
+
+// 4. Data fetching
 const { data } = await useFetch('/api/resource')
 
-// 3. State local
+// 5. Local state (refs)
 const isOpen = ref(false)
 
-// 4. Computed
+// 6. Computed
 const filtered = computed(() => data.value?.filter(...))
 
-// 5. Methods
+// 7. Methods
 function handleAction() { }
 
-// 6. Watch
+// 8. Watch
 
+// 9. Lifecycle hooks
+onMounted(() => { })
 </script>
 
 <template>
@@ -159,12 +208,14 @@ function handleAction() { }
 </template>
 ```
 
-### API Routes
+When data fetching depends on computed/state (e.g. `useLazyFetch` with reactive query params), place the dependency before the fetch call.
+
+### API routes
 
 ```typescript
-// Toujours utiliser defineEventHandler
+// Always use defineEventHandler
 export default defineEventHandler(async (event) => {
-  // Récupérer params
+  // Get params
   const id = getRouterParam(event, 'id')
   const body = await readBody(event)
   const query = getQuery(event)
@@ -172,7 +223,7 @@ export default defineEventHandler(async (event) => {
   // DB
   const db = useDrizzle()
 
-  // Auth (si nécessaire)
+  // Auth (if needed)
   const session = await getServerSession(event)
   if (!session) {
     throw createError({ statusCode: 401 })
@@ -186,17 +237,20 @@ export default defineEventHandler(async (event) => {
 
 ### Prerendering (SSG)
 
-Pages statiques configurées dans `nuxt.config.ts`:
+Static pages configured in `nuxt.config.ts`:
 ```typescript
 routeRules: {
   '/': { prerender: true },
   '/experience': { prerender: true },
+  '/programmes': { prerender: true },
+  '/podcasts': { prerender: true },
+  '/speakers': { prerender: true },
 }
 ```
 
 ### Hydration mismatches
 
-Pour les données dynamiques sur pages prérendues, utiliser `<ClientOnly>`:
+For dynamic data on prerendered pages, use `<ClientOnly>`:
 ```vue
 <ClientOnly>
   <span>{{ dynamicValue }}</span>
@@ -209,34 +263,39 @@ Pour les données dynamiques sur pages prérendues, utiliser `<ClientOnly>`:
 ### Lazy loading
 
 ```typescript
-// Non-bloquant pour données non-critiques
+// Non-blocking for non-critical data
 const { data, status } = useLazyFetch('/api/stats')
 ```
 
 ## Design system
 
-### Couleurs (TailwindCSS)
+### Colors (TailwindCSS)
 
 ```
-background       → Fond principal (#0a0a0f)
-foreground       → Texte principal (#f8fafc)
-foreground-muted → Texte secondaire (#94a3b8)
-border           → Bordures (rgba 10%)
-primary          → Accent (#8b5cf6)
+background       → Main background (#0a0a0f)
+foreground       → Primary text (#f8fafc)
+foreground-muted → Secondary text (#94a3b8)
+border           → Borders (rgba 10%)
+primary          → Accent blue (#3B82F6) — QG only, not on public pages
 ```
+
+### Color rules
+
+- **Public pages** (homepage, annuaire, speakers, entreprises, programmes, podcasts, legal, coc): neutral colors only (`foreground`, `foreground-muted`, `border`). No `primary`/blue.
+- **QG (private)**: blue accent (`primary`) for tabs, CTAs, card hovers, header.
 
 ### Fonts
 
-- **Space Grotesk** → Titres (`font-display`)
-- **Inter** → Corps de texte
+- **Space Grotesk** → Headings (`font-display`)
+- **Satoshi** → Body text
 
-### Composants récurrents
+### Button patterns
 
 ```html
-<!-- Bouton principal -->
-<button class="px-6 py-4 bg-foreground text-background rounded-full font-medium">
+<!-- Primary button (physical shelf effect) -->
+<button class="px-6 py-4 bg-foreground border border-b-[3px] border-foreground border-b-foreground-muted/50 text-background rounded-full font-medium transition-all hover:-translate-y-0.5 hover:shadow-glow active:translate-y-px active:border-b active:shadow-none">
 
-<!-- Bouton secondaire -->
+<!-- Secondary button -->
 <button class="px-6 py-4 border border-border rounded-full hover:border-foreground">
 
 <!-- Card -->
@@ -246,22 +305,22 @@ primary          → Accent (#8b5cf6)
 <span class="px-3 py-1 border border-border rounded-full text-sm">
 ```
 
-## Accessibilité
+## Accessibility
 
-Module `@nuxt/a11y` activé. Règles critiques :
-- Liens dans du texte : toujours `underline` pour les distinguer
-- Contraste minimum 3:1 pour les liens
-- Alt text sur les images
+Module `@nuxt/a11y` enabled. Critical rules:
+- Links in text: always `underline` to distinguish them
+- Minimum 3:1 contrast for links
+- Alt text on images
 
-## Déploiement
+## Deployment
 
-- **Hébergement** : Netlify (preset nitro)
-- **Base de données** : NuxtHub (Cloudflare D1)
-- **Auth** : Variables d'env `GITHUB_CLIENT_ID`, `GITHUB_CLIENT_SECRET`, `AUTH_SECRET`
+- **Hosting**: Netlify (nitro preset)
+- **Database**: NuxtHub (Cloudflare D1)
+- **Auth**: Env vars `GITHUB_CLIENT_ID`, `GITHUB_CLIENT_SECRET`, `AUTH_SECRET`
 
-### Fix connu : unhead
+### Known fix: unhead
 
-Si erreur 500 avec schemaOrg sur Netlify :
+If 500 error with schemaOrg on Netlify:
 ```typescript
 nitro: {
   externals: {

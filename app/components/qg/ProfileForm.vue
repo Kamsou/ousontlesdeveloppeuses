@@ -14,19 +14,10 @@ const emit = defineEmits<{
 const { $clientPosthog } = useNuxtApp()
 const { signOut } = useAuth()
 const toast = useToast()
-
-const isNewProfile = computed(() => !props.profile)
-
 const validProfileTypes = [
   "L'Architecte", 'La Détective', 'La Speedrunner', 'La Perfectionniste',
   'La Connectrice', "L'Exploratrice", 'La Gardienne', 'La Créative'
 ]
-
-const hasValidExperienceProfile = computed(() => {
-  return props.profile?.profileType &&
-    props.profile?.profilePhrase &&
-    validProfileTypes.includes(props.profile.profileType)
-})
 
 const form = reactive({
   firstName: '',
@@ -51,31 +42,16 @@ const newTopic = ref('')
 const saving = ref(false)
 const error = ref('')
 const deleting = ref(false)
+const stickysentinel = ref<HTMLElement>()
+const isSticky = ref(false)
+let stickyObserver: IntersectionObserver | null = null
+const isNewProfile = computed(() => !props.profile)
 
-watch(() => props.profile, (p) => {
-  if (p) {
-    const nameParts = (p.name || '').split(' ')
-    form.firstName = nameParts[0] || ''
-    form.lastName = nameParts.slice(1).join(' ') || ''
-    form.bio = p.bio || ''
-    form.location = p.location || ''
-    form.yearsExperience = p.yearsExperience
-    form.website = p.website || ''
-    form.linkedinUrl = p.linkedinUrl || ''
-    form.twitterUrl = p.twitterUrl || ''
-    form.skills = p.skills || []
-    form.openTo = p.openTo || []
-    form.speakerTopics = p.speakerProfile?.topics || []
-    form.remoteOk = p.speakerProfile?.remoteOk ?? true
-    form.travelWilling = p.speakerProfile?.travelWilling ?? false
-    form.emailOptIn = p.emailOptIn ?? false
-  } else if (props.sessionUserName) {
-    const nameParts = props.sessionUserName.split(' ')
-    form.firstName = nameParts[0] || ''
-    form.lastName = nameParts.slice(1).join(' ') || ''
-  }
-}, { immediate: true })
-
+const hasValidExperienceProfile = computed(() => {
+  return props.profile?.profileType &&
+    props.profile?.profilePhrase &&
+    validProfileTypes.includes(props.profile.profileType)
+})
 function addSkill() {
   if (newSkill.value && !form.skills.includes(newSkill.value)) {
     form.skills.push(newSkill.value)
@@ -157,6 +133,40 @@ async function deleteProfile() {
     deleting.value = false
   }
 }
+watch(() => props.profile, (p) => {
+  if (p) {
+    const nameParts = (p.name || '').split(' ')
+    form.firstName = nameParts[0] || ''
+    form.lastName = nameParts.slice(1).join(' ') || ''
+    form.bio = p.bio || ''
+    form.location = p.location || ''
+    form.yearsExperience = p.yearsExperience
+    form.website = p.website || ''
+    form.linkedinUrl = p.linkedinUrl || ''
+    form.twitterUrl = p.twitterUrl || ''
+    form.skills = p.skills || []
+    form.openTo = p.openTo || []
+    form.speakerTopics = p.speakerProfile?.topics || []
+    form.remoteOk = p.speakerProfile?.remoteOk ?? true
+    form.travelWilling = p.speakerProfile?.travelWilling ?? false
+    form.emailOptIn = p.emailOptIn ?? false
+  } else if (props.sessionUserName) {
+    const nameParts = props.sessionUserName.split(' ')
+    form.firstName = nameParts[0] || ''
+    form.lastName = nameParts.slice(1).join(' ') || ''
+  }
+}, { immediate: true })
+
+watch(stickysentinel, (el) => {
+  stickyObserver?.disconnect()
+  if (!el) return
+  stickyObserver = new IntersectionObserver(
+    (entries) => { isSticky.value = !entries[0]?.isIntersecting },
+    { threshold: 0 }
+  )
+  stickyObserver.observe(el)
+})
+onUnmounted(() => stickyObserver?.disconnect())
 </script>
 
 <template>
@@ -393,14 +403,17 @@ async function deleteProfile() {
           </label>
         </section>
 
-        <div class="flex justify-end gap-4 pt-8">
-          <button type="submit" :disabled="saving || (isNewProfile && !form.cocAccepted)" class="px-8 py-4 bg-foreground border border-b-[3px] border-foreground border-b-foreground-muted/50 rounded-full text-background text-sm font-medium cursor-pointer transition-all hover:-translate-y-0.5 hover:shadow-glow active:translate-y-px active:border-b active:shadow-none disabled:opacity-50 disabled:cursor-not-allowed">
-            {{ saving ? 'Enregistrement...' : 'Enregistrer' }}
-          </button>
+        <div ref="stickysentinel" class="h-0" aria-hidden="true"></div>
+        <div :class="['sticky bottom-[calc(3.5rem+env(safe-area-inset-bottom,0px))] md:bottom-0 z-10 -mx-6 px-6 py-3 bg-background/90 backdrop-blur-lg mt-6 transition-colors', isSticky ? 'border-t border-border/20' : '']">
+          <div class="flex md:justify-end">
+            <button type="submit" :disabled="saving || (isNewProfile && !form.cocAccepted)" class="w-full md:w-auto px-8 py-4 bg-foreground border border-b-[3px] border-foreground border-b-foreground-muted/50 rounded-full text-background text-sm font-medium cursor-pointer transition-all hover:-translate-y-0.5 hover:shadow-glow active:translate-y-px active:border-b active:shadow-none disabled:opacity-50 disabled:cursor-not-allowed">
+              {{ saving ? 'Enregistrement...' : 'Enregistrer' }}
+            </button>
+          </div>
         </div>
       </form>
 
-      <section v-if="!isNewProfile" class="mt-16 pt-8 border-t border-red-500/20">
+      <section v-if="!isNewProfile" class="mt-10 pt-8 border-t border-red-500/20">
         <h2 class="text-sm font-medium text-red-400 mb-4">Zone de danger</h2>
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 border border-red-500/20 rounded-xl">
           <div>
