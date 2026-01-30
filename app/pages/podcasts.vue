@@ -20,6 +20,14 @@ interface Podcast {
 }
 
 const { data: podcasts, status } = await useFetch<Podcast[]>('/api/podcasts')
+
+const emailCopied = ref(false)
+
+async function copyEmail() {
+  await navigator.clipboard.writeText('contact@ousontlesdeveloppeuses.fr')
+  emailCopied.value = true
+  setTimeout(() => { emailCopied.value = false }, 2000)
+}
 </script>
 
 <template>
@@ -92,17 +100,20 @@ const { data: podcasts, status } = await useFetch<Podcast[]>('/api/podcasts')
         Un podcast à suggérer ?
       </h2>
       <p class="text-foreground-muted mb-6 max-w-md mx-auto">
-        Tu connais un épisode de podcast avec une développeuse qui devrait être listé ici ?
+        Tu connais un épisode de podcast avec une développeuse qui devrait être listé ici ? Copie notre email et envoie-le nous.
       </p>
-      <a
-        href="mailto:contact@ousontlesdeveloppeuses.fr?subject=Suggestion de podcast"
-        class="inline-flex items-center gap-2 px-6 py-3 bg-foreground border border-b-[3px] border-foreground border-b-foreground-muted/50 text-background rounded-full text-sm font-medium no-underline transition-all hover:-translate-y-0.5 hover:shadow-glow active:translate-y-px active:border-b active:shadow-none"
+      <button
+        @click="copyEmail"
+        class="inline-flex items-center gap-2 px-6 py-3 bg-foreground border border-b-[3px] border-foreground border-b-foreground-muted/50 text-background rounded-full text-sm font-medium transition-all hover:-translate-y-0.5 hover:shadow-glow active:translate-y-px active:border-b active:shadow-none cursor-pointer"
       >
-        <span>Proposer un podcast</span>
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M5 12h14M12 5l7 7-7 7"/>
+        <span>{{ emailCopied ? 'Email copié !' : 'Copier l\'email' }}</span>
+        <svg v-if="!emailCopied" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="9" y="9" width="13" height="13" rx="2" /><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
         </svg>
-      </a>
+        <svg v-else width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M20 6L9 17l-5-5" />
+        </svg>
+      </button>
     </div>
   </div>
 </template>
