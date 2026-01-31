@@ -45,37 +45,65 @@ const filters = reactive({
   openTo: route.query.openTo ? String(route.query.openTo).split(',').filter(Boolean) : []
 })
 
+const allDevelopers = ref<Developer[]>([])
 const page = ref(1)
 const isLoadingMore = ref(false)
+const hasMore = ref(false)
+const totalCount = ref(0)
+const loadMoreRef = ref<HTMLElement | null>(null)
 
-const queryParams = computed(() => {
+const initialQuery = computed(() => {
   const params: Record<string, string> = {}
   if (filters.location) params.location = filters.location
   if (filters.skill) params.skill = filters.skill
   if (filters.openTo.length) params.openTo = filters.openTo.join(',')
-  params.page = page.value.toString()
+  params.page = '1'
   return params
 })
 
 const { data, status } = useLazyFetch<ApiResponse>('/api/developers', {
-  query: queryParams
+  query: initialQuery
 })
 
-const developers = computed(() => data.value?.developers || [])
-const pagination = computed(() => data.value?.pagination)
-const isLoading = computed(() => status.value === 'pending' && page.value === 1)
+const isLoading = computed(() => status.value === 'pending' && !allDevelopers.value.length)
 
-async function loadMore() {
-  isLoadingMore.value = true
-  page.value++
-  await nextTick()
-  await new Promise(resolve => setTimeout(resolve, 100))
-  isLoadingMore.value = false
-}
+watch(data, (d) => {
+  if (d) {
+    allDevelopers.value = d.developers
+    totalCount.value = d.pagination.total
+    hasMore.value = d.pagination.hasMore
+    page.value = 1
+  }
+})
 
 watch([() => filters.location, () => filters.skill, () => filters.openTo], () => {
+  hasMore.value = false
   page.value = 1
 })
+
+async function loadMore() {
+  if (isLoadingMore.value || !hasMore.value) return
+  isLoadingMore.value = true
+  page.value++
+  try {
+    const params: Record<string, string> = {}
+    if (filters.location) params.location = filters.location
+    if (filters.skill) params.skill = filters.skill
+    if (filters.openTo.length) params.openTo = filters.openTo.join(',')
+    params.page = page.value.toString()
+    const result = await $fetch<ApiResponse>('/api/developers', { query: params })
+    allDevelopers.value = [...allDevelopers.value, ...result.developers]
+    hasMore.value = result.pagination.hasMore
+  } catch {
+    page.value--
+  } finally {
+    isLoadingMore.value = false
+  }
+}
+
+useIntersectionObserver(loadMoreRef, (entries) => {
+  if (entries[0]?.isIntersecting) loadMore()
+}, { rootMargin: '200px' })
 
 function toggleOpenTo(value: string) {
   const index = filters.openTo.indexOf(value)
@@ -116,7 +144,7 @@ function trackSearch() {
       location: filters.location || null,
       skill: filters.skill || null,
       openTo: filters.openTo.length ? filters.openTo : null,
-      results_count: pagination.value?.total || 0
+      results_count: totalCount.value
     })
   }, 1000)
 }
@@ -132,7 +160,7 @@ watch(() => filters.skill, () => { updateUrl(); trackSearch() })
       <h1 class="font-display text-4xl md:text-7xl font-medium tracking-tight mb-2">Développeuses</h1>
       <p class="text-foreground-muted text-base">
         <span v-if="isLoading" class="inline-block w-20 h-5 bg-border rounded animate-pulse align-middle" />
-        <span v-else>{{ pagination?.total || 0 }} profils</span>
+        <span v-else>{{ totalCount }} profils</span>
       </p>
     </header>
 
@@ -189,14 +217,14 @@ watch(() => filters.skill, () => { updateUrl(); trackSearch() })
         <CardSkeleton v-for="i in 6" :key="i" />
       </div>
 
-      <div v-else-if="!developers?.length" class="text-center py-16 text-foreground-muted">
+      <div v-else-if="!allDevelopers.length" class="text-center py-16 text-foreground-muted">
         <p class="mb-4">Aucun profil trouvé</p>
         <button @click="clearFilters" class="px-6 py-3 bg-transparent border border-border/10 rounded-lg text-foreground cursor-pointer">Effacer les filtres</button>
       </div>
 
       <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <NuxtLink
-          v-for="dev in developers"
+          v-for="dev in allDevelopers"
           :key="dev.id"
           :to="`/annuaire/${dev.slug}`"
           :class="[
@@ -258,18 +286,8 @@ watch(() => filters.skill, () => { updateUrl(); trackSearch() })
         </NuxtLink>
       </div>
 
-      <div v-if="pagination?.hasMore" class="flex justify-center mt-12">
-        <button
-          @click="loadMore"
-          :disabled="isLoadingMore"
-          class="px-8 py-3 border border-b-[3px] border-border/10 border-b-border/30 rounded-full text-foreground-muted text-sm cursor-pointer transition-all hover:border-foreground hover:text-foreground hover:-translate-y-0.5 active:translate-y-px active:border-b disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          <span v-if="isLoadingMore" class="flex items-center gap-2">
-            <span class="w-4 h-4 border-2 border-foreground-muted border-t-transparent rounded-full animate-spin"></span>
-            Chargement...
-          </span>
-          <span v-else>Voir plus</span>
-        </button>
+      <div v-if="hasMore" ref="loadMoreRef" class="flex justify-center py-8">
+        <span class="w-6 h-6 border-2 border-foreground-muted border-t-transparent rounded-full animate-spin"></span>
       </div>
     </section>
   </div>

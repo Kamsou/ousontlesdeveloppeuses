@@ -44,7 +44,6 @@ const error = ref('')
 const deleting = ref(false)
 const stickysentinel = ref<HTMLElement>()
 const isSticky = ref(false)
-let stickyObserver: IntersectionObserver | null = null
 const isNewProfile = computed(() => !props.profile)
 
 const hasValidExperienceProfile = computed(() => {
@@ -157,16 +156,9 @@ watch(() => props.profile, (p) => {
   }
 }, { immediate: true })
 
-watch(stickysentinel, (el) => {
-  stickyObserver?.disconnect()
-  if (!el) return
-  stickyObserver = new IntersectionObserver(
-    (entries) => { isSticky.value = !entries[0]?.isIntersecting },
-    { threshold: 0 }
-  )
-  stickyObserver.observe(el)
-})
-onUnmounted(() => stickyObserver?.disconnect())
+useIntersectionObserver(stickysentinel, (entries) => {
+  isSticky.value = !entries[0]?.isIntersecting
+}, { threshold: 0 })
 </script>
 
 <template>

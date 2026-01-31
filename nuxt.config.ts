@@ -27,7 +27,7 @@ export default defineNuxtConfig({
       ]
     }
   },
-  modules: ['@nuxthub/core', '@sidebase/nuxt-auth', '@nuxtjs/seo', '@nuxtjs/tailwindcss', '@nuxtjs/google-fonts', '@nuxt/a11y', 'nuxt-posthog'],
+  modules: ['@nuxthub/core', '@sidebase/nuxt-auth', '@nuxtjs/seo', '@nuxtjs/tailwindcss', '@nuxtjs/google-fonts', '@nuxt/a11y', 'nuxt-posthog', '@vueuse/nuxt'],
 
   css: ['@/assets/css/main.css'],
 

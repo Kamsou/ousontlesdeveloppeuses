@@ -1,4 +1,4 @@
-import { sqliteTable, text, integer } from 'drizzle-orm/sqlite-core'
+import { sqliteTable, text, integer, uniqueIndex } from 'drizzle-orm/sqlite-core'
 import { relations } from 'drizzle-orm'
 
 export const developers = sqliteTable('developers', {
@@ -331,4 +331,6 @@ export const accountDeletionStats = sqliteTable('account_deletion_stats', {
   month: text('month').notNull(),
   deletedBy: text('deleted_by').notNull(),
   count: integer('count').notNull().default(0)
-})
+}, (table) => [
+  uniqueIndex('account_deletion_stats_month_deleted_by_unique').on(table.month, table.deletedBy)
+])

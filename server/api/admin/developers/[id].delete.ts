@@ -1,5 +1,5 @@
 import { getServerSession } from '#auth'
-import { eq, and } from 'drizzle-orm'
+import { eq } from 'drizzle-orm'
 
 export default defineEventHandler(async (event) => {
   const session = await getServerSession(event)
@@ -38,22 +38,7 @@ export default defineEventHandler(async (event) => {
   await db.delete(tables.speakerProfiles).where(eq(tables.speakerProfiles.developerId, id))
   await db.delete(tables.developers).where(eq(tables.developers.id, id))
 
-  const month = new Date().toISOString().slice(0, 7)
-  const existing = await db.query.accountDeletionStats.findFirst({
-    where: and(
-      eq(tables.accountDeletionStats.month, month),
-      eq(tables.accountDeletionStats.deletedBy, 'admin')
-    )
-  })
-  if (existing) {
-    await db.update(tables.accountDeletionStats)
-      .set({ count: existing.count + 1 })
-      .where(eq(tables.accountDeletionStats.id, existing.id))
-  } else {
-    await db.insert(tables.accountDeletionStats).values({
-      month, deletedBy: 'admin', count: 1
-    })
-  }
+  await trackDeletion('admin')
 
   return { success: true }
 })

@@ -1,5 +1,5 @@
 import { getServerSession } from '#auth'
-import { eq, desc, sql } from 'drizzle-orm'
+import { eq, sql } from 'drizzle-orm'
 
 export default defineEventHandler(async (event) => {
   const session = await getServerSession(event)

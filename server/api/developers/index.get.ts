@@ -1,5 +1,25 @@
 import { useRateLimit } from '../../utils/rateLimit'
 
+function seededShuffle<T>(arr: T[], seed: number): T[] {
+  const result = [...arr]
+  let s = seed
+  for (let i = result.length - 1; i > 0; i--) {
+    s = (s * 1664525 + 1013904223) & 0xffffffff
+    const j = ((s >>> 0) % (i + 1))
+    ;[result[i], result[j]] = [result[j], result[i]]
+  }
+  return result
+}
+
+function getDailySeed(): number {
+  const today = new Date().toISOString().slice(0, 10)
+  let seed = 0
+  for (let i = 0; i < today.length; i++) {
+    seed = ((seed << 5) - seed + today.charCodeAt(i)) | 0
+  }
+  return seed
+}
+
 export default defineEventHandler(async (event) => {
   useRateLimit(event, { windowMs: 60 * 1000, max: 60 })
 
@@ -17,13 +37,8 @@ export default defineEventHandler(async (event) => {
     }
   })
 
-  let filtered = developers
-
-  // Shuffle pour une visibilité équitable
-  for (let i = filtered.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [filtered[i], filtered[j]] = [filtered[j], filtered[i]]
-  }
+  // Shuffle seedé sur le jour — même ordre pour tous les visiteurs pendant 24h
+  let filtered = seededShuffle(developers, getDailySeed())
 
   if (query.location) {
     filtered = filtered.filter(d =>
@@ -51,7 +66,8 @@ export default defineEventHandler(async (event) => {
   }
 
   const total = filtered.length
-  const paginated = filtered.slice(0, page * limit)
+  const offset = (page - 1) * limit
+  const paginated = filtered.slice(offset, offset + limit)
 
   return {
     developers: paginated.map(d => ({
@@ -72,7 +88,7 @@ export default defineEventHandler(async (event) => {
       total,
       page,
       limit,
-      hasMore: paginated.length < total
+      hasMore: offset + limit < total
     }
   }
 })
