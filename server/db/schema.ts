@@ -325,3 +325,10 @@ export const commentsRelations = relations(comments, ({ one }) => ({
     references: [sideProjects.id]
   })
 }))
+
+export const accountDeletionStats = sqliteTable('account_deletion_stats', {
+  id: integer('id').primaryKey({ autoIncrement: true }),
+  month: text('month').notNull(),
+  deletedBy: text('deleted_by').notNull(),
+  count: integer('count').notNull().default(0)
+})

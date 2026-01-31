@@ -9,14 +9,14 @@ useHead({
 })
 
 useSeoMeta({
-  title: 'Où Sont Les Développeuses (OSLD) — Annuaire des développeuses tech en France',
+  title: 'Où Sont Les Développeuses (OSLD) - Annuaire des développeuses tech en France',
   description: 'Annuaire des développeuses tech en France : profils, speakeuses pour vos conférences, entreprises inclusives et entraide communautaire. Rejoignez OSLD.',
-  ogTitle: 'Où Sont Les Développeuses — Annuaire & communauté tech',
+  ogTitle: 'Où Sont Les Développeuses - Annuaire & communauté tech',
   ogDescription: 'Annuaire des développeuses en France. Trouvez des profils tech, des speakeuses pour vos événements et des entreprises inclusives.',
   ogImage: 'https://ousontlesdeveloppeuses.fr/og-image.png',
   ogType: 'website',
   twitterCard: 'summary_large_image',
-  twitterTitle: 'Où Sont Les Développeuses — Annuaire & communauté tech',
+  twitterTitle: 'Où Sont Les Développeuses - Annuaire & communauté tech',
   twitterDescription: 'Annuaire des développeuses en France. Profils tech, speakeuses, entreprises inclusives et entraide communautaire.',
   twitterImage: 'https://ousontlesdeveloppeuses.fr/og-image.png',
 })
@@ -29,7 +29,7 @@ useSchemaOrg([
     inLanguage: 'fr-FR',
   }),
   defineWebPage({
-    name: 'Où Sont Les Développeuses — Annuaire des développeuses tech en France',
+    name: 'Où Sont Les Développeuses - Annuaire des développeuses tech en France',
     description: 'Annuaire des développeuses tech en France : profils, speakeuses pour vos conférences, entreprises inclusives et entraide communautaire.',
   }),
 ])

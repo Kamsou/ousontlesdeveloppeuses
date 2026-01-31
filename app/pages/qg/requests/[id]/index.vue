@@ -211,7 +211,7 @@ async function sendContact() {
               <div v-else class="w-8 h-8 rounded-full bg-border/20 flex items-center justify-center text-foreground-muted text-xs">
                 {{ dev.name?.charAt(0) }}
               </div>
-              <NuxtLink :to="`/annuaire/${dev.slug}`" class="text-sm hover:text-foreground-muted transition-colors flex-1 min-w-0 truncate">
+              <NuxtLink :to="`/annuaire/${dev.slug}`" target="_blank" class="text-sm hover:text-foreground-muted transition-colors flex-1 min-w-0 truncate">
                 {{ dev.name }}
               </NuxtLink>
               <span v-if="dev.matchedSkills?.length" class="text-xs text-foreground-muted hidden sm:block">

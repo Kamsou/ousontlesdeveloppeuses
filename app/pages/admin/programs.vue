@@ -115,12 +115,6 @@ async function deleteProgram(id: number, name: string) {
         Développeuses
       </NuxtLink>
       <NuxtLink
-        to="/admin/feedbacks"
-        class="px-4 py-2 border border-border/10 rounded-lg text-sm font-medium hover:border-foreground-muted transition-colors no-underline"
-      >
-        Feedbacks
-      </NuxtLink>
-      <NuxtLink
         to="/admin/programs"
         class="px-4 py-2 bg-foreground text-background rounded-lg text-sm font-medium no-underline"
       >
@@ -131,6 +125,12 @@ async function deleteProgram(id: number, name: string) {
         class="px-4 py-2 border border-border/10 rounded-lg text-sm font-medium hover:border-foreground-muted transition-colors no-underline"
       >
         Podcasts
+      </NuxtLink>
+      <NuxtLink
+        to="/admin/stats"
+        class="px-4 py-2 border border-border/10 rounded-lg text-sm font-medium hover:border-foreground-muted transition-colors no-underline"
+      >
+        Stats
       </NuxtLink>
     </div>
 

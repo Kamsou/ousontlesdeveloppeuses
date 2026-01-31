@@ -276,7 +276,7 @@ background       → Main background (#0a0a0f)
 foreground       → Primary text (#f8fafc)
 foreground-muted → Secondary text (#94a3b8)
 border           → Borders (rgba 10%)
-primary          → Accent blue (#3B82F6) — QG only, not on public pages
+primary          → Accent blue (#3B82F6) - QG only, not on public pages
 ```
 
 ### Color rules

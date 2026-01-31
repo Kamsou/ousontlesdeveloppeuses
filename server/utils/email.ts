@@ -81,7 +81,7 @@ export async function sendNotificationEmail(to: string, subject: string, content
           Voir mon profil
         </a>
         <p style="margin-top: 40px; color: #94a3b8; font-size: 14px;">
-          — L'équipe OSLD
+          - L'équipe OSLD
         </p>
       </div>
     `

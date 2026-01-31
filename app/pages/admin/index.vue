@@ -63,6 +63,7 @@ function formatDate(date: string | Date | null) {
     year: 'numeric'
   })
 }
+
 </script>
 
 <template>
@@ -75,12 +76,6 @@ function formatDate(date: string | Date | null) {
         Développeuses
       </NuxtLink>
       <NuxtLink
-        to="/admin/feedbacks"
-        class="px-4 py-2 border border-border/10 rounded-lg text-sm font-medium hover:border-foreground-muted transition-colors no-underline"
-      >
-        Feedbacks
-      </NuxtLink>
-      <NuxtLink
         to="/admin/programs"
         class="px-4 py-2 border border-border/10 rounded-lg text-sm font-medium hover:border-foreground-muted transition-colors no-underline"
       >
@@ -91,6 +86,12 @@ function formatDate(date: string | Date | null) {
         class="px-4 py-2 border border-border/10 rounded-lg text-sm font-medium hover:border-foreground-muted transition-colors no-underline"
       >
         Podcasts
+      </NuxtLink>
+      <NuxtLink
+        to="/admin/stats"
+        class="px-4 py-2 border border-border/10 rounded-lg text-sm font-medium hover:border-foreground-muted transition-colors no-underline"
+      >
+        Stats
       </NuxtLink>
     </div>
 
@@ -252,5 +253,6 @@ function formatDate(date: string | Date | null) {
         Aucune développeuse trouvée
       </div>
     </div>
+
   </div>
 </template>

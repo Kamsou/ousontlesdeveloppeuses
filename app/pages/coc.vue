@@ -100,7 +100,7 @@ useSeoMeta({
       <section class="mb-12">
         <h2 class="font-display text-2xl font-medium mb-6">Notre intention</h2>
         <p class="text-foreground-muted leading-relaxed mb-4">
-          Nous souhaitons que chaque personne — quels que soient son parcours, son identité ou son expérience — se sente <strong class="text-foreground">accueillie, en sécurité et légitime</strong> dans notre communauté.
+          Nous souhaitons que chaque personne - quels que soient son parcours, son identité ou son expérience - se sente <strong class="text-foreground">accueillie, en sécurité et légitime</strong> dans notre communauté.
         </p>
         <p class="text-foreground-muted leading-relaxed mb-4">
           Nous savons qu'un seul comportement déplacé peut fissurer la confiance : c'est pourquoi nous agissons avec vigilance et pédagogie, dans une logique de <strong class="text-foreground">prévention, d'écoute et de réparation</strong>.
@@ -132,7 +132,7 @@ useSeoMeta({
 
       <section class="p-6 border border-border/10 rounded-2xl bg-white/[0.02]">
         <p class="text-foreground-muted leading-relaxed text-center">
-          Nous ne cherchons pas la perfection, mais la <strong class="text-foreground">sécurité et la progression</strong> — individuelle comme collective.<br />
+          Nous ne cherchons pas la perfection, mais la <strong class="text-foreground">sécurité et la progression</strong> - individuelle comme collective.<br />
           Ensemble, faisons d'OSLD un lieu d'apprentissage, de confiance et d'entraide.
         </p>
       </section>
