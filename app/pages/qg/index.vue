@@ -105,6 +105,7 @@ watch(() => route.query.tab, (tab) => {
 
 watch(activeTab, (tab) => {
   router.replace({ query: tab === 'entraide' ? {} : { tab } })
+  $clientPosthog?.capture('qg_tab_clicked', { tab })
 })
 onMounted(() => {
   const shouldShow = isNewProfile.value || (profile.value && !profile.value.emailOptInAsked)

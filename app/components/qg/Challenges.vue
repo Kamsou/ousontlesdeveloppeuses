@@ -2,6 +2,7 @@
 import type { Challenge } from '~/types/qg'
 import { challengePacks, challengeTemplates, challengeLevels, getXpForDifficulty } from '~/utils/challengeCategories'
 
+const { $clientPosthog } = useNuxtApp()
 const { data: userChallenges, status: challengesStatus, refresh } = useLazyFetch<Challenge[]>('/api/challenges/current')
 
 const openPackId = ref<string | null>(null)
@@ -118,6 +119,7 @@ async function startChallenge(templateId: string) {
       method: 'POST',
       body: { templateId }
     })
+    $clientPosthog?.capture('challenge_started', { templateId })
     await refresh()
   } catch (e: any) {
     error.value = e.data?.message || 'Erreur'
@@ -358,9 +360,10 @@ onMounted(() => {
                 v-for="template in getCategoryTemplates(pack.id, cat.value)"
                 :key="template.id"
               >
-                <button
-                  @click="toggleChallenge(template.id)"
-                  class="w-full flex items-center gap-3 text-left py-2.5 -ml-2 px-2 rounded-lg transition-colors hover:bg-white/[0.02] group/item"
+                <div
+                  @click="(getStatus(template.id) || !activeChallenge) && toggleChallenge(template.id)"
+                  class="w-full flex items-center gap-3 text-left py-2.5 -ml-2 px-2 rounded-lg transition-colors group/item relative"
+                  :class="getStatus(template.id) || !activeChallenge ? 'hover:bg-white/[0.02] cursor-pointer' : 'cursor-default'"
                 >
                   <span class="shrink-0 w-4 flex items-center justify-center">
                     <svg
@@ -401,7 +404,20 @@ onMounted(() => {
                     class="text-[11px] tabular-nums"
                     :style="{ color: categoryColors[cat.value] }"
                   >+{{ getXpForDifficulty(template.difficulty) }}</span>
-                </button>
+
+                  <button
+                    v-if="!getStatus(template.id)"
+                    @click.stop="!activeChallenge && (openChallengeId = template.id, startChallenge(template.id))"
+                    :disabled="starting || !!activeChallenge"
+                    class="hidden md:group-hover/item:inline-flex absolute right-2 top-1/2 -translate-y-1/2 px-3 py-1 rounded-full text-xs font-medium border bg-background"
+                    :style="{
+                      borderColor: categoryColors[cat.value] + ((starting || activeChallenge) ? '15' : '30'),
+                      color: categoryColors[cat.value] + ((starting || activeChallenge) ? '40' : 'ff')
+                    }"
+                  >
+                    {{ starting ? '...' : 'Commencer' }}
+                  </button>
+                </div>
 
                 <div v-if="openChallengeId === template.id" class="ml-7 mt-1 mb-5">
                   <p class="text-[13px] text-foreground-muted leading-relaxed">
@@ -437,7 +453,7 @@ onMounted(() => {
                     </button>
                   </div>
 
-                  <div v-else class="mt-5">
+                  <div v-else class="mt-5 md:hidden">
                     <button
                       v-if="!activeChallenge"
                       @click="startChallenge(template.id)"
