@@ -262,7 +262,7 @@ watch(() => filters.skill, () => { updateUrl(); trackSearch() })
               />
               <div class="flex-1">
                 <h3 class="font-display text-lg font-medium">{{ dev.name }}</h3>
-                <p v-if="dev.title" class="text-sm text-foreground-muted">{{ dev.title }}</p>
+                <p v-if="dev.title" class="text-sm text-foreground-muted">{{ dev.title }}<span v-if="dev.location"> · {{ dev.location }}</span></p>
                 <p v-else-if="dev.location" class="text-sm text-foreground-muted">{{ dev.location }}</p>
               </div>
               <span v-if="dev.isSpeaker" class="px-3 py-1 bg-background-card border border-border/10 rounded-full text-[0.7rem] uppercase tracking-widest text-foreground-muted">Speakeuse</span>
