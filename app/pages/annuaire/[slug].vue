@@ -5,6 +5,7 @@ interface Developer {
   name: string
   avatarUrl: string | null
   bio: string | null
+  title: string | null
   location: string | null
   yearsExperience: number | null
   website: string | null
@@ -50,7 +51,9 @@ const seoDescription = computed(() => {
   if (!developer.value) return 'Profil de développeuse sur OSLD'
   const parts: string[] = []
 
-  if (developer.value.bio) {
+  if (developer.value.title) {
+    parts.push(developer.value.title)
+  } else if (developer.value.bio) {
     parts.push(developer.value.bio.slice(0, 120))
   }
 
@@ -130,6 +133,7 @@ onMounted(() => {
           />
           <div>
             <h1 class="font-display text-3xl md:text-5xl font-medium tracking-tight mb-2">{{ developer.name }}</h1>
+            <p v-if="developer.title" class="text-foreground-muted mb-2">{{ developer.title }}</p>
             <div class="flex flex-col md:flex-row gap-2 md:gap-6 text-foreground-muted">
               <span v-if="developer.location">{{ developer.location }}</span>
               <span v-if="developer.yearsExperience">

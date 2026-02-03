@@ -148,19 +148,30 @@ onMounted(() => {
     </header>
 
     <div class="max-w-3xl mx-auto px-6 pt-4 md:pt-8 pb-4 md:pb-6">
-      <div v-if="isLoadingActivity" class="mb-4 md:mb-6">
-        <div class="h-4 w-28 bg-border/20 rounded animate-pulse mb-3"></div>
-        <div class="flex flex-wrap gap-2">
-          <div class="h-8 w-32 bg-border/20 rounded-full animate-pulse"></div>
-          <div class="h-8 w-44 bg-border/20 rounded-full animate-pulse"></div>
+      <ClientOnly>
+        <div v-if="isLoadingActivity" class="mb-4 md:mb-6">
+          <div class="h-4 w-28 bg-border/20 rounded animate-pulse mb-3"></div>
+          <div class="flex flex-wrap gap-2">
+            <div class="h-8 w-32 bg-border/20 rounded-full animate-pulse"></div>
+            <div class="h-8 w-44 bg-border/20 rounded-full animate-pulse"></div>
+          </div>
         </div>
-      </div>
-      <QgWeeklyActivity
-        v-else-if="activity && !activity.isNew"
-        :activity="activity"
-        class="mb-4 md:mb-6"
-        @go-to-profile="activeTab = 'profil'"
-      />
+        <QgWeeklyActivity
+          v-else-if="activity && !activity.isNew"
+          :activity="activity"
+          class="mb-4 md:mb-6"
+          @go-to-profile="activeTab = 'profil'"
+        />
+        <template #fallback>
+          <div class="mb-4 md:mb-6">
+            <div class="h-4 w-28 bg-border/20 rounded animate-pulse mb-3"></div>
+            <div class="flex flex-wrap gap-2">
+              <div class="h-8 w-32 bg-border/20 rounded-full animate-pulse"></div>
+              <div class="h-8 w-44 bg-border/20 rounded-full animate-pulse"></div>
+            </div>
+          </div>
+        </template>
+      </ClientOnly>
     </div>
 
     <nav class="hidden md:block sticky top-[49px] z-40 bg-background border-b border-border/10">

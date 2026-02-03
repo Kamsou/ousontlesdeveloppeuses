@@ -66,7 +66,7 @@ async function markAsResolved(requestId: number, e: Event) {
             <span
               v-for="tech in request.techs.slice(0, 3)"
               :key="tech.id"
-              class="px-2 py-0.5 bg-subtle rounded text-xs text-foreground-muted/70"
+              class="px-2 py-0.5 bg-subtle rounded text-xs text-foreground-muted"
             >
               {{ tech.techName }}
             </span>

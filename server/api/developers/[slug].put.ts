@@ -50,6 +50,7 @@ export default defineEventHandler(async (event) => {
     name: newName,
     ...slugUpdate,
     bio: body.bio ?? developer.bio,
+    title: body.title ?? developer.title,
     location: body.location ?? developer.location,
     yearsExperience: body.yearsExperience ?? developer.yearsExperience,
     website: body.website ?? developer.website,

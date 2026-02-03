@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { openToOptions } from '~/utils/constants'
+import { openToOptions, skillGroups, suggestedSkills } from '~/utils/constants'
 import type { QgProfile } from '~/types/qg'
 
 const props = defineProps<{
@@ -23,6 +23,7 @@ const form = reactive({
   firstName: '',
   lastName: '',
   bio: '',
+  title: '',
   location: '',
   yearsExperience: null as number | null,
   website: '',
@@ -51,6 +52,15 @@ const hasValidExperienceProfile = computed(() => {
     props.profile?.profilePhrase &&
     validProfileTypes.includes(props.profile.profileType)
 })
+function toggleSkill(skill: string) {
+  const index = form.skills.indexOf(skill)
+  if (index > -1) {
+    form.skills.splice(index, 1)
+  } else {
+    form.skills.push(skill)
+  }
+}
+
 function addSkill() {
   if (newSkill.value && !form.skills.includes(newSkill.value)) {
     form.skills.push(newSkill.value)
@@ -138,6 +148,7 @@ watch(() => props.profile, (p) => {
     form.firstName = nameParts[0] || ''
     form.lastName = nameParts.slice(1).join(' ') || ''
     form.bio = p.bio || ''
+    form.title = p.title || ''
     form.location = p.location || ''
     form.yearsExperience = p.yearsExperience
     form.website = p.website || ''
@@ -164,14 +175,24 @@ useIntersectionObserver(stickysentinel, (entries) => {
 <template>
   <div>
     <ClientOnly>
+      <template #fallback>
+        <div class="animate-pulse space-y-8">
+          <div class="py-5 border-b border-border/10">
+            <div class="h-6 bg-border/50 rounded w-24 mb-6"></div>
+            <div class="space-y-6">
+              <div class="h-12 bg-border/50 rounded"></div>
+              <div class="h-24 bg-border/50 rounded"></div>
+            </div>
+          </div>
+        </div>
+      </template>
+
       <div v-if="isNewProfile" class="mb-8 p-4 bg-primary/10 border border-primary/30 rounded-xl">
         <p class="text-sm text-foreground">
           Cet espace est reservé aux <strong>développeuses francophones</strong>, contente de t'accueillir !
         </p>
       </div>
-    </ClientOnly>
 
-    <ClientOnly>
       <section v-if="hasValidExperienceProfile" class="mb-10 relative group">
         <div class="absolute inset-0 bg-gradient-to-r from-primary/5 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
         <div class="relative p-6 md:p-8 border border-border/50 rounded-2xl">
@@ -192,20 +213,6 @@ useIntersectionObserver(stickysentinel, (entries) => {
           </div>
         </div>
       </section>
-    </ClientOnly>
-
-    <ClientOnly>
-      <template #fallback>
-        <div class="animate-pulse space-y-8">
-          <div class="py-5 border-b border-border/10">
-            <div class="h-6 bg-border/50 rounded w-24 mb-6"></div>
-            <div class="space-y-6">
-              <div class="h-12 bg-border/50 rounded"></div>
-              <div class="h-24 bg-border/50 rounded"></div>
-            </div>
-          </div>
-        </div>
-      </template>
 
       <form @submit.prevent="save">
         <div v-if="error" class="p-4 bg-red-500/10 border border-red-500/30 rounded-lg text-red-500 mb-8">{{ error }}</div>
@@ -222,6 +229,14 @@ useIntersectionObserver(stickysentinel, (entries) => {
               <div class="flex flex-col gap-2">
                 <label for="firstName" class="text-xs uppercase tracking-wide text-foreground-muted">Prénom *</label>
                 <input id="firstName" v-model="form.firstName" type="text" required class="px-4 py-3 bg-background-card border border-border/10 rounded-lg text-foreground text-sm transition-colors focus:outline-none focus:border-foreground-muted" />
+              </div>
+            </div>
+
+            <div class="flex flex-col gap-2">
+              <label for="title" class="text-xs uppercase tracking-wide text-foreground-muted">En quelques mots</label>
+              <div class="relative">
+                <input id="title" v-model="form.title" type="text" maxlength="120" placeholder="Dev fullstack Vue/Node, freelance..." class="w-full px-4 py-3 bg-background-card border border-border/10 rounded-lg text-foreground text-sm transition-colors focus:outline-none focus:border-foreground-muted placeholder:text-foreground-muted" />
+                <span v-if="form.title.length > 80" class="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] tabular-nums text-foreground-muted/40">{{ form.title.length }}/120</span>
               </div>
             </div>
 
@@ -249,14 +264,37 @@ useIntersectionObserver(stickysentinel, (entries) => {
         </section>
 
         <section class="py-5 border-b border-border/10">
-          <h2 id="competences-label" class="font-display text-xl font-medium mb-4">Compétences</h2>
+          <h2 id="competences-label" class="font-display text-xl font-medium mb-2">Compétences</h2>
+          <p class="text-foreground-muted text-sm mb-4">Clique pour ajouter ou retirer</p>
+
+          <div class="space-y-3 mb-6">
+            <div v-for="group in skillGroups" :key="group.label">
+              <span class="text-[10px] uppercase tracking-wide text-foreground-muted/50 mb-1.5 block">{{ group.label }}</span>
+              <div class="flex flex-wrap gap-2 md:gap-1.5">
+                <button
+                  v-for="skill in group.skills"
+                  :key="skill"
+                  type="button"
+                  :class="[
+                    'px-4 py-2 md:px-3 md:py-1 border rounded-full cursor-pointer text-sm md:text-xs transition-all',
+                    form.skills.includes(skill)
+                      ? 'bg-primary/10 border-primary/40 text-primary'
+                      : 'bg-transparent border-border/40 text-foreground-muted hover:border-border/10 hover:text-foreground'
+                  ]"
+                  @click="toggleSkill(skill)"
+                >
+                  {{ skill }}
+                </button>
+              </div>
+            </div>
+          </div>
 
           <div class="flex gap-2 mb-4">
             <input
               id="new-skill"
               v-model="newSkill"
               type="text"
-              placeholder="Vue.js, TypeScript, Node..."
+              placeholder="Autre compétence..."
               aria-labelledby="competences-label"
               class="flex-1 px-4 py-3 bg-background-card border border-border/10 rounded-lg text-foreground text-sm transition-colors focus:outline-none focus:border-foreground-muted placeholder:text-foreground-muted"
               @keydown.enter.prevent="addSkill"
@@ -264,12 +302,13 @@ useIntersectionObserver(stickysentinel, (entries) => {
             <button type="button" @click="addSkill" class="px-6 py-3 bg-background-card border border-b-[3px] border-primary/20 border-b-primary/60 rounded-lg text-foreground cursor-pointer transition-all hover:border-primary/40 hover:bg-primary/[0.03] hover:shadow-glow hover:-translate-y-0.5 active:translate-y-px active:border-b active:shadow-none">Ajouter</button>
           </div>
 
-          <div class="flex flex-wrap gap-2">
-            <span v-for="skill in form.skills" :key="skill" class="flex items-center gap-2 px-4 py-2 bg-background-card border border-border/10 rounded-full text-sm">
-              {{ skill }}
-              <button type="button" @click="removeSkill(skill)" class="bg-transparent border-none text-foreground-muted cursor-pointer text-lg leading-none p-0 hover:text-foreground">&times;</button>
-            </span>
-            <span v-if="form.skills.length === 0" class="text-sm text-foreground-muted">Aucune compétence ajoutée</span>
+          <div v-if="form.skills.some(s => !suggestedSkills.includes(s))" class="flex flex-wrap gap-2">
+            <template v-for="skill in form.skills" :key="skill">
+              <span v-if="!suggestedSkills.includes(skill)" class="flex items-center gap-2 px-4 py-2 bg-background-card border border-border/10 rounded-full text-sm">
+                {{ skill }}
+                <button type="button" @click="removeSkill(skill)" class="bg-transparent border-none text-foreground-muted cursor-pointer text-lg leading-none p-0 hover:text-foreground">&times;</button>
+              </span>
+            </template>
           </div>
         </section>
 

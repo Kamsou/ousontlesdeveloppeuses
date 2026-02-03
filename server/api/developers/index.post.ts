@@ -44,6 +44,7 @@ export default defineEventHandler(async (event) => {
     email: session.user.email || null,
     avatarUrl: session.user.image || null,
     bio: body.bio || null,
+    title: body.title || null,
     location: body.location || null,
     yearsExperience: body.yearsExperience || null,
     website: body.website || null,

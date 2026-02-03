@@ -9,6 +9,7 @@ export const developers = sqliteTable('developers', {
   email: text('email'),
   avatarUrl: text('avatar_url'),
   bio: text('bio'),
+  title: text('title'),
   location: text('location'),
   yearsExperience: integer('years_experience'),
   website: text('website'),

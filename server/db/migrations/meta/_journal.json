@@ -127,6 +127,13 @@
       "when": 1770052800827,
       "tag": "0017_graceful_the_leader",
       "breakpoints": true
+    },
+    {
+      "idx": 18,
+      "version": "6",
+      "when": 1770114302139,
+      "tag": "0018_cold_abomination",
+      "breakpoints": true
     }
   ]
 }

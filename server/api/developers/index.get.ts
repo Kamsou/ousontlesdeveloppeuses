@@ -76,6 +76,7 @@ export default defineEventHandler(async (event) => {
       name: d.name,
       avatarUrl: d.avatarUrl,
       bio: d.bio,
+      title: d.title,
       location: d.location,
       yearsExperience: d.yearsExperience,
       linkedinUrl: d.linkedinUrl,

@@ -18,9 +18,10 @@ export default defineNuxtConfig({
   app: {
     head: {
       htmlAttrs: { lang: 'fr' },
+      title: 'Où Sont Les Développeuses',
       link: [
         { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
-        { rel: 'preconnect', href: 'https://api.fontshare.com', crossorigin: 'anonymous' },
+        { rel: 'preconnect', href: 'https://api.fontshare.com' },
         { rel: 'preconnect', href: 'https://cdn.fontshare.com', crossorigin: 'anonymous' },
         { rel: 'preload', href: 'https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&display=swap', as: 'style' },
         { rel: 'stylesheet', href: 'https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&display=swap' }
@@ -116,5 +117,7 @@ export default defineNuxtConfig({
     '/programmes': { prerender: true },
     '/podcasts': { prerender: true },
     '/speakers': { prerender: true },
+    '/qg/**': { ssr: false },
+    '/qg': { ssr: false },
   }
 })

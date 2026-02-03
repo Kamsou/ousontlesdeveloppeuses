@@ -4,6 +4,7 @@ export interface QgProfile {
   email: string | null
   avatarUrl: string | null
   bio: string | null
+  title: string | null
   location: string | null
   yearsExperience: number | null
   website: string | null

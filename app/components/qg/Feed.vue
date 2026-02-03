@@ -73,7 +73,7 @@ onMounted(() => {
     </div>
 
     <div v-else-if="!feedData?.requests?.length" class="py-12 text-center border border-dashed border-border/20 rounded-xl">
-      <p class="text-foreground-muted/70 text-sm">Aucune demande pour le moment</p>
+      <p class="text-foreground-muted text-sm">Aucune demande pour le moment</p>
     </div>
 
     <div v-else class="space-y-4">
@@ -122,7 +122,7 @@ onMounted(() => {
           <span
             v-for="tech in request.techs.slice(0, 4)"
             :key="tech.id"
-            class="px-2 py-0.5 bg-subtle rounded text-xs text-foreground-muted/70"
+            class="px-2 py-0.5 bg-subtle rounded text-xs text-foreground-muted"
           >
             {{ tech.techName }}
           </span>

@@ -67,7 +67,7 @@ const isLoading = computed(() => status.value === 'pending')
           </span>
         </div>
 
-        <p class="text-xs text-foreground-muted/70 truncate mb-3">{{ project.description }}</p>
+        <p class="text-xs text-foreground-muted truncate mb-3">{{ project.description }}</p>
 
         <div class="flex items-center gap-1.5 flex-wrap mb-3">
           <template v-if="project.techs.length">
