@@ -6,6 +6,8 @@ interface HelpRequest {
   helpType: 'bug' | 'review' | 'advice' | 'pair' | 'other'
   status: 'open' | 'closed'
   techs: { id: number; techName: string }[]
+  isOwner: boolean
+  developer: { id: number; name: string; avatarUrl: string | null; slug: string } | null
 }
 
 definePageMeta({
@@ -22,11 +24,17 @@ useSeoMeta({
 })
 
 const { data: request, status: requestStatus, refresh: refreshRequest } = await useFetch<HelpRequest>(`/api/help-requests/${requestId}`)
+
+const isOwner = computed(() => request.value?.isOwner ?? false)
+
 const { data: matchesData, status: matchesStatus } = useLazyFetch<{
   matches: any[]
   total: number
   hasMore: boolean
-}>(`/api/help-requests/${requestId}/matches`)
+}>(`/api/help-requests/${requestId}/matches`, {
+  immediate: request.value?.isOwner === true
+})
+
 const { data: currentUser } = useLazyFetch<{ id: number } | null>('/api/developers/me', {
   default: () => null
 })
@@ -187,86 +195,94 @@ async function sendContact() {
           {{ request.description }}
         </p>
 
-        <div v-if="isLoadingMatches" class="space-y-2 mb-8">
-          <div v-for="i in 2" :key="i" class="flex items-center gap-3 p-3 rounded-lg animate-pulse">
-            <div class="w-8 h-8 bg-border/20 rounded-full"></div>
-            <div class="h-4 bg-border/20 rounded w-24"></div>
-          </div>
+        <div v-if="!isOwner && request.developer" class="flex items-center gap-3 mb-8 p-3 rounded-lg bg-foreground/[0.02]">
+          <img v-if="request.developer.avatarUrl" :src="request.developer.avatarUrl" :alt="request.developer.name" class="w-8 h-8 rounded-full object-cover" />
+          <div v-else class="w-8 h-8 rounded-full bg-border/20 flex items-center justify-center text-foreground-muted text-xs">{{ request.developer.name?.charAt(0) }}</div>
+          <NuxtLink :to="`/annuaire/${request.developer.slug}`" class="text-sm hover:text-foreground-muted transition-colors">{{ request.developer.name }}</NuxtLink>
         </div>
 
-        <div v-else-if="matches?.length" class="mb-8">
-          <p class="text-xs text-foreground-muted mb-3">{{ totalMatches }} {{ totalMatches === 1 ? 'personne peut' : 'personnes peuvent' }} t'aider</p>
-          <div class="space-y-1">
-            <div
-              v-for="dev in matches"
-              :key="dev.id"
-              class="flex items-center gap-3 p-3 -mx-3 rounded-lg hover:bg-foreground/[0.02] transition-colors group"
-            >
-              <img
-                v-if="dev.avatarUrl"
-                :src="dev.avatarUrl"
-                :alt="dev.name"
-                class="w-8 h-8 rounded-full object-cover"
-              />
-              <div v-else class="w-8 h-8 rounded-full bg-border/20 flex items-center justify-center text-foreground-muted text-xs">
-                {{ dev.name?.charAt(0) }}
-              </div>
-              <NuxtLink :to="`/annuaire/${dev.slug}`" target="_blank" class="text-sm hover:text-foreground-muted transition-colors flex-1 min-w-0 truncate">
-                {{ dev.name }}
-              </NuxtLink>
-              <span v-if="dev.matchedSkills?.length" class="text-xs text-foreground-muted hidden sm:block">
-                {{ dev.matchedSkills.slice(0, 2).join(', ') }}
-              </span>
-              <button
-                v-if="dev.email"
-                @click="openContactModal({ id: dev.id, name: dev.name })"
-                class="text-xs text-foreground-muted hover:text-foreground transition-colors"
-              >
-                Contacter
-              </button>
+        <template v-if="isOwner">
+          <div v-if="isLoadingMatches" class="space-y-2 mb-8">
+            <div v-for="i in 2" :key="i" class="flex items-center gap-3 p-3 rounded-lg animate-pulse">
+              <div class="w-8 h-8 bg-border/20 rounded-full"></div>
+              <div class="h-4 bg-border/20 rounded w-24"></div>
             </div>
           </div>
-          <button
-            v-if="hasMoreMatches"
-            @click="loadAllMatches"
-            :disabled="isLoadingMore"
-            class="text-xs text-foreground-muted hover:text-foreground transition-colors mt-2"
-          >
-            {{ isLoadingMore ? '...' : `+ ${totalMatches - matches.length} autres` }}
-          </button>
-        </div>
 
-        <div v-else class="text-sm text-foreground-muted mb-8">
-          Pas encore de match
-        </div>
+          <div v-else-if="matches?.length" class="mb-8">
+            <p class="text-xs text-foreground-muted mb-3">{{ totalMatches }} {{ totalMatches === 1 ? 'personne peut' : 'personnes peuvent' }} t'aider</p>
+            <div class="space-y-1">
+              <div
+                v-for="dev in matches"
+                :key="dev.id"
+                class="flex items-center gap-3 p-3 -mx-3 rounded-lg hover:bg-foreground/[0.02] transition-colors group"
+              >
+                <img
+                  v-if="dev.avatarUrl"
+                  :src="dev.avatarUrl"
+                  :alt="dev.name"
+                  class="w-8 h-8 rounded-full object-cover"
+                />
+                <div v-else class="w-8 h-8 rounded-full bg-border/20 flex items-center justify-center text-foreground-muted text-xs">
+                  {{ dev.name?.charAt(0) }}
+                </div>
+                <NuxtLink :to="`/annuaire/${dev.slug}`" target="_blank" class="text-sm hover:text-foreground-muted transition-colors flex-1 min-w-0 truncate">
+                  {{ dev.name }}
+                </NuxtLink>
+                <span v-if="dev.matchedSkills?.length" class="text-xs text-foreground-muted hidden sm:block">
+                  {{ dev.matchedSkills.slice(0, 2).join(', ') }}
+                </span>
+                <button
+                  v-if="dev.email"
+                  @click="openContactModal({ id: dev.id, name: dev.name })"
+                  class="text-xs text-foreground-muted hover:text-foreground transition-colors"
+                >
+                  Contacter
+                </button>
+              </div>
+            </div>
+            <button
+              v-if="hasMoreMatches"
+              @click="loadAllMatches"
+              :disabled="isLoadingMore"
+              class="text-xs text-foreground-muted hover:text-foreground transition-colors mt-2"
+            >
+              {{ isLoadingMore ? '...' : `+ ${totalMatches - matches.length} autres` }}
+            </button>
+          </div>
 
-        <div class="flex items-center gap-4 pt-6 border-t border-border/20">
-          <NuxtLink :to="`/qg/requests/${requestId}/edit`" class="text-sm text-foreground-muted hover:text-foreground transition-colors">
-            Modifier
-          </NuxtLink>
-          <button
-            v-if="request.status === 'open'"
-            @click="showCloseDialog = true"
-            class="text-sm text-foreground-muted hover:text-green-400 transition-colors"
-          >
-            Résolu
-          </button>
-          <button
-            v-else
-            @click="showReopenDialog = true"
-            class="text-sm text-foreground-muted hover:text-foreground transition-colors"
-          >
-            Rouvrir
-          </button>
-          <button
-            @click="showDeleteDialog = true"
-            class="text-sm text-foreground-muted hover:text-red-400 transition-colors ml-auto"
-          >
-            Supprimer
-          </button>
-        </div>
+          <div v-else class="text-sm text-foreground-muted mb-8">
+            Pas encore de match
+          </div>
 
-        <QgComments :help-request-id="Number(requestId)" :current-user-id="currentUserId" :is-owner="true" />
+          <div class="flex items-center gap-4 pt-6 border-t border-border/20">
+            <NuxtLink :to="`/qg/requests/${requestId}/edit`" class="text-sm text-foreground-muted hover:text-foreground transition-colors">
+              Modifier
+            </NuxtLink>
+            <button
+              v-if="request.status === 'open'"
+              @click="showCloseDialog = true"
+              class="text-sm text-foreground-muted hover:text-green-400 transition-colors"
+            >
+              Résolu
+            </button>
+            <button
+              v-else
+              @click="showReopenDialog = true"
+              class="text-sm text-foreground-muted hover:text-foreground transition-colors"
+            >
+              Rouvrir
+            </button>
+            <button
+              @click="showDeleteDialog = true"
+              class="text-sm text-foreground-muted hover:text-red-400 transition-colors ml-auto"
+            >
+              Supprimer
+            </button>
+          </div>
+        </template>
+
+        <QgComments :help-request-id="Number(requestId)" :current-user-id="currentUserId" :is-owner="isOwner" />
       </div>
 
       <div v-else class="text-center py-16">
