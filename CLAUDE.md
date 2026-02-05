@@ -5,7 +5,7 @@ Project guide for Claude Code.
 ## Overview
 
 **OSLD - Où Sont Les Développeuses**: Directory of women developers in France.
-Nuxt 4 + TypeScript, deployed on Netlify with NuxtHub (SQLite/D1).
+Nuxt 4 + TypeScript, deployed on Netlify with Turso (libSQL).
 
 ## Architecture
 
@@ -65,15 +65,34 @@ server/
 npm run dev              # Dev server
 npm run build            # Production build (Netlify)
 npx drizzle-kit generate # Generate migrations
-npx nuxthub database migrations list   # List migrations
-npx nuxthub database migrations apply  # Apply in prod
+```
+
+### Database migrations (production)
+
+La base de prod est sur **Turso** (SQLite managé). Utiliser le CLI Turso :
+
+```bash
+# Installer Turso CLI (macOS)
+brew install tursodatabase/tap/turso
+
+# Se connecter
+turso auth login
+
+# Lister les bases
+turso db list
+
+# Ouvrir un shell SQL sur la base
+turso db shell NOM_DE_LA_BASE
+
+# Ou exécuter directement une requête
+turso db shell NOM_DE_LA_BASE "ALTER TABLE developers ADD column_name TYPE;"
 ```
 
 ## Tech stack
 
 - **Nuxt 4** - Vue 3 + Nitro, compatibilityVersion 4
 - **TypeScript** - Strict mode
-- **Drizzle ORM** - SQLite (NuxtHub D1 in prod)
+- **Drizzle ORM** - SQLite local, Turso (libSQL) en prod
 - **Auth.js** - GitHub OAuth via @sidebase/nuxt-auth
 - **TailwindCSS** - Styling
 - **@nuxtjs/seo** - SEO, schemaOrg, robots, sitemap, ogImage
@@ -315,7 +334,7 @@ Module `@nuxt/a11y` enabled. Critical rules:
 ## Deployment
 
 - **Hosting**: Netlify (nitro preset)
-- **Database**: NuxtHub (Cloudflare D1)
+- **Database**: Turso (libSQL) - env vars `TURSO_DATABASE_URL`, `TURSO_AUTH_TOKEN`
 - **Auth**: Env vars `GITHUB_CLIENT_ID`, `GITHUB_CLIENT_SECRET`, `AUTH_SECRET`
 
 ### Known fix: unhead
