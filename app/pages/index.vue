@@ -127,16 +127,15 @@ const features = [
         </h1>
 
         <div class="overflow-hidden">
-          <p class="text-sm md:text-lg text-foreground-muted max-w-md leading-relaxed mb-12 animate-slide-up animation-delay-300">
-            Développeuses, faites-vous connaître.<br/>
-            Profils. Talks. Entraide.
+          <p class="text-sm md:text-lg text-foreground-muted max-w-xl leading-relaxed mb-12 animate-slide-up animation-delay-300">
+            Parce qu'on a besoin de voir des développeuses pour en devenir une.
           </p>
         </div>
 
         <div>
           <div class="flex gap-4 items-center flex-wrap animate-slide-up animation-delay-400">
           <NuxtLink to="/annuaire" class="group flex items-center gap-4 px-6 py-4 bg-foreground border border-b-[3px] border-foreground border-b-foreground-muted/50 text-background rounded-full text-sm font-medium cursor-pointer transition-all hover:gap-6 hover:pr-5 hover:-translate-y-0.5 hover:shadow-glow active:translate-y-px active:border-b active:shadow-none no-underline">
-            <span>Elles sont là</span>
+            <span>Découvrir les profils</span>
             <span class="flex transition-transform group-hover:translate-x-1">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M5 12h14M12 5l7 7-7 7"/>
@@ -144,7 +143,7 @@ const features = [
             </span>
           </NuxtLink>
           <button @click="handleCreateProfile" class="px-6 py-4 bg-transparent text-foreground border border-b-[3px] border-border/10 border-b-border/30 rounded-full text-sm font-medium cursor-pointer transition-all hover:border-foreground hover:bg-foreground hover:text-background hover:-translate-y-0.5 active:translate-y-px active:border-b">
-            Créer mon profil
+            Devenir visible
           </button>
           </div>
         </div>
@@ -168,6 +167,7 @@ const features = [
     </div>
 
     <section class="py-24 px-4 md:px-16">
+      <p class="text-foreground-muted text-sm uppercase tracking-widest mb-12">Elles sont déjà là. Rejoins-les.</p>
       <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
         <div v-for="(stat, index) in stats" :key="index" class="flex flex-col gap-6 py-8 border-t border-border/10">
           <span class="text-[0.7rem] text-foreground-muted tracking-widest">0{{ index + 1 }}</span>
@@ -203,7 +203,7 @@ const features = [
             Le QG des développeuses
           </h2>
           <p class="text-foreground-muted text-base leading-relaxed mb-8 max-w-md">
-            Discussions, découvertes, entraide. Ton espace pour échanger avec la communauté.
+            Tu n'es plus seule. Entraide, challenges, opportunités - un espace entre devs, loin du bruit.
           </p>
           <ClientOnly>
             <button
@@ -235,42 +235,42 @@ const features = [
           <div class="p-5 border border-border/10 rounded-2xl text-center">
             <div class="w-10 h-10 flex items-center justify-center border border-border/10 rounded-full mb-3 mx-auto">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-              </svg>
-            </div>
-            <h3 class="font-display text-sm font-medium mb-1">Discussions</h3>
-            <p class="text-foreground-muted text-xs">Échange avec d'autres devs</p>
-          </div>
-          <div class="p-5 border border-border/10 rounded-2xl text-center">
-            <div class="w-10 h-10 flex items-center justify-center border border-border/10 rounded-full mb-3 mx-auto">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                <circle cx="11" cy="11" r="8"/>
-                <path d="M21 21l-4.35-4.35"/>
-              </svg>
-            </div>
-            <h3 class="font-display text-sm font-medium mb-1">Découvertes</h3>
-            <p class="text-foreground-muted text-xs">Trouve des profils qui matchent</p>
-          </div>
-          <div class="p-5 border border-border/10 rounded-2xl text-center">
-            <div class="w-10 h-10 flex items-center justify-center border border-border/10 rounded-full mb-3 mx-auto">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-                <circle cx="9" cy="7" r="4"/>
-                <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
-                <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                <circle cx="12" cy="12" r="10"/>
+                <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+                <line x1="12" y1="17" x2="12.01" y2="17"/>
               </svg>
             </div>
             <h3 class="font-display text-sm font-medium mb-1">Entraide</h3>
-            <p class="text-foreground-muted text-xs">Demande un coup de main</p>
+            <p class="text-foreground-muted text-xs">Bug, review, conseil...</p>
           </div>
           <div class="p-5 border border-border/10 rounded-2xl text-center">
             <div class="w-10 h-10 flex items-center justify-center border border-border/10 rounded-full mb-3 mx-auto">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
               </svg>
             </div>
-            <h3 class="font-display text-sm font-medium mb-1">Side Projects</h3>
-            <p class="text-foreground-muted text-xs">Trouve des contributrices</p>
+            <h3 class="font-display text-sm font-medium mb-1">Challenges</h3>
+            <p class="text-foreground-muted text-xs">Mini-défis pour progresser</p>
+          </div>
+          <div class="p-5 border border-border/10 rounded-2xl text-center">
+            <div class="w-10 h-10 flex items-center justify-center border border-border/10 rounded-full mb-3 mx-auto">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <rect x="2" y="7" width="20" height="14" rx="2" ry="2"/>
+                <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+              </svg>
+            </div>
+            <h3 class="font-display text-sm font-medium mb-1">Offres</h3>
+            <p class="text-foreground-muted text-xs">Jobs et side projects</p>
+          </div>
+          <div class="p-5 border border-border/10 rounded-2xl text-center">
+            <div class="w-10 h-10 flex items-center justify-center border border-border/10 rounded-full mb-3 mx-auto">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                <circle cx="12" cy="7" r="4"/>
+              </svg>
+            </div>
+            <h3 class="font-display text-sm font-medium mb-1">Profil</h3>
+            <p class="text-foreground-muted text-xs">Crée ton profil dev</p>
           </div>
         </div>
       </div>
@@ -354,14 +354,14 @@ const features = [
       <div class="max-w-xl text-center">
         <span class="block text-[0.7rem] uppercase tracking-[0.2em] text-foreground-muted mb-6">Rejoindre</span>
         <h2 class="font-display text-2xl md:text-5xl font-medium leading-tight tracking-tight mb-6">
-          Ajoutez votre profil<br/>à l'annuaire
+          Deviens visible
         </h2>
         <p class="text-foreground-muted text-base leading-relaxed mb-10">
-          Indiquez vos technos, votre localisation et ce pour quoi vous êtes disponible.
+          Ton profil pourrait être celui qui donne envie à une future dev de se lancer.
         </p>
         <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
           <button @click="handleCreateProfile" class="group inline-flex items-center gap-4 px-8 py-5 bg-foreground border border-b-[3px] border-foreground border-b-foreground-muted/50 text-background rounded-full text-base font-medium cursor-pointer transition-all hover:gap-6 hover:-translate-y-0.5 hover:shadow-glow active:translate-y-px active:border-b active:shadow-none">
-            <span>Créer mon profil</span>
+            <span>Devenir visible</span>
             <span class="flex transition-transform group-hover:translate-x-1">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M5 12h14M12 5l7 7-7 7"/>
@@ -371,6 +371,36 @@ const features = [
           <NuxtLink to="/experience" class="text-foreground-muted hover:text-foreground text-sm transition-colors underline underline-offset-4 decoration-border hover:decoration-text">
             ou découvre ton profil dev →
           </NuxtLink>
+        </div>
+      </div>
+    </section>
+
+    <section class="py-20 md:py-32 px-4 md:px-16 border-t border-border/10">
+      <div class="max-w-3xl mx-auto">
+        <div class="relative">
+          <span class="hidden md:block absolute -top-8 -left-12 text-[12rem] font-display font-bold text-foreground/[0.03] leading-none select-none">"</span>
+
+          <div class="relative z-10">
+            <p class="text-foreground/60 text-base md:text-xl leading-relaxed mb-4 md:mb-6">
+              Après plusieurs années en tant que développeuse, un constat&nbsp;:
+            </p>
+            <p class="font-display text-xl md:text-4xl font-medium text-foreground leading-snug mb-6 md:mb-8">
+              J'ai bossé avec 2&nbsp;développeuses contre une vingtaine de développeurs.
+            </p>
+            <p class="text-foreground/60 text-base md:text-xl leading-relaxed">
+              OSLD est né de là. Un espace pour nous rendre visibles, nous retrouver, et montrer aux prochaines que c'est possible.
+            </p>
+
+            <div class="mt-8 md:mt-12 pt-6 md:pt-8 border-t border-border/10 flex items-center gap-3 md:gap-4">
+              <div class="w-10 h-10 md:w-12 md:h-12 rounded-full bg-gradient-to-br from-foreground/20 to-foreground/5 flex items-center justify-center text-foreground/60 font-display font-medium text-sm md:text-base">
+                C
+              </div>
+              <div>
+                <p class="text-foreground font-medium text-sm md:text-base">Camille</p>
+                <p class="text-foreground-muted text-xs md:text-sm">8 ans d'expérience</p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </section>

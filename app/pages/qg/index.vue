@@ -28,6 +28,9 @@ const { data: offers, status: offersStatus, refresh: refreshOffers } = useLazyFe
 const { data: profile, refresh: refreshProfile } = await useFetch<QgProfile | null>('/api/developers/me', {
   default: () => null
 })
+const { data: isAdmin } = useLazyFetch('/api/admin/check', {
+  default: () => false
+})
 type TabType = 'entraide' | 'challenges' | 'offres' | 'profil'
 
 const activeTab = ref<TabType>(
@@ -131,6 +134,11 @@ onMounted(() => {
         </NuxtLink>
         <h1 class="font-display text-sm font-semibold tracking-widest text-primary m-0">MON QG</h1>
         <div class="flex items-center gap-3">
+          <NuxtLink v-if="isAdmin" to="/admin" class="flex items-center justify-center w-8 h-8 rounded-full border border-border/10 text-foreground-muted hover:text-foreground hover:border-foreground-muted transition-colors" title="Dashboard admin">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
+            </svg>
+          </NuxtLink>
           <button @click="cycleTheme" class="flex items-center justify-center w-8 h-8 rounded-full border border-border/10 text-foreground-muted hover:text-foreground hover:border-foreground-muted transition-colors" :title="themeLabel">
             <svg v-if="themePreference === 'system'" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <rect x="2" y="3" width="20" height="14" rx="2" ry="2" /><line x1="8" y1="21" x2="16" y2="21" /><line x1="12" y1="17" x2="12" y2="21" />

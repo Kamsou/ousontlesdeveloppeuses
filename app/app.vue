@@ -3,11 +3,13 @@ const { $clientPosthog } = useNuxtApp()
 const { data, status, signIn, signOut } = useAuth()
 const route = useRoute()
 const isQg = computed(() => route.path.startsWith('/qg'))
+const isAdminRoute = computed(() => route.path.startsWith('/admin'))
+const isPrivateArea = computed(() => isQg.value || isAdminRoute.value)
 const { isDark } = useQgTheme()
 
 watchEffect(() => {
   if (import.meta.client) {
-    if (isQg.value && !isDark.value) {
+    if (isPrivateArea.value && !isDark.value) {
       document.documentElement.classList.add('theme-light')
     } else {
       document.documentElement.classList.remove('theme-light')
@@ -78,7 +80,7 @@ onUnmounted(() => {
 
 <template>
   <div class="min-h-screen flex flex-col relative bg-background text-foreground">
-    <header v-if="!isQg" class="fixed top-0 left-0 right-0 z-50 px-4 md:px-8 py-4 backdrop-blur-xl bg-background/80 border-b border-border/5">
+    <header v-if="!isPrivateArea" class="fixed top-0 left-0 right-0 z-50 px-4 md:px-8 py-4 backdrop-blur-xl bg-background/80 border-b border-border/5">
       <div class="max-w-7xl mx-auto flex items-center justify-between">
         <NuxtLink to="/" class="flex items-center gap-3 no-underline text-foreground group z-10">
           <span class="flex flex-col gap-[3px] w-[18px]">
@@ -204,7 +206,7 @@ onUnmounted(() => {
       </div>
     </header>
 
-    <div v-if="menuOpen && !isQg" class="fixed inset-0 z-40 bg-background pt-20 px-6 lg:hidden overflow-y-auto flex flex-col">
+    <div v-if="menuOpen && !isPrivateArea" class="fixed inset-0 z-40 bg-background pt-20 px-6 lg:hidden overflow-y-auto flex flex-col">
       <nav aria-label="Navigation mobile" class="flex flex-col gap-1 py-6 flex-1">
         <NuxtLink to="/annuaire" :class="['no-underline text-lg font-medium px-3 py-2.5 rounded-xl transition-colors', route.path.startsWith('/annuaire') || route.path.startsWith('/profil/') ? 'text-foreground bg-white/5' : 'text-foreground-muted']">Annuaire</NuxtLink>
         <NuxtLink to="/speakers" :class="['no-underline text-lg font-medium px-3 py-2.5 rounded-xl transition-colors', route.path === '/speakers' ? 'text-foreground bg-white/5' : 'text-foreground-muted']">Speakeuses</NuxtLink>
@@ -253,11 +255,11 @@ onUnmounted(() => {
       </div>
     </div>
 
-    <main :class="['flex-1 relative z-[1]', isQg ? '' : 'pt-20']">
+    <main :class="['flex-1 relative z-[1]', isPrivateArea ? '' : 'pt-20']">
       <NuxtPage />
     </main>
 
-    <footer v-if="!isQg" class="relative z-[1] text-center py-8 text-foreground-muted text-sm border-t border-border/5">
+    <footer v-if="!isPrivateArea" class="relative z-[1] text-center py-8 text-foreground-muted text-sm border-t border-border/5">
       <p>Fait pour toutes les développeuses par <a href="https://linkedin.com/in/camillecoutens" target="_blank" rel="noopener noreferrer" class="text-foreground-muted underline underline-offset-2 decoration-border hover:text-foreground hover:decoration-foreground transition-colors">Camille Coutens</a></p>
       <span class="inline-flex gap-4 mt-3">
         <NuxtLink to="/coc" class="text-foreground-muted underline underline-offset-2 decoration-border hover:text-foreground transition-colors">Code de conduite</NuxtLink>

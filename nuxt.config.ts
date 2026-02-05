@@ -126,6 +126,8 @@ export default defineNuxtConfig({
     '/speakers': { prerender: true },
     '/qg/**': { ssr: false },
     '/qg': { ssr: false },
+    '/admin/**': { ssr: false },
+    '/admin': { ssr: false },
   },
   vite: {
     build: {
