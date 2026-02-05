@@ -142,7 +142,7 @@ onMounted(() => {
               <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
             </svg>
           </button>
-          <img v-if="session?.user?.image" :src="session.user.image" :alt="session.user.name || ''" class="w-8 h-8 rounded-full border border-border/10" />
+          <img v-if="session?.user?.image" :src="optimizedAvatar(session.user.image, 64)" :alt="session.user.name || ''" class="w-8 h-8 rounded-full border border-border/10" />
           <span v-else class="w-8 h-8 rounded-full bg-border/50"></span>
         </div>
       </div>

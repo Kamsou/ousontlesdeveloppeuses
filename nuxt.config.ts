@@ -23,8 +23,15 @@ export default defineNuxtConfig({
         { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
         { rel: 'preconnect', href: 'https://api.fontshare.com' },
         { rel: 'preconnect', href: 'https://cdn.fontshare.com', crossorigin: 'anonymous' },
-        { rel: 'preload', href: 'https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&display=swap', as: 'style' },
-        { rel: 'stylesheet', href: 'https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&display=swap' }
+        {
+          rel: 'stylesheet',
+          href: 'https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&display=swap',
+          media: 'print',
+          onload: "this.media='all'"
+        }
+      ],
+      noscript: [
+        { innerHTML: '<link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&display=swap">' }
       ]
     }
   },
@@ -119,5 +126,10 @@ export default defineNuxtConfig({
     '/speakers': { prerender: true },
     '/qg/**': { ssr: false },
     '/qg': { ssr: false },
+  },
+  vite: {
+    build: {
+      target: 'esnext'
+    }
   }
 })

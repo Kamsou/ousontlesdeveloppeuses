@@ -151,7 +151,7 @@ onUnmounted(() => {
             <template v-else>
               <div class="hidden lg:block relative user-menu">
                 <button @click.stop="userMenuOpen = !userMenuOpen" class="flex items-center gap-2 cursor-pointer bg-transparent border-none">
-                  <img :src="data?.user?.image || ''" :alt="data?.user?.name || ''" class="w-9 h-9 rounded-full border-2 border-foreground/30" />
+                  <img :src="optimizedAvatar(data?.user?.image, 72)" :alt="data?.user?.name || ''" class="w-9 h-9 rounded-full border-2 border-foreground/30" />
                   <svg :class="['w-4 h-4 text-foreground-muted transition-transform', userMenuOpen ? 'rotate-180' : '']" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M6 9l6 6 6-6"/>
                   </svg>
@@ -187,7 +187,7 @@ onUnmounted(() => {
                 </div>
               </div>
               <NuxtLink to="/profil" class="lg:hidden">
-                <img :src="data?.user?.image || ''" :alt="data?.user?.name || ''" class="w-9 h-9 rounded-full border-2 border-foreground/30" />
+                <img :src="optimizedAvatar(data?.user?.image, 72)" :alt="data?.user?.name || ''" class="w-9 h-9 rounded-full border-2 border-foreground/30" />
               </NuxtLink>
             </template>
             <template #fallback>
@@ -240,7 +240,7 @@ onUnmounted(() => {
         <template v-else>
           <div class="flex flex-col gap-3">
             <NuxtLink to="/qg" class="flex items-center gap-3 no-underline text-foreground px-3 py-2.5 rounded-xl hover:bg-white/5 transition-colors">
-              <img :src="data?.user?.image || ''" :alt="data?.user?.name || ''" class="w-10 h-10 rounded-full border-2 border-foreground/30" />
+              <img :src="optimizedAvatar(data?.user?.image, 80)" :alt="data?.user?.name || ''" class="w-10 h-10 rounded-full border-2 border-foreground/30" />
               <div class="flex flex-col min-w-0">
                 <span class="font-medium text-sm truncate">{{ displayName }}</span>
                 <span class="text-xs text-foreground-muted">Mon QG</span>

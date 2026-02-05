@@ -120,9 +120,11 @@ function openReviewModal(company: any) {
           </div>
         </div>
 
-        <button v-if="status === 'authenticated'" @click="showAddModal = true" class="px-6 py-3 bg-foreground border border-b-[3px] border-foreground border-b-foreground-muted/50 text-background rounded-lg text-sm font-medium cursor-pointer transition-all hover:-translate-y-0.5 hover:shadow-glow active:translate-y-px active:border-b active:shadow-none">
-          Ajouter une entreprise
-        </button>
+        <ClientOnly>
+          <button v-if="status === 'authenticated'" @click="showAddModal = true" class="px-6 py-3 bg-foreground border border-b-[3px] border-foreground border-b-foreground-muted/50 text-background rounded-lg text-sm font-medium cursor-pointer transition-all hover:-translate-y-0.5 hover:shadow-glow active:translate-y-px active:border-b active:shadow-none">
+            Ajouter une entreprise
+          </button>
+        </ClientOnly>
       </div>
     </header>
 
@@ -213,9 +215,11 @@ function openReviewModal(company: any) {
             <a v-if="company.website" :href="company.website" target="_blank" class="flex-1 py-3 px-4 bg-transparent border border-b-[3px] border-border/10 border-b-border/30 rounded-lg text-sm text-foreground text-center no-underline transition-all hover:border-foreground hover:-translate-y-0.5 active:translate-y-px active:border-b">
               Site web
             </a>
-            <button v-if="status === 'authenticated'" @click="openReviewModal(company)" class="flex-1 py-3 px-4 bg-foreground border border-b-[3px] border-foreground border-b-foreground-muted/50 text-background rounded-lg text-sm cursor-pointer transition-all hover:-translate-y-0.5 hover:shadow-glow active:translate-y-px active:border-b active:shadow-none">
-              Donner un avis
-            </button>
+            <ClientOnly>
+              <button v-if="status === 'authenticated'" @click="openReviewModal(company)" class="flex-1 py-3 px-4 bg-foreground border border-b-[3px] border-foreground border-b-foreground-muted/50 text-background rounded-lg text-sm cursor-pointer transition-all hover:-translate-y-0.5 hover:shadow-glow active:translate-y-px active:border-b active:shadow-none">
+                Donner un avis
+              </button>
+            </ClientOnly>
           </div>
         </div>
       </div>
