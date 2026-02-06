@@ -5,6 +5,9 @@ export default defineNuxtConfig({
     anthropicApiKey: process.env.ANTHROPIC_API_KEY,
     resendApiKey: process.env.RESEND_API_KEY,
     cronSecret: process.env.CRON_SECRET,
+    brevoApiKey: process.env.BREVO_API_KEY,
+    brevoListId: process.env.BREVO_LIST_ID,
+    brevoWebhookSecret: process.env.BREVO_WEBHOOK_SECRET,
     public: {
       posthog: {
         publicKey: process.env.NUXT_PUBLIC_POSTHOG_PUBLIC_KEY,

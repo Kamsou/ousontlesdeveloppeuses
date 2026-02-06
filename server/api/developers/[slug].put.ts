@@ -60,6 +60,11 @@ export default defineEventHandler(async (event) => {
     updatedAt: new Date()
   }).where(eq(tables.developers.id, id))
 
+  if (typeof emailOptInUpdate.emailOptIn === 'boolean') {
+    syncBrevoContact(developer.email, newName, emailOptInUpdate.emailOptIn)
+      .catch(err => console.error('[brevo]', err))
+  }
+
   if (body.skills) {
     await db.delete(tables.developerSkills).where(eq(tables.developerSkills.developerId, id))
     if (body.skills.length) {
