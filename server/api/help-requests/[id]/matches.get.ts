@@ -1,4 +1,4 @@
-import { getServerSession, getToken } from '#auth'
+import { getServerSession } from '#auth'
 import { eq, inArray } from 'drizzle-orm'
 
 const INITIAL_LIMIT = 5
@@ -34,13 +34,12 @@ function locationsMatch(loc1: string | null, loc2: string | null): boolean {
 
 export default defineEventHandler(async (event) => {
   const session = await getServerSession(event)
-  const token = await getToken({ event })
 
   if (!session?.user) {
     throw createError({ statusCode: 401, message: 'Non authentifié' })
   }
 
-  const githubId = (token?.id || token?.sub) as string
+  const githubId = session.user.id
   if (!githubId) {
     throw createError({ statusCode: 400, message: 'ID GitHub non trouvé' })
   }

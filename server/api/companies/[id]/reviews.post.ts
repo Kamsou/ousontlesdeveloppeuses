@@ -1,15 +1,14 @@
-import { getServerSession, getToken } from '#auth'
+import { getServerSession } from '#auth'
 import { eq, and } from 'drizzle-orm'
 
 export default defineEventHandler(async (event) => {
   const session = await getServerSession(event)
-  const token = await getToken({ event })
 
   if (!session?.user) {
     throw createError({ statusCode: 401, message: 'Non authentifié' })
   }
 
-  const githubId = (token?.id || token?.sub) as string
+  const githubId = session.user.id
 
   const companyId = Number(getRouterParam(event, 'id'))
   const body = await readBody(event)

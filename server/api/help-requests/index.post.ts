@@ -1,4 +1,4 @@
-import { getServerSession, getToken } from '#auth'
+import { getServerSession } from '#auth'
 import { eq } from 'drizzle-orm'
 import { sendAdminNewHelpRequest } from '../../utils/email'
 
@@ -6,13 +6,12 @@ export default defineEventHandler(async (event) => {
   useRateLimit(event, { windowMs: 60 * 60 * 1000, max: 5 })
 
   const session = await getServerSession(event)
-  const token = await getToken({ event })
 
   if (!session?.user) {
     throw createError({ statusCode: 401, message: 'Non authentifié' })
   }
 
-  const githubId = (token?.id || token?.sub) as string
+  const githubId = session.user.id
   if (!githubId) {
     throw createError({ statusCode: 400, message: 'ID GitHub non trouvé' })
   }
