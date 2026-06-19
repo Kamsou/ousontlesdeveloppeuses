@@ -50,11 +50,10 @@ const filters = reactive({
   experience: queryArray(route.query.experience)
 })
 
-const allDevelopers = ref<Developer[]>([])
+const extraDevelopers = ref<Developer[]>([])
 const page = ref(1)
 const isLoadingMore = ref(false)
-const hasMore = ref(false)
-const totalCount = ref(0)
+const lastLoadedHasMore = ref<boolean | null>(null)
 const loadMoreRef = ref<HTMLElement | null>(null)
 
 const initialQuery = computed(() => {
@@ -72,19 +71,22 @@ const { data, status } = useLazyFetch<ApiResponse>('/api/developers', {
   query: initialQuery
 })
 
-const isLoading = computed(() => status.value === 'pending' && !allDevelopers.value.length)
+// Derive from `data` with computeds so the list renders during SSR too.
+// (A watch-populated ref stays empty on the server because reactive watchers
+// don't re-run during SSR, which caused a hydration mismatch.)
+const allDevelopers = computed<Developer[]>(() => [
+  ...(data.value?.developers ?? []),
+  ...extraDevelopers.value
+])
+const totalCount = computed(() => data.value?.pagination.total ?? 0)
+const hasMore = computed(() => lastLoadedHasMore.value ?? data.value?.pagination.hasMore ?? false)
+const isLoading = computed(() => !data.value)
 
-watch(data, (d) => {
-  if (d) {
-    allDevelopers.value = d.developers
-    totalCount.value = d.pagination.total
-    hasMore.value = d.pagination.hasMore
-    page.value = 1
-  }
-}, { immediate: true })
-
-watch([() => filters.location, () => filters.skill, () => filters.openTo, () => filters.lookingFor, () => filters.experience], () => {
-  hasMore.value = false
+// Reset pagination accumulation whenever the base query result changes
+// (filter changes / revalidation). Runs client-side only — SSR is always page 1.
+watch(data, () => {
+  extraDevelopers.value = []
+  lastLoadedHasMore.value = null
   page.value = 1
 })
 
@@ -101,8 +103,8 @@ async function loadMore() {
     if (filters.experience.length) params.experience = filters.experience.join(',')
     params.page = page.value.toString()
     const result = await $fetch<ApiResponse>('/api/developers', { query: params })
-    allDevelopers.value = [...allDevelopers.value, ...result.developers]
-    hasMore.value = result.pagination.hasMore
+    extraDevelopers.value = [...extraDevelopers.value, ...result.developers]
+    lastLoadedHasMore.value = result.pagination.hasMore
   } catch {
     page.value--
   } finally {
