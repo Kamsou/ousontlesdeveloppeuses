@@ -103,6 +103,7 @@ export default defineEventHandler(async (event) => {
       if (existingSpeaker) {
         await db.update(tables.speakerProfiles).set({
           topics: body.speakerTopics ? JSON.stringify(body.speakerTopics) : existingSpeaker.topics,
+          pastTalksUrl: body.pastTalksUrl?.trim() || null,
           available: body.speakerAvailable ?? existingSpeaker.available,
           remoteOk: body.remoteOk ?? existingSpeaker.remoteOk,
           travelWilling: body.travelWilling ?? existingSpeaker.travelWilling
@@ -111,6 +112,7 @@ export default defineEventHandler(async (event) => {
         await db.insert(tables.speakerProfiles).values({
           developerId: id,
           topics: body.speakerTopics ? JSON.stringify(body.speakerTopics) : null,
+          pastTalksUrl: body.pastTalksUrl?.trim() || null,
           available: true,
           remoteOk: body.remoteOk ?? true,
           travelWilling: body.travelWilling ?? false

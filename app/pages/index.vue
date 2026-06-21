@@ -13,12 +13,18 @@ useSeoMeta({
   description: 'Annuaire des développeuses tech en France : profils, speakeuses, entreprises inclusives, quiz IA et espace d\'entraide privé. Rejoignez la communauté OSLD.',
   ogTitle: 'Où sont les développeuses ? Ici.',
   ogDescription: 'Se retrouver, se rendre visibles. Annuaire de développeuses, speakeuses, ressources tech et entraide communautaire.',
-  ogImage: 'https://ousontlesdeveloppeuses.fr/og-image.png',
   ogType: 'website',
   twitterCard: 'summary_large_image',
   twitterTitle: 'Où sont les développeuses ? Ici.',
   twitterDescription: 'Se retrouver, se rendre visibles. Annuaire de développeuses, speakeuses, ressources tech et entraide communautaire.',
-  twitterImage: 'https://ousontlesdeveloppeuses.fr/og-image.png',
+})
+
+const { data: ogStats } = await useFetch('/api/stats', { key: 'og-stats' })
+defineOgImageComponent('OgImageListing', {
+  title: 'Où sont les développeuses ?',
+  subtitle: 'Se retrouver, se rendre visibles.',
+  count: ogStats.value?.developers ?? null,
+  countLabel: 'développeuses référencées'
 })
 
 useSchemaOrg([

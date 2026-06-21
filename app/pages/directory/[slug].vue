@@ -19,6 +19,7 @@ interface Developer {
   lookingFor: string[]
   speakerProfile: {
     topics: string[]
+    pastTalksUrl: string | null
     available: boolean | null
     remoteOk: boolean | null
     travelWilling: boolean | null
@@ -227,10 +228,24 @@ onMounted(() => {
           </span>
         </div>
 
-        <div class="flex gap-4">
+        <div class="flex gap-4 mb-4">
           <span v-if="developer.speakerProfile.remoteOk" class="text-sm text-foreground-muted">Remote possible</span>
           <span v-if="developer.speakerProfile.travelWilling" class="text-sm text-foreground-muted">Se déplace</span>
         </div>
+
+        <a
+          v-if="developer.speakerProfile.pastTalksUrl"
+          :href="developer.speakerProfile.pastTalksUrl"
+          target="_blank"
+          rel="noopener"
+          class="inline-flex items-center gap-2 px-5 py-3 bg-background-card border border-border/10 rounded-full text-foreground no-underline text-sm transition-all hover:bg-background-card-hover hover:border-foreground-muted"
+        >
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polygon points="23 7 16 12 23 17 23 7"/>
+            <rect x="1" y="5" width="15" height="14" rx="2" ry="2"/>
+          </svg>
+          Voir ses talks passés
+        </a>
       </section>
     </div>
   </div>

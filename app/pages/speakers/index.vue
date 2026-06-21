@@ -4,8 +4,15 @@ useSeoMeta({
   description: 'Trouvez des speakeuses tech pour vos conférences et événements. Filtrez par sujet, ville, remote ou présentiel. Développeuses disponibles en France.',
   ogTitle: 'Speakeuses Tech pour vos Conférences',
   ogDescription: 'Trouvez des speakeuses tech pour vos conférences. Filtrez par sujet, remote ou présentiel.',
-  ogImage: 'https://ousontlesdeveloppeuses.fr/og-image.png',
   twitterCard: 'summary_large_image',
+})
+
+const { data: ogStats } = await useFetch('/api/stats', { key: 'og-stats' })
+defineOgImageComponent('OgImageListing', {
+  title: 'Speakeuses tech',
+  subtitle: 'Pour vos conférences et événements.',
+  count: ogStats.value?.speakers ?? null,
+  countLabel: 'speakeuses disponibles'
 })
 
 interface Speaker {
@@ -18,6 +25,7 @@ interface Speaker {
   skills: string[]
   speakerProfile: {
     topics: string[]
+    pastTalksUrl: string | null
     remoteOk: boolean | null
     travelWilling: boolean | null
     available: boolean | null
@@ -194,6 +202,10 @@ watch(() => filters.travel, () => { updateUrl(); trackSearch() })
             <span v-if="speaker.speakerProfile?.travelWilling" class="flex items-center gap-1.5">
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-foreground-muted/60"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
               Se déplace
+            </span>
+            <span v-if="speaker.speakerProfile?.pastTalksUrl" class="flex items-center gap-1.5">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-foreground-muted/60"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+              Talks dispo
             </span>
             <span v-if="speaker.skills?.length" class="ml-auto text-foreground-muted/40">
               {{ speaker.skills.slice(0, 3).join(' · ') }}<template v-if="speaker.skills.length > 3"> · +{{ speaker.skills.length - 3 }}</template>

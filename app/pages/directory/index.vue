@@ -4,8 +4,15 @@ useSeoMeta({
   description: 'Trouvez des développeuses en France. Filtrez par ville, technologie et disponibilité : freelance, CDI, mentoring, conférence, pair programming.',
   ogTitle: 'Annuaire des Développeuses Tech en France',
   ogDescription: 'Trouvez des développeuses en France. Filtrez par ville, techno et disponibilité (freelance, CDI, mentoring...).',
-  ogImage: 'https://ousontlesdeveloppeuses.fr/og-image.png',
   twitterCard: 'summary_large_image',
+})
+
+const { data: ogStats } = await useFetch('/api/stats', { key: 'og-stats' })
+defineOgImageComponent('OgImageListing', {
+  title: 'Annuaire des développeuses',
+  subtitle: 'Filtre par ville, stack et disponibilité.',
+  count: ogStats.value?.developers ?? null,
+  countLabel: 'développeuses référencées'
 })
 
 import { openToOptions, lookingForOptions, lookingForLabels, getExperienceLabel, experienceOptions } from '~/utils/constants'

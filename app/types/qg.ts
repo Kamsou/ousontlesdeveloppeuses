@@ -21,6 +21,7 @@ export interface QgProfile {
   lookingForSince: string | null
   speakerProfile: {
     topics: string[]
+    pastTalksUrl: string | null
     available: boolean | null
     remoteOk: boolean | null
     travelWilling: boolean | null

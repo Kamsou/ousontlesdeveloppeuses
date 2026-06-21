@@ -98,6 +98,7 @@ export default defineEventHandler(async (event) => {
     await db.insert(tables.speakerProfiles).values({
       developerId: developer.id,
       topics: body.speakerTopics ? JSON.stringify(body.speakerTopics) : null,
+      pastTalksUrl: body.pastTalksUrl?.trim() || null,
       available: true,
       remoteOk: body.remoteOk ?? true,
       travelWilling: body.travelWilling ?? false

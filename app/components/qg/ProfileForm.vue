@@ -33,6 +33,7 @@ interface ProfileFormState {
   lookingFor: string[]
   openTo: string[]
   speakerTopics: string[]
+  pastTalksUrl: string
   remoteOk: boolean
   travelWilling: boolean
   emailOptIn: boolean
@@ -54,6 +55,7 @@ const form = reactive<ProfileFormState>({
   lookingFor: [],
   openTo: [],
   speakerTopics: [],
+  pastTalksUrl: '',
   remoteOk: true,
   travelWilling: false,
   emailOptIn: false,
@@ -238,6 +240,7 @@ watch(() => props.profile, (p) => {
     form.lookingFor = p.lookingFor || []
     form.openTo = p.openTo || []
     form.speakerTopics = p.speakerProfile?.topics || []
+    form.pastTalksUrl = p.speakerProfile?.pastTalksUrl || ''
     form.remoteOk = p.speakerProfile?.remoteOk ?? true
     form.travelWilling = p.speakerProfile?.travelWilling ?? false
     form.emailOptIn = p.emailOptIn ?? false
@@ -509,6 +512,18 @@ useIntersectionObserver(stickysentinel, (entries) => {
                 </span>
                 <span v-if="form.speakerTopics.length === 0" class="text-sm text-foreground-muted">Aucun sujet ajouté</span>
               </div>
+            </div>
+
+            <div class="flex flex-col gap-2 mb-4">
+              <label for="past-talks" class="text-xs uppercase tracking-wide text-foreground-muted">Talks passés</label>
+              <input
+                id="past-talks"
+                v-model="form.pastTalksUrl"
+                type="url"
+                placeholder="Lien vers une vidéo, des slides, ta page Sessionize..."
+                class="w-full px-4 py-3 bg-background-card border border-border/20 rounded-lg text-foreground text-sm transition-colors focus:outline-none focus:border-foreground-muted placeholder:text-foreground-muted/40"
+              />
+              <span class="text-xs text-foreground-muted">Aide les organisateurs à découvrir tes interventions précédentes.</span>
             </div>
 
             <div class="flex flex-col md:flex-row gap-4 md:gap-8 mt-4">

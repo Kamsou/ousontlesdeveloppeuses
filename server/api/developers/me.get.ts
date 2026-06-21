@@ -56,6 +56,7 @@ export default defineEventHandler(async (event) => {
     lookingForSince: developer.lookingForSince?.toISOString() || null,
     speakerProfile: developer.speakerProfile ? {
       topics: parseTopics(developer.speakerProfile.topics),
+      pastTalksUrl: developer.speakerProfile.pastTalksUrl,
       available: developer.speakerProfile.available,
       remoteOk: developer.speakerProfile.remoteOk,
       travelWilling: developer.speakerProfile.travelWilling

@@ -59,6 +59,7 @@ export default defineEventHandler(async (event) => {
     skills: dev.skills.map(s => s.skillName),
     speakerProfile: dev.speakerProfile ? {
       topics: parseTopics(dev.speakerProfile.topics),
+      pastTalksUrl: dev.speakerProfile.pastTalksUrl,
       remoteOk: dev.speakerProfile.remoteOk,
       travelWilling: dev.speakerProfile.travelWilling,
       available: dev.speakerProfile.available
