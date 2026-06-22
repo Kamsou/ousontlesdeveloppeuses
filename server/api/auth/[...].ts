@@ -28,11 +28,14 @@ export default NuxtAuthHandler({
           }
         }
       }
+      if (!token.id && token.sub) {
+        token.id = token.sub
+      }
       return token
     },
     session({ session, token }) {
       if (session.user) {
-        session.user.id = token.id
+        session.user.id = (token.id ?? token.sub) as string
         session.user.login = token.login
       }
       return session
