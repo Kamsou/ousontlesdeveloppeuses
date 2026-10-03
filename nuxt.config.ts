@@ -33,10 +33,18 @@ export default defineNuxtConfig({
   css: ['@/assets/css/main.css'],
 
   fonts: {
+    providers: {
+      google: false,
+      googleicons: false,
+      bunny: false,
+      fontshare: false,
+      fontsource: false,
+      adobe: false
+    },
     families: [
-      { name: 'Satoshi', provider: 'fontshare', weights: [400, 500, 700] },
-      { name: 'Space Grotesk', provider: 'google', weights: [500, 700], global: true },
-      { name: 'JetBrains Mono', provider: 'google', weights: [400], global: true }
+      { name: 'Satoshi', provider: 'local', weights: [400, 500, 700] },
+      { name: 'Space Grotesk', provider: 'local', weights: [500, 700], global: true },
+      { name: 'JetBrains Mono', provider: 'local', weights: [400], global: true }
     ]
   },
 
