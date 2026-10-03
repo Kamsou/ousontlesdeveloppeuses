@@ -1,19 +1,19 @@
 <script setup lang="ts">
 useSeoMeta({
-  title: 'Le QG - L\'espace privé des développeuses | OSLD',
-  description: 'Derrière la vitrine publique, un espace entre nous. Entraide, side projects, offres d\'emploi. Juste entre devs.',
-  ogTitle: 'Le QG - L\'espace privé des développeuses | OSLD',
-  ogDescription: 'Derrière la vitrine publique, un espace entre nous. Entraide, side projects, offres d\'emploi. Juste entre devs.',
+  title: 'Ton profil - Sois trouvée | OSLD',
+  description: 'Crée ton profil de développeuse en deux minutes. Les orgas, les recruteurs et les autres devs te trouvent et te contactent.',
+  ogTitle: 'Ton profil - Sois trouvée | OSLD',
+  ogDescription: 'Crée ton profil de développeuse en deux minutes. Les orgas, les recruteurs et les autres devs te trouvent et te contactent.',
   ogImage: 'https://ousontlesdeveloppeuses.fr/og-image.png',
   ogType: 'website',
   twitterCard: 'summary_large_image',
-  twitterTitle: 'Le QG - L\'espace privé des développeuses | OSLD',
-  twitterDescription: 'Derrière la vitrine publique, un espace entre nous. Entraide, side projects, offres d\'emploi. Juste entre devs.',
+  twitterTitle: 'Ton profil - Sois trouvée | OSLD',
+  twitterDescription: 'Crée ton profil de développeuse en deux minutes. Les orgas, les recruteurs et les autres devs te trouvent et te contactent.',
   twitterImage: 'https://ousontlesdeveloppeuses.fr/og-image.png',
 })
 
 onMounted(() => {
-  navigateTo('/#qg', { replace: true })
+  navigateTo('/#profil', { replace: true })
 })
 </script>
 

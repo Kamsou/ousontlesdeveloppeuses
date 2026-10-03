@@ -20,10 +20,10 @@ const visible = useRevealOnce(iciRef, 0.6)
         Deviens visible
       </h2>
       <p class="text-foreground-muted text-base md:text-lg leading-relaxed mb-10 max-w-xl">
-        Ton profil pourrait inspirer une future dev à se lancer. Et derrière, une communauté t'attend.
+        Ton profil pourrait inspirer une future dev à se lancer. Ou t'amener ta prochaine conf, ta prochaine mentorée, ton prochain poste.
       </p>
       <button @click="emit('join')" class="group inline-flex items-center gap-4 px-8 py-5 bg-foreground border border-b-[3px] border-foreground border-b-foreground-muted/50 text-background rounded-full text-base font-medium cursor-pointer transition-all hover:gap-6 hover:-translate-y-0.5 hover:shadow-glow active:translate-y-px active:border-b active:shadow-none">
-        <span>Rejoins la communauté</span>
+        <span>Crée ton profil</span>
         <span class="flex transition-transform group-hover:translate-x-1">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M5 12h14M12 5l7 7-7 7"/>

@@ -210,7 +210,7 @@ onBeforeUnmount(() => {
 
         <p data-hero-block class="text-base md:text-xl text-foreground-muted max-w-xl leading-relaxed mb-10 animate-slide-up animation-delay-300">
           <span class="text-foreground">Elles sont <ClientOnly><span v-if="count">{{ count }}</span><span v-else>là</span><template #fallback>là</template></ClientOnly>, il suffit d'éclairer.</span><br class="hidden md:block" />
-          Le QG des développeuses en France : se retrouver, se rendre visibles, et montrer aux prochaines que c'est possible.
+          L'annuaire des développeuses en France : se rendre visibles, se trouver entre nous, et montrer aux prochaines que c'est possible.
         </p>
 
         <div data-hero-block class="pointer-events-auto inline-flex gap-4 items-center flex-wrap animate-slide-up animation-delay-400" @animationend="measure">
@@ -223,7 +223,7 @@ onBeforeUnmount(() => {
             </span>
           </NuxtLink>
           <button @click="emit('join')" class="px-6 py-4 bg-background/60 backdrop-blur-md text-foreground border border-b-[3px] border-border/15 border-b-border/30 rounded-full text-sm font-medium cursor-pointer transition-all hover:border-foreground hover:bg-foreground hover:text-background hover:-translate-y-0.5 active:translate-y-px active:border-b">
-            Rejoins la communauté
+            Crée ton profil
           </button>
         </div>
       </div>

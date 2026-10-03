@@ -1,14 +1,14 @@
 <script setup lang="ts">
 useSeoMeta({
-  title: 'Découvrir OSLD - Annuaire, Speakeuses, Entreprises | OSLD',
-  description: 'Profils de développeuses, speakeuses pour événements tech, entreprises inclusives, programmes et ressources. Découvrez tout ce que propose OSLD.',
-  ogTitle: 'Découvrir OSLD - Annuaire, Speakeuses, Entreprises',
-  ogDescription: 'Profils de développeuses, speakeuses pour événements tech, entreprises inclusives, programmes et ressources. Découvrez tout ce que propose OSLD.',
+  title: 'Découvrir OSLD - Annuaire, Speakeuses, Ressources | OSLD',
+  description: 'Profils de développeuses, speakeuses pour événements tech, programmes, podcasts et ressources. Découvrez tout ce que propose OSLD.',
+  ogTitle: 'Découvrir OSLD - Annuaire, Speakeuses, Ressources',
+  ogDescription: 'Profils de développeuses, speakeuses pour événements tech, programmes, podcasts et ressources. Découvrez tout ce que propose OSLD.',
   ogImage: 'https://ousontlesdeveloppeuses.fr/og-image.png',
   ogType: 'website',
   twitterCard: 'summary_large_image',
-  twitterTitle: 'Découvrir OSLD - Annuaire, Speakeuses, Entreprises',
-  twitterDescription: 'Profils de développeuses, speakeuses pour événements tech, entreprises inclusives, programmes et ressources. Découvrez tout ce que propose OSLD.',
+  twitterTitle: 'Découvrir OSLD - Annuaire, Speakeuses, Ressources',
+  twitterDescription: 'Profils de développeuses, speakeuses pour événements tech, programmes, podcasts et ressources. Découvrez tout ce que propose OSLD.',
   twitterImage: 'https://ousontlesdeveloppeuses.fr/og-image.png',
 })
 

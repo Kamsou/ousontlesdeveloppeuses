@@ -12,7 +12,7 @@ const visible = useRevealOnce(sectionRef, 0.25)
 
 const targets = computed(() => {
   const s = visible.value ? props.stats : null
-  return [s?.developers ?? 0, s?.locations ?? 0, s?.companies ?? 0, s?.speakers ?? 0]
+  return [s?.developers ?? 0, s?.locations ?? 0, s?.speakers ?? 0]
 })
 
 const animated = useTransition(targets, {
@@ -98,19 +98,12 @@ function pluralize(count: number, singular: string, plural: string) {
             </div>
           </div>
 
-          <NuxtLink to="/companies" class="spotlight-card flex flex-col justify-between gap-6 p-6 md:p-8 border border-border/10 rounded-3xl bg-background-card no-underline text-foreground" @pointermove="trackPointer">
-            <span class="font-mono text-xs text-foreground-muted">03</span>
+
+          <NuxtLink to="/speakers" class="spotlight-card col-span-2 flex flex-col justify-between gap-6 p-6 md:p-8 border border-border/10 rounded-3xl bg-background-card no-underline text-foreground" @pointermove="trackPointer">
+            <span class="font-mono text-xs text-foreground-muted">03 / conférences</span>
             <div>
               <div class="font-display text-5xl md:text-6xl font-medium tracking-tight leading-none tabular-nums">{{ counters[2] }}</div>
-              <div class="text-foreground-muted text-sm mt-2">{{ pluralize(counters[2] ?? 0, 'Entreprise', 'Entreprises') }}</div>
-            </div>
-          </NuxtLink>
-
-          <NuxtLink to="/speakers" class="spotlight-card flex flex-col justify-between gap-6 p-6 md:p-8 border border-border/10 rounded-3xl bg-background-card no-underline text-foreground" @pointermove="trackPointer">
-            <span class="font-mono text-xs text-foreground-muted">04</span>
-            <div>
-              <div class="font-display text-5xl md:text-6xl font-medium tracking-tight leading-none tabular-nums">{{ counters[3] }}</div>
-              <div class="text-foreground-muted text-sm mt-2">{{ pluralize(counters[3] ?? 0, 'Speakeuse', 'Speakeuses') }}</div>
+              <div class="text-foreground-muted text-sm mt-2">{{ pluralize(counters[2] ?? 0, 'Speakeuse', 'Speakeuses') }}</div>
             </div>
           </NuxtLink>
         </div>
@@ -118,8 +111,7 @@ function pluralize(count: number, singular: string, plural: string) {
           <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
             <div class="col-span-2 lg:row-span-2 h-72 lg:h-auto rounded-3xl bg-foreground/5 animate-pulse"></div>
             <div class="col-span-2 h-44 rounded-3xl bg-foreground/5 animate-pulse"></div>
-            <div class="h-44 rounded-3xl bg-foreground/5 animate-pulse"></div>
-            <div class="h-44 rounded-3xl bg-foreground/5 animate-pulse"></div>
+            <div class="col-span-2 h-44 rounded-3xl bg-foreground/5 animate-pulse"></div>
           </div>
         </template>
       </ClientOnly>

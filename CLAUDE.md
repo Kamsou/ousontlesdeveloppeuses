@@ -15,15 +15,16 @@ app/
 │   ├── index.vue         → Homepage
 │   ├── directory/        → Developer directory (public)
 │   ├── speakers/         → Speakers list (public)
-│   ├── companies/        → Companies + reviews (public)
+│   ├── companies/        → Companies + reviews (hidden: no nav link, noindex, not in sitemap)
 │   ├── programs.vue      → Programs & communities (public)
 │   ├── podcasts.vue      → Podcasts (public)
 │   ├── experience/       → Quiz "Quel dev es-tu?" (public)
 │   ├── mission.vue       → Anchor redirect → /#mission
 │   ├── discover.vue      → Anchor redirect → /#discover
 │   ├── stats.vue         → Anchor redirect → /#stats
-│   ├── qg-info.vue       → Anchor redirect → /#qg
-│   ├── qg/               → Private dashboard (auth required)
+│   ├── qg-info.vue       → Anchor redirect → /#profil
+│   ├── qg/               → Private dashboard (auth required). Community features are
+│   │                        read-only: QG_FROZEN in shared/utils/qg.ts
 │   │   ├── index.vue     → QG hub (tabs: help, offers, profile)
 │   │   ├── ask.vue       → Create help request
 │   │   ├── new-offer.vue → Create offer

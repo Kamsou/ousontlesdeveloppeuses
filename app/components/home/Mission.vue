@@ -8,7 +8,7 @@ const gridRef = ref<HTMLElement | null>(null)
 const gridVisible = useRevealOnce(gridRef, 0.4)
 const progress = ref(0)
 
-const statement = 'On représente moins de 20\u00a0% de la tech. Alors on s\'est fait une place pour se rendre visibles, se retrouver, s\'entraider, et montrer aux prochaines générations que c\'est possible.'
+const statement = 'On représente moins de 20\u00a0% de la tech. Alors on s\'est fait une place pour se rendre visibles, se trouver entre nous, et montrer aux prochaines générations que c\'est possible.'
 const words = statement.split(' ')
 
 const litDots = (() => {
@@ -21,7 +21,7 @@ const litOrder = [...litDots]
 
 const pillars = [
   { title: 'Visibilité', text: 'Un annuaire public pour que plus personne ne puisse dire « on ne trouve pas de développeuses ».' },
-  { title: 'Communauté', text: 'Un réseau pour se retrouver, s\'entraider, créer ensemble et partager entre développeuses.' },
+  { title: 'Réseau', text: 'Se trouver entre développeuses : une mentore, une binôme de pair programming, un coffee chat.' },
   { title: 'Inspiration', text: 'Montrer aux prochaines générations que c\'est possible, et qu\'elles ne sont pas seules.' }
 ]
 

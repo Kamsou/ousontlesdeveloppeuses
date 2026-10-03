@@ -56,7 +56,7 @@ export default defineNuxtConfig({
   site: {
     url: 'https://ousontlesdeveloppeuses.fr',
     name: 'Où Sont Les Développeuses',
-    description: 'Annuaire des développeuses tech en France. Profils, speakeuses pour vos conférences, entreprises inclusives et entraide communautaire.',
+    description: 'Annuaire des développeuses tech en France. Profils, speakeuses pour vos conférences, programmes et ressources tech.',
     defaultLocale: 'fr',
   },
 
@@ -71,7 +71,7 @@ export default defineNuxtConfig({
       alternateName: 'OSLD',
       url: 'https://ousontlesdeveloppeuses.fr',
       logo: 'https://ousontlesdeveloppeuses.fr/og-image.png',
-      description: 'Annuaire des développeuses tech en France. Profils, speakeuses, entreprises inclusives et entraide communautaire.',
+      description: 'Annuaire des développeuses tech en France. Profils, speakeuses, programmes et ressources tech.',
       sameAs: [
         'https://github.com/Kamsou/ousontlesdevs',
       ],

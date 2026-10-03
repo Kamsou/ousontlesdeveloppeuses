@@ -66,8 +66,8 @@ onBeforeUnmount(() => {
         </p>
       </div>
 
-      <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
-        <NuxtLink to="/directory" class="spotlight-card group md:col-span-2 lg:col-span-3 grid lg:grid-cols-2 gap-8 lg:gap-12 lg:items-end p-6 md:p-8 border border-border/10 rounded-3xl bg-background-card no-underline text-foreground" @pointermove="trackPointer">
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
+        <NuxtLink to="/directory" class="spotlight-card group md:col-span-2 lg:col-span-2 grid lg:grid-cols-2 gap-8 lg:gap-12 lg:items-end p-6 md:p-8 border border-border/10 rounded-3xl bg-background-card no-underline text-foreground" @pointermove="trackPointer">
           <div>
             <span class="font-mono text-xs text-foreground-muted">/directory</span>
             <h3 class="font-display text-3xl md:text-4xl font-medium mt-3 mb-3">Annuaire</h3>
@@ -106,23 +106,6 @@ onBeforeUnmount(() => {
             <h3 class="font-display text-2xl font-medium mb-2">Speakeuses</h3>
             <p class="text-foreground-muted text-sm leading-relaxed">
               Des speakeuses pour tes événements tech, par sujet et format.
-            </p>
-          </div>
-        </NuxtLink>
-
-        <NuxtLink to="/companies" class="spotlight-card group flex flex-col justify-between gap-6 p-6 md:p-7 border border-border/10 rounded-3xl bg-background-card no-underline text-foreground" @pointermove="trackPointer">
-          <div class="inline-flex self-start items-center gap-2.5 px-3.5 py-2 rounded-full border border-border/20">
-            <span class="flex gap-0.5" aria-hidden="true">
-              <svg v-for="i in 5" :key="i" class="star w-3 h-3" :style="{ transitionDelay: `${i * 60}ms` }" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path d="M12 2l3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1z"/>
-              </svg>
-            </span>
-            <span class="text-xs font-medium">Certifiée Inclusive</span>
-          </div>
-          <div>
-            <h3 class="font-display text-2xl font-medium mb-2">Entreprises</h3>
-            <p class="text-foreground-muted text-sm leading-relaxed">
-              Avis sur les entreprises tech. Badge « Certifiée Inclusive » dès 5 avis positifs.
             </p>
           </div>
         </NuxtLink>
@@ -202,14 +185,6 @@ onBeforeUnmount(() => {
   transform: rotate(-8deg);
 }
 
-.star {
-  fill: transparent;
-  transition: fill 0.2s ease;
-}
-
-.group:hover .star {
-  fill: currentColor;
-}
 
 .fan {
   transform: rotate(var(--r)) translateX(0);

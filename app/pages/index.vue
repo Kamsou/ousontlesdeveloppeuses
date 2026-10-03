@@ -10,13 +10,13 @@ useHead({
 
 useSeoMeta({
   title: 'Où Sont Les Développeuses (OSLD) - Annuaire des développeuses tech en France',
-  description: 'Annuaire des développeuses tech en France : profils, speakeuses, entreprises inclusives, quiz IA et espace d\'entraide privé. Rejoignez la communauté OSLD.',
+  description: 'Annuaire des développeuses tech en France : profils, speakeuses pour vos conférences, programmes, podcasts et quiz IA. Crée ton profil et sois trouvée.',
   ogTitle: 'Où sont les développeuses ? Ici.',
-  ogDescription: 'Se retrouver, se rendre visibles. Annuaire de développeuses, speakeuses, ressources tech et entraide communautaire.',
+  ogDescription: 'Se rendre visibles, se trouver. Annuaire de développeuses, speakeuses et ressources tech en France.',
   ogType: 'website',
   twitterCard: 'summary_large_image',
   twitterTitle: 'Où sont les développeuses ? Ici.',
-  twitterDescription: 'Se retrouver, se rendre visibles. Annuaire de développeuses, speakeuses, ressources tech et entraide communautaire.',
+  twitterDescription: 'Se rendre visibles, se trouver. Annuaire de développeuses, speakeuses et ressources tech en France.',
 })
 
 const { data: ogStats } = await useFetch('/api/stats', { key: 'og-stats' })
@@ -36,7 +36,7 @@ useSchemaOrg([
   }),
   defineWebPage({
     name: 'Où Sont Les Développeuses - Annuaire des développeuses tech en France',
-    description: 'Annuaire des développeuses tech en France : profils, speakeuses, entreprises inclusives, programmes, podcasts, quiz IA et espace d\'entraide communautaire privé (Le QG).',
+    description: 'Annuaire des développeuses tech en France : profils, speakeuses, programmes, podcasts et quiz IA.',
   }),
   {
     '@type': 'FAQPage',
@@ -46,15 +46,15 @@ useSchemaOrg([
         'name': 'Pourquoi OSLD ?',
         'acceptedAnswer': {
           '@type': 'Answer',
-          'text': 'Les développeuses représentent moins de 20% de la tech. OSLD rend visibles les développeuses en France, crée un réseau pour se retrouver, s\'entraider, créer ensemble, et montre aux prochaines générations que c\'est possible.'
+          'text': 'Les développeuses représentent moins de 20% de la tech. OSLD rend visibles les développeuses en France, leur permet de se trouver entre elles (mentorat, coffee chat, pair programming), et montre aux prochaines générations que c\'est possible.'
         }
       },
       {
         '@type': 'Question',
-        'name': 'Qu\'est-ce que le QG ?',
+        'name': 'Comment être visible sur OSLD ?',
         'acceptedAnswer': {
           '@type': 'Answer',
-          'text': 'Le QG est l\'espace privé d\'OSLD réservé aux développeuses inscrites. On y trouve de l\'entraide technique (bugs, reviews, conseils), des side projects collaboratifs et des offres d\'emploi communautaires.'
+          'text': 'Crée ton profil gratuitement avec ton compte GitHub : stack, ville, expérience et disponibilités (conférence, mentoring, coffee chat, pair programming). Les orgas d\'événements, les recruteurs et les autres développeuses te trouvent dans l\'annuaire et peuvent te contacter.'
         }
       },
       {
@@ -105,7 +105,7 @@ onMounted(() => {
     <HomeStats :stats="statsData ?? null" :developers="developers" />
     <HomeMission />
     <HomeDiscover />
-    <HomeQg />
+    <HomeProfile @join="handleCreateProfile" />
     <HomeQuiz />
     <HomeStory />
     <HomeJoin @join="handleCreateProfile" />

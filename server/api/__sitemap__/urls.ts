@@ -14,7 +14,6 @@ export default defineSitemapEventHandler(async () => {
     { loc: '/', priority: 1.0, changefreq: 'daily' as const },
     { loc: '/directory', priority: 0.9, changefreq: 'daily' as const },
     { loc: '/speakers', priority: 0.8, changefreq: 'weekly' as const },
-    { loc: '/companies', priority: 0.8, changefreq: 'weekly' as const },
     { loc: '/programs', priority: 0.7, changefreq: 'monthly' as const },
     { loc: '/podcasts', priority: 0.7, changefreq: 'monthly' as const },
     { loc: '/mission', priority: 0.6, changefreq: 'monthly' as const },

@@ -16,10 +16,6 @@ URL: https://ousontlesdeveloppeuses.fr/directory
 Find women tech speakers for your conferences and events. Filterable by topic, remote/on-site availability.
 URL: https://ousontlesdeveloppeuses.fr/speakers
 
-### Companies (public)
-Reviews and feedback on tech companies by the community. "Certified Inclusive" badge for companies with 5+ positive reviews.
-URL: https://ousontlesdeveloppeuses.fr/companies
-
 ### Programs & Resources (public)
 Communities, training, and mentorship for women developers: Duchess France, Rails Girls, and more.
 URL: https://ousontlesdeveloppeuses.fr/programs
@@ -32,8 +28,8 @@ URL: https://ousontlesdeveloppeuses.fr/podcasts
 AI-powered quiz to discover your developer profile. 5 questions, personalized portrait.
 URL: https://ousontlesdeveloppeuses.fr/experience
 
-### Le QG (private, GitHub login required)
-Private space for registered developers. Technical help (bugs, code reviews, advice), collaborative side projects, community job offers (permanent, freelance, internship, apprenticeship).
+### Developer profile (GitHub login required)
+Developers create a free profile (stack, city, experience, availability: conference, mentoring, coffee chat, pair programming, CV review, active job search). Event organizers, recruiters and other developers find them in the directory and contact them. Messages between members are delivered by email.
 
 ## Key Information
 
