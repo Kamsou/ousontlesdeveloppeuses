@@ -8,11 +8,15 @@ useSeoMeta({
 })
 
 const { data: ogStats } = await useFetch('/api/stats', { key: 'og-stats' })
+const { data: landings } = await useFetch<{ cities: { slug: string, label: string, count: number }[], techs: { slug: string, label: string, count: number }[] }>('/api/landings', { key: 'landings' })
+const { data: ogAvatars } = await useFetch<string[]>('/api/developers/avatars', { key: 'og-avatars' })
 defineOgImageComponent('OgImageListing', {
-  title: 'Annuaire des développeuses',
-  subtitle: 'Filtre par ville, stack et disponibilité.',
+  label: 'annuaire',
+  title: 'Annuaire des',
+  outline: 'développeuses',
   count: ogStats.value?.developers ?? null,
-  countLabel: 'développeuses référencées'
+  countLabel: 'profils · filtre par ville, stack, dispo',
+  avatars: ogAvatars.value ?? []
 })
 
 import { openToOptions, openToLabels, lookingForOptions, lookingForLabels, getExperienceLabel, experienceOptions } from '~/utils/constants'
@@ -490,6 +494,33 @@ watch(() => filters.skill, () => { updateUrl(); trackSearch() })
         <div v-if="hasMore" ref="loadMoreRef" class="flex items-center justify-center gap-3 py-10">
           <span class="w-4 h-4 border-2 border-foreground-muted border-t-transparent rounded-full motion-safe:animate-spin" aria-hidden="true"></span>
           <span class="font-mono text-xs text-foreground-muted">chargement…</span>
+        </div>
+      </div>
+    </section>
+
+    <section v-if="landings && (landings.cities.length || landings.techs.length)" class="px-4 md:px-16 py-12 md:py-16 border-t border-border/10">
+      <div class="w-full max-w-7xl mx-auto grid lg:grid-cols-2 gap-12">
+        <div v-if="landings.cities.length">
+          <h2 class="font-mono text-xs text-foreground-muted mb-4"># par-ville</h2>
+          <ul class="flex flex-wrap gap-2">
+            <li v-for="city in landings.cities" :key="city.slug">
+              <NuxtLink :to="`/directory/ville/${city.slug}`" class="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-border/15 text-sm text-foreground no-underline hover:border-foreground/40 transition-colors">
+                Développeuses à {{ city.label }}
+                <span class="font-mono text-xs text-foreground-muted">{{ city.count }}</span>
+              </NuxtLink>
+            </li>
+          </ul>
+        </div>
+        <div v-if="landings.techs.length">
+          <h2 class="font-mono text-xs text-foreground-muted mb-4"># par-techno</h2>
+          <ul class="flex flex-wrap gap-2">
+            <li v-for="tech in landings.techs" :key="tech.slug">
+              <NuxtLink :to="`/directory/techno/${tech.slug}`" class="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-border/15 text-sm text-foreground no-underline hover:border-foreground/40 transition-colors">
+                Développeuses {{ tech.label }}
+                <span class="font-mono text-xs text-foreground-muted">{{ tech.count }}</span>
+              </NuxtLink>
+            </li>
+          </ul>
         </div>
       </div>
     </section>

@@ -80,7 +80,7 @@ export default defineNuxtConfig({
 
   sitemap: {
     sources: ['/api/__sitemap__/urls'],
-    exclude: ['/profile', '/profile/**', '/qg', '/qg/**', '/admin', '/admin/**'],
+    exclude: ['/profile', '/profile/**', '/qg', '/qg/**', '/admin', '/admin/**', '/mission', '/discover', '/stats', '/qg-info', '/companies'],
   },
 
   robots: {
@@ -91,6 +91,7 @@ export default defineNuxtConfig({
 
   ogImage: {
     enabled: true,
+    fonts: ['Space+Grotesk:500', 'Space+Grotesk:700', 'JetBrains+Mono:400'],
     defaults: {
       width: 1200,
       height: 630,

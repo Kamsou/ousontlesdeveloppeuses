@@ -196,14 +196,14 @@ onBeforeUnmount(() => {
 
         <h1 class="font-display text-5xl md:text-[clamp(3.5rem,10vw,8.5rem)] font-medium leading-[0.95] tracking-tight mb-8">
           <span class="block overflow-hidden">
-            <span data-hero-block class="inline-block mr-[0.2em] animate-slide-up animation-delay-100">Où</span>
-            <span data-hero-block class="inline-block mr-[0.2em] animate-slide-up animation-delay-150">sont</span>
-            <span data-hero-block class="inline-block animate-slide-up animation-delay-200">les</span>
+            <span data-hero-block class="inline-block animate-slide-up animation-delay-100">Où</span>{{ ' ' }}
+            <span data-hero-block class="inline-block animate-slide-up animation-delay-150">sont</span>{{ ' ' }}
+            <span data-hero-block class="inline-block animate-slide-up animation-delay-200">les</span>{{ ' ' }}
           </span>
           <span class="block overflow-hidden pb-[0.08em]">
             <span ref="wordRef" data-hero-block class="relative inline-block animate-slide-up animation-delay-250" @animationend="measure">
               <span class="title-stroke">développeuses</span>
-              <span aria-hidden="true" class="word-fill absolute inset-0">développeuses</span>
+              <span aria-hidden="true" class="word-fill absolute inset-0" data-text="développeuses"></span>
             </span>
           </span>
         </h1>
@@ -268,6 +268,10 @@ onBeforeUnmount(() => {
 .title-stroke {
   color: transparent;
   -webkit-text-stroke: 1px rgb(var(--foreground));
+}
+
+.word-fill::before {
+  content: attr(data-text);
 }
 
 .word-fill {

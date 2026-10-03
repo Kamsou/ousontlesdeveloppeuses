@@ -16,11 +16,7 @@ export default defineSitemapEventHandler(async () => {
     { loc: '/speakers', priority: 0.8, changefreq: 'weekly' as const },
     { loc: '/programs', priority: 0.7, changefreq: 'monthly' as const },
     { loc: '/podcasts', priority: 0.7, changefreq: 'monthly' as const },
-    { loc: '/mission', priority: 0.6, changefreq: 'monthly' as const },
-    { loc: '/discover', priority: 0.6, changefreq: 'monthly' as const },
     { loc: '/experience', priority: 0.5, changefreq: 'monthly' as const },
-    { loc: '/qg-info', priority: 0.5, changefreq: 'monthly' as const },
-    { loc: '/stats', priority: 0.4, changefreq: 'daily' as const },
   ]
 
   const developerPages = developers.map((dev: { slug: string | null; updatedAt: Date | null }) =>
@@ -32,8 +28,15 @@ export default defineSitemapEventHandler(async () => {
     })
   )
 
+  const landings = await getLandingIndex()
+  const landingPages = [
+    ...landings.cities.map(city => asSitemapUrl({ loc: `/directory/ville/${city.slug}`, changefreq: 'weekly', priority: 0.8 })),
+    ...landings.techs.map(tech => asSitemapUrl({ loc: `/directory/techno/${tech.slug}`, changefreq: 'weekly', priority: 0.8 }))
+  ]
+
   return [
     ...staticPages.map((page) => asSitemapUrl(page)),
+    ...landingPages,
     ...developerPages
   ]
 })

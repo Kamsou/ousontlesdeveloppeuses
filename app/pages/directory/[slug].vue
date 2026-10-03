@@ -29,6 +29,19 @@ interface Developer {
 import { openToLabels } from '~/utils/constants'
 import { queryString } from '~/utils/query'
 
+interface RelatedDevelopers {
+  city: string | null
+  cityLanding: string | null
+  developers: {
+    slug: string
+    name: string
+    title: string | null
+    location: string | null
+    avatarUrl: string | null
+    sameCity: boolean
+  }[]
+}
+
 const { $clientPosthog } = useNuxtApp()
 const route = useRoute()
 const slug = queryString(route.params.slug)
@@ -43,13 +56,19 @@ if (developer.value && slug !== developer.value.slug) {
   await navigateTo(`/directory/${developer.value.slug}`, { redirectCode: 301 })
 }
 
+const { data: related } = await useFetch<RelatedDevelopers>(`/api/developers/${developer.value?.slug ?? slug}/related`)
+
 // SEO dynamique enrichi
 const seoTitle = computed(() => {
   if (!developer.value) return 'Profil Développeuse - OSLD'
-  const parts = [developer.value.name]
-  if (developer.value.location) parts.push(`Développeuse à ${developer.value.location}`)
-  else parts.push('Développeuse')
-  return parts.join(' - ')
+  const { name, location, skills } = developer.value
+  const place = location ? ` à ${location.split(',')[0]?.trim()}` : ''
+  const withSkills = (count: number) => {
+    const stack = skills?.slice(0, count).join(' & ')
+    return `${name} - Développeuse${stack ? ` ${stack}` : ''}${place}`
+  }
+  const twoSkills = withSkills(2)
+  return twoSkills.length <= 60 ? twoSkills : withSkills(1)
 })
 
 const seoDescription = computed(() => {
@@ -76,7 +95,18 @@ const seoDescription = computed(() => {
     parts.push(`Échanges : ${labels.join(', ')}`)
   }
 
-  return parts.join('. ').slice(0, 160) || 'Découvrez le profil de cette développeuse sur OSLD'
+  return parts.map(part => part.trim().replace(/[.\s]+$/, '')).join('. ').slice(0, 160) || 'Découvrez le profil de cette développeuse sur OSLD'
+})
+
+const relatedCity = computed(() => {
+  const city = related.value?.city
+  return city && related.value?.developers.some(dev => dev.sameCity) ? city : null
+})
+
+const relatedHeading = computed(() => {
+  if (!relatedCity.value) return 'D\'autres développeuses avec une stack proche'
+  if (related.value?.developers.every(dev => dev.sameCity)) return `D'autres développeuses à ${relatedCity.value}`
+  return `D'autres développeuses à ${relatedCity.value} ou avec une stack proche`
 })
 
 const heroMeta = computed(() => {
@@ -96,7 +126,6 @@ useSeoMeta({
   twitterCard: 'summary_large_image',
   twitterTitle: seoTitle,
   twitterDescription: seoDescription,
-  twitterImage: () => developer.value?.avatarUrl || 'https://ousontlesdeveloppeuses.fr/og-image.png',
 })
 
 useSchemaOrg([
@@ -104,8 +133,12 @@ useSchemaOrg([
     name: () => developer.value?.name || '',
     description: () => developer.value?.bio || undefined,
     image: () => developer.value?.avatarUrl || undefined,
-    jobTitle: 'Développeuse',
-    url: () => developer.value?.website || undefined,
+    jobTitle: () => developer.value?.title || 'Développeuse',
+    url: () => developer.value ? `https://ousontlesdeveloppeuses.fr/directory/${developer.value.slug}` : undefined,
+    sameAs: () => {
+      const links = [developer.value?.website, developer.value?.linkedinUrl, developer.value?.githubUrl, developer.value?.twitterUrl].filter((link): link is string => !!link)
+      return links.length ? links : undefined
+    },
     address: developer.value?.location ? {
       '@type': 'PostalAddress',
       addressLocality: developer.value.location,
@@ -117,9 +150,12 @@ useSchemaOrg([
 
 defineOgImageComponent('OgImageDefault', {
   name: developer.value?.name,
-  location: developer.value?.location,
+  jobTitle: developer.value?.title ?? undefined,
+  location: developer.value?.location ?? undefined,
   skills: developer.value?.skills,
-  avatarUrl: developer.value?.avatarUrl
+  avatarUrl: developer.value?.avatarUrl ? optimizedAvatar(developer.value.avatarUrl, 400) : undefined,
+  isSpeaker: !!developer.value?.speakerProfile?.available || !!developer.value?.openTo?.includes('conference'),
+  openTo: developer.value?.openTo?.map(type => openToLabels[type] || type).filter(label => label !== 'Conférence')
 })
 
 onMounted(() => {
@@ -283,6 +319,47 @@ onMounted(() => {
             </a>
           </section>
         </div>
+      </div>
+    </section>
+
+    <section v-if="related?.developers.length" class="px-4 md:px-16 py-12 md:py-16 border-t border-border/10">
+      <div class="w-full max-w-7xl mx-auto">
+        <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3 mb-8">
+          <div>
+            <p class="font-mono text-xs text-foreground-muted mb-3"># autres-profils</p>
+            <h2 class="font-display text-3xl md:text-4xl font-medium tracking-tight">{{ relatedHeading }}</h2>
+          </div>
+          <NuxtLink
+            :to="related.cityLanding ? `/directory/ville/${related.cityLanding}` : relatedCity ? { path: '/directory', query: { location: relatedCity } } : '/directory'"
+            class="font-mono text-xs text-foreground-muted underline underline-offset-4 decoration-foreground/30 hover:text-foreground hover:decoration-foreground transition-colors"
+          >
+            {{ relatedCity ? `toutes les devs à ${relatedCity} →` : 'voir tout l\'annuaire →' }}
+          </NuxtLink>
+        </div>
+        <ul class="grid sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
+          <li v-for="dev in related.developers" :key="dev.slug">
+            <NuxtLink
+              :to="`/directory/${dev.slug}`"
+              class="spotlight-card group flex items-center gap-4 p-5 rounded-3xl border border-border/10 bg-background-card no-underline text-foreground"
+              @pointermove="trackPointer"
+            >
+              <img
+                v-if="dev.avatarUrl"
+                :src="optimizedAvatar(dev.avatarUrl, 96)"
+                :alt="dev.name"
+                width="48"
+                height="48"
+                loading="lazy"
+                class="w-12 h-12 rounded-full object-cover grayscale group-hover:grayscale-0 transition-[filter] duration-500 motion-reduce:transition-none"
+              />
+              <span v-else class="w-12 h-12 rounded-full bg-foreground/10 flex items-center justify-center font-display" aria-hidden="true">{{ dev.name.charAt(0) }}</span>
+              <span class="min-w-0">
+                <span class="block font-display font-medium truncate">{{ dev.name }}</span>
+                <span class="block text-sm text-foreground-muted truncate">{{ [dev.title, dev.location].filter(Boolean).join(' · ') }}</span>
+              </span>
+            </NuxtLink>
+          </li>
+        </ul>
       </div>
     </section>
   </div>
