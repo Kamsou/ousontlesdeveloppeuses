@@ -7,7 +7,7 @@ useSeoMeta({
   twitterCard: 'summary_large_image',
 })
 
-defineOgImageComponent('OgImageListing', {
+defineOgImage('Listing', {
   label: 'ressources',
   title: 'Programmes &',
   outline: 'communautés',

@@ -9,7 +9,7 @@ useSeoMeta({
   twitterCard: 'summary_large_image',
 })
 
-defineOgImageComponent('OgImageListing', {
+defineOgImage('Listing', {
   label: 'podcasts',
   title: 'Des parcours',
   outline: 'à écouter',

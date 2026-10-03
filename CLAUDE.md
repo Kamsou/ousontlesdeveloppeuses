@@ -225,9 +225,13 @@ useSeoMeta({
   description: 'Description',
   ogTitle: 'OG Title',
   ogDescription: 'OG Description',
-  ogImage: 'https://ousontlesdeveloppeuses.fr/og-image.png',
 })
+
+// Social share image (nuxt-og-image v6, Takumi renderer)
+defineOgImage('Listing', { label: 'annuaire', title: 'Où sont les', outline: 'développeuses' })
 ```
+
+OG templates live in `app/components/OgImage/` (`Listing.takumi.vue`, `Default.takumi.vue`). Fonts reach the renderer only through `@nuxt/fonts` families with `global: true`. Keep explicit `display: flex` + `flex-direction` on every container.
 
 ### LLM SEO
 
@@ -361,6 +365,8 @@ primary          → Accent blue (#3B82F6) - QG only, not on public pages
 
 - **Space Grotesk** → Headings (`font-display`)
 - **Satoshi** → Body text
+
+Both are self-hosted by `@nuxt/fonts` (config `fonts.families` in nuxt.config.ts).
 
 ### Button patterns
 

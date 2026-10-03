@@ -9,7 +9,7 @@ useSeoMeta({
 
 const { data: ogStats } = await useFetch('/api/stats', { key: 'og-stats' })
 const { data: ogAvatars } = await useFetch<string[]>('/api/developers/avatars', { key: 'og-speaker-avatars', query: { speakers: 'true' } })
-defineOgImageComponent('OgImageListing', {
+defineOgImage('Listing', {
   label: 'speakeuses',
   title: 'Trouve ta',
   outline: 'speakeuse tech',

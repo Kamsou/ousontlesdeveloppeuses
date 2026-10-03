@@ -10,7 +10,7 @@ useSeoMeta({
 const { data: ogStats } = await useFetch('/api/stats', { key: 'og-stats' })
 const { data: landings } = await useFetch<{ cities: { slug: string, label: string, count: number }[], techs: { slug: string, label: string, count: number }[] }>('/api/landings', { key: 'landings' })
 const { data: ogAvatars } = await useFetch<string[]>('/api/developers/avatars', { key: 'og-avatars' })
-defineOgImageComponent('OgImageListing', {
+defineOgImage('Listing', {
   label: 'annuaire',
   title: 'Annuaire des',
   outline: 'développeuses',

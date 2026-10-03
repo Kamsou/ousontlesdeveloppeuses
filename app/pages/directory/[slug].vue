@@ -148,7 +148,7 @@ useSchemaOrg([
   }),
 ])
 
-defineOgImageComponent('OgImageDefault', {
+defineOgImage('Default', {
   name: developer.value?.name,
   jobTitle: developer.value?.title ?? undefined,
   location: developer.value?.location ?? undefined,

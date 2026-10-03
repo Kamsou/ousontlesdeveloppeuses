@@ -130,7 +130,7 @@ useSchemaOrg([
   }
 ])
 
-defineOgImageComponent('OgImageListing', {
+defineOgImage('Listing', {
   label: `annuaire / ${props.slug}`,
   title: 'Développeuses',
   outline: isCity.value ? `à ${landing.value.label}` : landing.value.label,

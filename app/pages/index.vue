@@ -21,7 +21,7 @@ useSeoMeta({
 
 const { data: ogStats } = await useFetch('/api/stats', { key: 'og-stats' })
 const { data: ogAvatars } = await useFetch<string[]>('/api/developers/avatars', { key: 'og-avatars' })
-defineOgImageComponent('OgImageListing', {
+defineOgImage('Listing', {
   label: 'annuaire',
   title: 'Où sont les',
   outline: 'développeuses',

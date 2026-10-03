@@ -24,33 +24,20 @@ export default defineNuxtConfig({
       htmlAttrs: { lang: 'fr' },
       title: 'Où Sont Les Développeuses',
       link: [
-        { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
-        { rel: 'preconnect', href: 'https://api.fontshare.com' },
-        { rel: 'preconnect', href: 'https://cdn.fontshare.com', crossorigin: 'anonymous' },
-        {
-          rel: 'stylesheet',
-          href: 'https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&display=swap',
-          media: 'print',
-          onload: "this.media='all'"
-        }
-      ],
-      noscript: [
-        { innerHTML: '<link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&display=swap">' }
+        { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
       ]
     }
   },
-  modules: ['@nuxthub/core', '@sidebase/nuxt-auth', '@nuxtjs/seo', '@nuxtjs/tailwindcss', '@nuxtjs/google-fonts', '@nuxt/a11y', 'nuxt-posthog', '@vueuse/nuxt'],
+  modules: ['@nuxthub/core', '@sidebase/nuxt-auth', '@nuxtjs/seo', '@nuxtjs/tailwindcss', '@nuxt/fonts', '@nuxt/a11y', 'nuxt-posthog', '@vueuse/nuxt'],
 
   css: ['@/assets/css/main.css'],
 
-  googleFonts: {
-    families: {
-      'Space Grotesk': [500, 700]
-    },
-    display: 'swap',
-    preload: true,
-    download: true,
-    inject: true
+  fonts: {
+    families: [
+      { name: 'Satoshi', provider: 'fontshare', weights: [400, 500, 700] },
+      { name: 'Space Grotesk', provider: 'google', weights: [500, 700], global: true },
+      { name: 'JetBrains Mono', provider: 'google', weights: [400], global: true }
+    ]
   },
 
   site: {
@@ -91,11 +78,9 @@ export default defineNuxtConfig({
 
   ogImage: {
     enabled: true,
-    fonts: ['Space+Grotesk:500', 'Space+Grotesk:700', 'JetBrains+Mono:400'],
     defaults: {
       width: 1200,
-      height: 630,
-      component: 'OgImageDefault'
+      height: 630
     }
   },
   hub: {
@@ -123,6 +108,17 @@ export default defineNuxtConfig({
     },
   },
   routeRules: {
+    '/**': {
+      headers: {
+        'Content-Security-Policy': "frame-ancestors 'none'; object-src 'none'; base-uri 'self'",
+        'Content-Security-Policy-Report-Only': "default-src 'self'; script-src 'self' 'unsafe-inline' https://eu.i.posthog.com https://eu-assets.i.posthog.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; font-src 'self' data:; connect-src 'self' https://eu.i.posthog.com https://eu-assets.i.posthog.com; frame-ancestors 'none'; object-src 'none'; base-uri 'self'; form-action 'self' https://github.com",
+        'X-Frame-Options': 'DENY',
+        'X-Content-Type-Options': 'nosniff',
+        'Referrer-Policy': 'strict-origin-when-cross-origin',
+        'Permissions-Policy': 'camera=(), microphone=(), geolocation=(), browsing-topics=()',
+        'Strict-Transport-Security': 'max-age=31536000; includeSubDomains'
+      }
+    },
     '/': { prerender: true },
     '/experience': { prerender: true },
     '/experience/**': { prerender: true },

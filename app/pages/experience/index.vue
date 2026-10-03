@@ -14,7 +14,7 @@ useSeoMeta({
   twitterCard: 'summary_large_image'
 })
 
-defineOgImageComponent('OgImageListing', {
+defineOgImage('Listing', {
   label: 'quiz',
   title: 'Quel dev',
   outline: 'es-tu ?',

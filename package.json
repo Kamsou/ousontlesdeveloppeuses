@@ -13,18 +13,19 @@
     "@anthropic-ai/sdk": "^0.131.0",
     "@libsql/client": "^0.15.15",
     "@nuxt/a11y": "^1.0.0-alpha.1",
-    "@nuxthub/core": "^0.10.1",
-    "@nuxtjs/google-fonts": "^3.2.0",
-    "@nuxtjs/seo": "^3.3.0",
+    "@nuxt/fonts": "^0.14.0",
+    "@nuxthub/core": "^0.10.8",
+    "@nuxtjs/seo": "^5.3.16",
     "@nuxtjs/tailwindcss": "^6.14.0",
-    "@sidebase/nuxt-auth": "^1.1.1",
+    "@sidebase/nuxt-auth": "^1.4.0",
+    "@takumi-rs/core": "^2.14.0",
     "@vueuse/core": "^14.2.0",
     "@vueuse/nuxt": "^14.2.0",
     "csv-parse": "^6.1.0",
     "dotenv": "^17.2.4",
-    "drizzle-orm": "^0.45.1",
+    "drizzle-orm": "^0.45.3",
     "next-auth": "~4.21.1",
-    "nuxt": "^4.2.2",
+    "nuxt": "^4.5.2",
     "nuxt-posthog": "^1.6.3",
     "resend": "^6.7.0",
     "vue": "^3.5.25",
@@ -33,7 +34,13 @@
   "devDependencies": {
     "@netlify/functions": "^5.1.2",
     "@types/node": "^25.0.2",
-    "drizzle-kit": "^0.31.8",
+    "drizzle-kit": "^0.31.11",
     "typescript": "^5.9.3"
+  },
+  "overrides": {
+    "rolldown": "~1.2.12",
+    "tsdown": {
+      "rolldown": "1.0.0-beta.57"
+    }
   }
 }
