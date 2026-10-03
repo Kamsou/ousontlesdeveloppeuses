@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { quizQuestions } from '~/utils/quiz'
+import { quizQuestions } from '#shared/utils/quiz'
 
 const { $clientPosthog } = useNuxtApp()
 
