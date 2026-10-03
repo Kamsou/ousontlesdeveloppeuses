@@ -2,6 +2,7 @@ export type HelpType = 'bug' | 'review' | 'advice' | 'pair' | 'other'
 
 export interface QgProfile {
   id: number
+  slug: string | null
   name: string
   email: string | null
   avatarUrl: string | null
@@ -73,6 +74,7 @@ export interface QgActivity {
   isNew: boolean
   weeklyContactsReceived?: number
   weeklyContactsSent?: number
+  totalContactsReceived?: number
   recentExchanges?: { type: 'sent' | 'received'; name: string; avatarUrl?: string; helpRequestTitle?: string }[]
   unreadComments?: { type: 'project' | 'request'; id: number; title: string; count: number }[]
   totalHelpGiven?: number

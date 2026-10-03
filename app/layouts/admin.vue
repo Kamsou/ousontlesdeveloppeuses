@@ -29,7 +29,7 @@ function isActive(to: string) {
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M19 12H5M12 19l-7-7 7-7"/>
           </svg>
-          Mon QG
+          Mon espace
         </NuxtLink>
         <h1 class="font-display text-sm font-semibold tracking-widest text-primary m-0">ADMIN</h1>
         <div class="flex items-center gap-3">

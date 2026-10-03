@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { QG_FROZEN } from '#shared/utils/qg'
 import { useAuth } from '#imports'
 import type { QgProfile, QgActivity, HelpRequest, Offer } from '~/types/qg'
 
@@ -7,7 +8,7 @@ definePageMeta({
 })
 
 useSeoMeta({
-  title: 'Mon QG',
+  title: 'Mon espace',
   robots: 'noindex'
 })
 
@@ -20,10 +21,10 @@ const themeLabel = computed(() => {
   if (isDark.value) return 'Passer en mode clair'
   return 'Passer en mode sombre'
 })
-const { data: requests, status: requestsStatus, refresh: refreshRequests } = useLazyFetch<HelpRequest[]>('/api/help-requests')
+const { data: requests, status: requestsStatus, refresh: refreshRequests } = useLazyFetch<HelpRequest[]>('/api/help-requests', { immediate: !QG_FROZEN })
 const { data: activity, status: activityStatus, refresh: refreshActivity } = useLazyFetch<QgActivity>('/api/qg/activity')
-const { data: myProjects, status: projectsStatus, refresh: refreshProjects } = useLazyFetch<any[]>('/api/side-projects/mine')
-const { data: offers, status: offersStatus, refresh: refreshOffers } = useLazyFetch<Offer[]>('/api/offers')
+const { data: myProjects, status: projectsStatus, refresh: refreshProjects } = useLazyFetch<any[]>('/api/side-projects/mine', { immediate: !QG_FROZEN })
+const { data: offers, status: offersStatus, refresh: refreshOffers } = useLazyFetch<Offer[]>('/api/offers', { immediate: !QG_FROZEN })
 const { data: profile, refresh: refreshProfile } = await useFetch<QgProfile | null>('/api/developers/me', {
   default: () => null
 })
@@ -45,7 +46,18 @@ const TAB_ALIASES = {
 
 type TabType = typeof TABS[keyof typeof TABS]
 
+const DEFAULT_TAB: TabType = QG_FROZEN ? TABS.PROFIL : TABS.ENTRAIDE
+
+const navTabs: { key: TabType, label: string, icon: string }[] = QG_FROZEN
+  ? []
+  : [
+      { key: TABS.ENTRAIDE, label: 'Entraide', icon: 'M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z' },
+      { key: TABS.OPPORTUNITES, label: 'Opportunités', icon: 'M2 9a2 2 0 012-2h16a2 2 0 012 2v10a2 2 0 01-2 2H4a2 2 0 01-2-2zM16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16' },
+      { key: TABS.PROFIL, label: 'Profil', icon: 'M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z' }
+    ]
+
 function getTabFromQuery(tab: any): TabType {
+  if (QG_FROZEN) return TABS.PROFIL
   if (tab === TABS.PROFIL) return TABS.PROFIL
   if (tab === TABS.CHALLENGES) return TABS.CHALLENGES
   if (tab === TABS.OPPORTUNITES || tab in TAB_ALIASES) {
@@ -128,7 +140,7 @@ async function handleMarkResolved(requestId: number) {
 async function handleProfileSaved() {
   const wasNew = isNewProfile.value
   await Promise.all([refreshProfile(), refreshActivity()])
-  if (wasNew) {
+  if (wasNew && !QG_FROZEN) {
     activeTab.value = TABS.ENTRAIDE
   }
 }
@@ -149,7 +161,7 @@ watch(() => route.query.tab, (tab) => {
 })
 
 watch(activeTab, (tab) => {
-  router.replace({ query: tab === TABS.ENTRAIDE ? {} : { tab } })
+  router.replace({ query: tab === DEFAULT_TAB ? {} : { tab } })
   $clientPosthog?.capture('qg_tab_clicked', { tab })
 })
 const toast = useToast()
@@ -184,7 +196,7 @@ onMounted(() => {
           </svg>
           Retour
         </NuxtLink>
-        <h1 class="font-display text-2xl font-bold uppercase tracking-wider text-primary m-0">MON QG</h1>
+        <h1 class="font-display text-2xl font-bold uppercase tracking-wider text-primary m-0">MON ESPACE</h1>
         <div class="flex items-center gap-3">
           <NuxtLink v-if="isAdmin" to="/admin" class="flex items-center justify-center w-8 h-8 rounded-full border border-border/10 text-foreground-muted hover:text-foreground hover:border-foreground-muted transition-colors" title="Dashboard admin">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -205,93 +217,47 @@ onMounted(() => {
       </div>
     </header>
 
-    <nav class="hidden md:block">
+    <nav v-if="navTabs.length" class="hidden md:block">
       <div class="max-w-5xl mx-auto px-6 flex items-center gap-8">
         <button
-          @click="activeTab = TABS.ENTRAIDE"
+          v-for="tab in navTabs"
+          :key="tab.key"
+          @click="activeTab = tab.key"
           :class="[
-            'pt-3.5 pb-3.5 text-xs font-semibold uppercase tracking-widest transition-colors relative',
-            activeTab === TABS.ENTRAIDE
+            'pt-3.5 pb-3.5 text-xs font-semibold uppercase tracking-widest transition-colors relative focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary rounded-sm',
+            activeTab === tab.key
               ? 'text-foreground'
               : 'text-foreground-muted hover:text-foreground'
           ]"
         >
-          Entraide
-          <span v-if="activeTab === TABS.ENTRAIDE" class="absolute bottom-0 left-0 right-0 h-[3px] bg-primary"></span>
-        </button>
-        <!-- Challenges tab hidden for now -->
-        <button
-          @click="activeTab = TABS.OPPORTUNITES"
-          :class="[
-            'pt-3.5 pb-3.5 text-xs font-semibold uppercase tracking-widest transition-colors relative',
-            activeTab === TABS.OPPORTUNITES
-              ? 'text-foreground'
-              : 'text-foreground-muted hover:text-foreground'
-          ]"
-        >
-          Opportunités
-          <span v-if="activeTab === TABS.OPPORTUNITES" class="absolute bottom-0 left-0 right-0 h-[3px] bg-primary"></span>
-        </button>
-        <button
-          @click="activeTab = TABS.PROFIL"
-          :class="[
-            'pt-3.5 pb-3.5 text-xs font-semibold uppercase tracking-widest transition-colors relative',
-            activeTab === TABS.PROFIL
-              ? 'text-foreground'
-              : 'text-foreground-muted hover:text-foreground'
-          ]"
-        >
-          Profil
-          <span v-if="activeTab === TABS.PROFIL" class="absolute bottom-0 left-0 right-0 h-[3px] bg-primary"></span>
+          {{ tab.label }}
+          <span v-if="activeTab === tab.key" class="absolute bottom-0 left-0 right-0 h-[3px] bg-primary"></span>
         </button>
       </div>
     </nav>
     </div>
 
-    <nav class="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-xl border-t border-border/20 pb-[env(safe-area-inset-bottom)]">
+    <nav v-if="navTabs.length" class="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-xl border-t border-border/20 pb-[env(safe-area-inset-bottom)]">
       <div class="flex justify-around">
         <button
-          @click="activeTab = TABS.ENTRAIDE"
+          v-for="tab in navTabs"
+          :key="tab.key"
+          @click="activeTab = tab.key"
           :class="[
-            'flex flex-col items-center gap-1 pt-2.5 pb-2 px-4 text-[11px] font-medium transition-colors',
-            activeTab === TABS.ENTRAIDE ? 'text-primary' : 'text-foreground-muted'
-          ]"
-        >
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" :stroke="activeTab === TABS.ENTRAIDE ? 'currentColor' : 'currentColor'" stroke-width="1.5">
-            <path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/>
-          </svg>
-          Entraide
-        </button>
-        <!-- Challenges tab hidden for now -->
-        <button
-          @click="activeTab = TABS.OPPORTUNITES"
-          :class="[
-            'flex flex-col items-center gap-1 pt-2.5 pb-2 px-4 text-[11px] font-medium transition-colors',
-            activeTab === TABS.OPPORTUNITES ? 'text-primary' : 'text-foreground-muted'
+            'flex flex-col items-center gap-1 pt-2.5 pb-2 px-4 text-[11px] font-medium transition-colors focus:outline-none focus-visible:outline-2 focus-visible:outline-primary',
+            activeTab === tab.key ? 'text-primary' : 'text-foreground-muted'
           ]"
         >
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-            <rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/>
+            <path :d="tab.icon"/>
           </svg>
-          Opportunités
-        </button>
-        <button
-          @click="activeTab = TABS.PROFIL"
-          :class="[
-            'flex flex-col items-center gap-1 pt-2.5 pb-2 px-4 text-[11px] font-medium transition-colors',
-            activeTab === TABS.PROFIL ? 'text-primary' : 'text-foreground-muted'
-          ]"
-        >
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-            <path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
-          </svg>
-          Profil
+          {{ tab.label }}
         </button>
       </div>
     </nav>
 
-    <div class="max-w-5xl mx-auto px-6 py-6 md:py-10 pb-24 md:pb-10">
-      <ClientOnly>
+    <div :class="['max-w-5xl mx-auto px-6 py-6 md:py-10 md:pb-10', navTabs.length ? 'pb-24' : 'pb-10']">
+      <ClientOnly v-if="!QG_FROZEN">
         <div v-if="isLoadingActivity" class="mb-6 md:mb-8">
           <div class="flex flex-wrap gap-2">
             <div class="h-8 w-32 bg-border/10 rounded-full animate-pulse"></div>
@@ -314,7 +280,7 @@ onMounted(() => {
         </template>
       </ClientOnly>
 
-      <div v-if="showLookingForBanner" class="mb-6 p-4 bg-amber-500/10 border border-amber-500/30 rounded-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+      <div v-if="showLookingForBanner && !QG_FROZEN" class="mb-6 p-4 bg-amber-500/10 border border-amber-500/30 rounded-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
           <p v-if="lookingForDaysLeft! <= 0" class="text-sm text-amber-700 dark:text-amber-400 font-medium">Ta recherche active a expiré</p>
           <p v-else class="text-sm text-amber-700 dark:text-amber-400 font-medium">Ta recherche active expire dans {{ lookingForDaysLeft }} jour{{ lookingForDaysLeft! > 1 ? 's' : '' }}</p>
@@ -327,14 +293,14 @@ onMounted(() => {
 
       <div v-if="activeTab === TABS.ENTRAIDE">
         <QgIncompleteProfileBanner
-          v-if="!isLoadingActivity && activity?.profileComplete === false"
+          v-if="!QG_FROZEN && !isLoadingActivity && activity?.profileComplete === false"
           :missing-fields="activity?.missingFields || []"
           context="à l'entraide"
           class="mb-8"
           @go-to-profile="activeTab = TABS.PROFIL"
         />
 
-        <section class="mb-8 md:mb-10">
+        <section v-if="!QG_FROZEN" class="mb-8 md:mb-10">
           <NuxtLink
             v-if="activity?.profileComplete !== false"
             to="/qg/ask"
@@ -401,7 +367,7 @@ onMounted(() => {
         </div>
       </div>
 
-      <div v-else-if="activeTab === TABS.CHALLENGES">
+      <div v-if="activeTab === TABS.CHALLENGES">
         <QgIncompleteProfileBanner
           v-if="!isLoadingActivity && activity?.profileComplete === false"
           :missing-fields="activity?.missingFields || []"
@@ -412,8 +378,9 @@ onMounted(() => {
         <QgChallenges v-else />
       </div>
 
-      <div v-else-if="activeTab === TABS.OPPORTUNITES">
-        <div v-if="activity?.profileComplete !== false" class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-8 md:mb-10">
+      <div v-if="activeTab === TABS.OPPORTUNITES">
+        <template v-if="QG_FROZEN" />
+        <div v-else-if="activity?.profileComplete !== false" class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-8 md:mb-10">
           <NuxtLink
             to="/qg/new-offer"
             class="group block bg-primary p-5 rounded-2xl transition-all hover:brightness-110 hover:-translate-y-0.5 active:translate-y-px no-underline"
@@ -488,7 +455,15 @@ onMounted(() => {
         </div>
       </div>
 
-      <div v-else class="max-w-3xl">
+      <div v-if="activeTab === TABS.PROFIL" class="max-w-3xl">
+        <QgProfileSummary
+          v-if="QG_FROZEN && profile"
+          :profile="profile"
+          :activity="activity ?? null"
+          :looking-for-days-left="lookingForDaysLeft"
+          class="mb-10"
+          @renew="renewLookingFor"
+        />
         <QgProfileForm
           :profile="profile ?? null"
           :session-user-name="session?.user?.name || undefined"

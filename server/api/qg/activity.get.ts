@@ -23,6 +23,7 @@ export default defineEventHandler(async (event) => {
     return {
       isNew: true,
       weeklyViews: 0,
+      totalContactsReceived: 0,
       recentContacts: [],
       totalHelpGiven: 0,
       profileComplete: false
@@ -59,6 +60,9 @@ export default defineEventHandler(async (event) => {
     },
     orderBy: [desc(tables.contactRequests.createdAt)]
   })
+
+  const [totalContactsReceived] = await db.select({ count: count() }).from(tables.contactRequests)
+    .where(eq(tables.contactRequests.recipientId, developer.id))
 
   const totalHelpGiven = await db.query.contactRequests.findMany({
     where: eq(tables.contactRequests.senderId, developer.id)
@@ -200,6 +204,7 @@ export default defineEventHandler(async (event) => {
     isNew: false,
     weeklyContactsReceived: receivedContacts.length,
     weeklyContactsSent: sentContacts.length,
+    totalContactsReceived: totalContactsReceived?.count ?? 0,
     recentExchanges,
     totalHelpGiven: totalHelpGiven.filter(c => c.helpRequestId).length,
     profileComplete,
