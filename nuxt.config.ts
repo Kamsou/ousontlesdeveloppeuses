@@ -95,6 +95,7 @@ export default defineNuxtConfig({
     db: 'sqlite'
   },
   auth: {
+    disableServerSideAuth: true,
     baseURL: process.env.NUXT_PUBLIC_AUTH_BASE_URL || 'http://localhost:3000/api/auth',
     originEnvKey: 'NUXT_PUBLIC_AUTH_BASE_URL',
     provider: {
@@ -141,9 +142,9 @@ export default defineNuxtConfig({
     '/qg-info': { prerender: true },
     '/legal': { prerender: true },
     '/coc': { prerender: true },
-    '/directory': { isr: 600, disableServerSideAuth: true },
-    '/directory/**': { isr: 600, disableServerSideAuth: true },
-    '/speakers': { isr: 600, disableServerSideAuth: true },
+    '/directory': { isr: 600 },
+    '/directory/**': { isr: 600 },
+    '/speakers': { isr: 600 },
     '/qg/**': { ssr: false },
     '/qg': { ssr: false },
     '/admin/**': { ssr: false },
