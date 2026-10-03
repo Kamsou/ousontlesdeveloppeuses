@@ -46,6 +46,8 @@ export default NuxtAuthHandler({
   },
   providers: [
     GitHub({
+      // GitHub sends `iss` on the OAuth callback (RFC 9207); openid-client rejects it unless the issuer is declared
+      issuer: 'https://github.com/login/oauth',
       clientId: process.env.GITHUB_CLIENT_ID || '',
       clientSecret: process.env.GITHUB_CLIENT_SECRET || ''
     })
