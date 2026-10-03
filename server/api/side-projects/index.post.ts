@@ -1,5 +1,6 @@
 import { getServerSession } from '#auth'
 import { eq, and, ne, count } from 'drizzle-orm'
+import { isValidUrl } from '../../utils/validation'
 
 export default defineEventHandler(async (event) => {
   assertQgOpen()
@@ -50,6 +51,10 @@ export default defineEventHandler(async (event) => {
 
   if (!body.description?.trim()) {
     throw createError({ statusCode: 400, message: 'La description est requise' })
+  }
+
+  if (!isValidUrl(body.repoUrl?.trim()) || !isValidUrl(body.websiteUrl?.trim())) {
+    throw createError({ statusCode: 400, message: 'URL invalide (elle doit commencer par https://)' })
   }
 
   const validStatuses = ['idea', 'open_to_contributors', 'looking_for_cofounder', 'completed']

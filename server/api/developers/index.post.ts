@@ -1,7 +1,7 @@
 import { getServerSession } from '#auth'
 import { eq } from 'drizzle-orm'
 import { sendWelcomeEmail } from '../../utils/email'
-import { validateProfileUrls, validateOpenTo, validateLookingFor } from '../../utils/validation'
+import { validateName, validateProfileUrls, validateOpenTo, validateLookingFor } from '../../utils/validation'
 
 export default defineEventHandler(async (event) => {
   const session = await getServerSession(event)
@@ -34,7 +34,11 @@ export default defineEventHandler(async (event) => {
 
   const db = useDrizzle()
 
-  const name = body.name || session.user.name || ''
+  const name = (body.name || session.user.name || '').trim()
+  const nameError = validateName(name)
+  if (nameError) {
+    throw createError({ statusCode: 400, message: nameError })
+  }
   const slug = await generateUniqueSlug(name)
 
   const result = await db.insert(tables.developers).values({

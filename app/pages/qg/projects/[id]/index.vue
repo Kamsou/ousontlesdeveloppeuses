@@ -105,10 +105,10 @@ function formatDate(date: string) {
             {{ statusLabels[project.status] }}
           </span>
           <h1 class="font-display text-2xl md:text-3xl font-bold leading-tight mb-4">{{ project.title }}</h1>
-          <div v-if="project.repoUrl || project.websiteUrl" class="flex items-center gap-2">
+          <div v-if="safeHref(project.repoUrl) || safeHref(project.websiteUrl)" class="flex items-center gap-2">
             <a
-              v-if="project.repoUrl"
-              :href="project.repoUrl"
+              v-if="safeHref(project.repoUrl)"
+              :href="safeHref(project.repoUrl)"
               target="_blank"
               rel="noopener noreferrer"
               class="inline-flex items-center gap-2 px-4 py-2 border border-border/20 rounded-full text-sm text-foreground-muted hover:text-foreground hover:border-foreground-muted transition-colors"
@@ -119,8 +119,8 @@ function formatDate(date: string) {
               Repo
             </a>
             <a
-              v-if="project.websiteUrl"
-              :href="project.websiteUrl"
+              v-if="safeHref(project.websiteUrl)"
+              :href="safeHref(project.websiteUrl)"
               target="_blank"
               rel="noopener noreferrer"
               class="inline-flex items-center gap-2 px-4 py-2 border border-border/20 rounded-full text-sm text-foreground-muted hover:text-foreground hover:border-foreground-muted transition-colors"

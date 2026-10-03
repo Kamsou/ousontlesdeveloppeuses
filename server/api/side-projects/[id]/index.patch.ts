@@ -1,5 +1,6 @@
 import { getServerSession } from '#auth'
 import { eq, and } from 'drizzle-orm'
+import { isValidUrl } from '../../../utils/validation'
 
 export default defineEventHandler(async (event) => {
   const session = await getServerSession(event)
@@ -54,6 +55,9 @@ export default defineEventHandler(async (event) => {
     const trimmed = body.description.trim()
     if (!trimmed) throw createError({ statusCode: 400, message: 'La description ne peut pas être vide' })
     updates.description = trimmed
+  }
+  if (!isValidUrl(body.repoUrl?.trim()) || !isValidUrl(body.websiteUrl?.trim())) {
+    throw createError({ statusCode: 400, message: 'URL invalide (elle doit commencer par https://)' })
   }
   if (body.repoUrl !== undefined) updates.repoUrl = body.repoUrl?.trim() || null
   if (body.websiteUrl !== undefined) updates.websiteUrl = body.websiteUrl?.trim() || null

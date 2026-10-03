@@ -1,6 +1,6 @@
 import { getServerSession } from '#auth'
 import { eq } from 'drizzle-orm'
-import { validateProfileUrls, validateOpenTo, validateLookingFor } from '../../utils/validation'
+import { validateName, validateProfileUrls, validateOpenTo, validateLookingFor } from '../../utils/validation'
 
 export default defineEventHandler(async (event) => {
   const session = await getServerSession(event)
@@ -43,7 +43,14 @@ export default defineEventHandler(async (event) => {
     emailOptInUpdate.emailOptInDate = new Date()
   }
 
-  const newName = body.name ?? developer.name
+  if (body.name !== undefined) {
+    const nameError = validateName(body.name)
+    if (nameError) {
+      throw createError({ statusCode: 400, message: nameError })
+    }
+  }
+
+  const newName = body.name?.trim() ?? developer.name
   const slugUpdate: { slug?: string } = {}
   if (body.name && body.name !== developer.name) {
     slugUpdate.slug = await generateUniqueSlug(body.name, developer.id)

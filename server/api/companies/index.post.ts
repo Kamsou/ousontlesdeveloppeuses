@@ -1,4 +1,5 @@
 import { getServerSession } from '#auth'
+import { isValidUrl } from '../../utils/validation'
 
 export default defineEventHandler(async (event) => {
   const session = await getServerSession(event)
@@ -12,6 +13,10 @@ export default defineEventHandler(async (event) => {
 
   if (!body.name) {
     throw createError({ statusCode: 400, message: 'Nom requis' })
+  }
+
+  if (!isValidUrl(body.website) || !isValidUrl(body.logoUrl)) {
+    throw createError({ statusCode: 400, message: 'URL invalide (elle doit commencer par https://)' })
   }
 
   const result = await db.insert(tables.companies).values({

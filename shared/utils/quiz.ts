@@ -45,3 +45,20 @@ export const quizQuestions = {
     ]
   }
 }
+
+export const quizProfileTypes = [
+  'L\'Architecte',
+  'La Détective',
+  'La Speedrunner',
+  'La Perfectionniste',
+  'La Connectrice',
+  'L\'Exploratrice',
+  'La Gardienne',
+  'La Créative',
+  'La Mentore',
+  'L\'Automatrice',
+  'La Stratège',
+  'La Bidouilleuse',
+  'La Vulgarisatrice',
+  'L\'Endurante'
+]

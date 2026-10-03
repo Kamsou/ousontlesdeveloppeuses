@@ -130,7 +130,12 @@ export default defineEventHandler(async (event) => {
     }
 
     return {
-      ...dev,
+      id: dev.id,
+      slug: dev.slug,
+      name: dev.name,
+      avatarUrl: dev.avatarUrl,
+      location: dev.location,
+      canContact: !!dev.email,
       matchScore: score,
       matchedSkills,
       sameLocation: locationsMatch(dev.location, requesterLocation)

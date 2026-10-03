@@ -36,7 +36,7 @@ export async function sendWelcomeEmail(to: string, name: string) {
         </h1>
 
         <p style="font-size: 16px; line-height: 1.7; color: #374151; margin-bottom: 16px;">
-          Hey ${name}, c'est Camille :)
+          Hey ${escapeHtml(name)}, c'est Camille :)
         </p>
 
         <p style="font-size: 16px; line-height: 1.7; color: #374151; margin-bottom: 16px;">
@@ -217,11 +217,11 @@ export async function sendContactEmail({
       <div style="font-family: system-ui, -apple-system, sans-serif; max-width: 600px; margin: 0 auto; padding: 40px 20px; background: #ffffff; color: #1a1a1a;">
 
         <h1 style="font-size: 24px; font-weight: 600; margin-bottom: 8px; color: #1a1a1a;">
-          Hey ${recipientName}
+          Hey ${escapeHtml(recipientName)}
         </h1>
 
         <p style="font-size: 16px; line-height: 1.7; color: #374151; margin-bottom: 24px;">
-          <strong>${senderName}</strong> t'a envoy\u00e9 un message via OSLD.
+          <strong>${escapeHtml(senderName)}</strong> t'a envoy\u00e9 un message via OSLD.
         </p>
 
         ${context}

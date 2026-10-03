@@ -302,8 +302,8 @@ onMounted(() => {
             </ul>
 
             <a
-              v-if="developer.speakerProfile.pastTalksUrl"
-              :href="developer.speakerProfile.pastTalksUrl"
+              v-if="safeHref(developer.speakerProfile.pastTalksUrl)"
+              :href="safeHref(developer.speakerProfile.pastTalksUrl)"
               target="_blank"
               rel="noopener"
               class="group inline-flex items-center gap-2 pt-4 w-full border-t border-border/10 text-sm text-foreground underline underline-offset-4 decoration-foreground/30 hover:decoration-foreground transition-colors"

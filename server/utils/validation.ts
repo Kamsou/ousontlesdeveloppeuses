@@ -27,6 +27,7 @@ export function validateProfileUrls(body: {
   twitterUrl?: string | null
   githubUrl?: string | null
   website?: string | null
+  pastTalksUrl?: string | null
 }): string | null {
   if (body.linkedinUrl && !isValidUrl(body.linkedinUrl, 'linkedin')) {
     return 'URL LinkedIn invalide (format: https://linkedin.com/in/pseudo). Attention : utilise https, pas http.'
@@ -36,6 +37,9 @@ export function validateProfileUrls(body: {
   }
   if (body.website && !isValidUrl(body.website, 'website')) {
     return 'URL du site invalide'
+  }
+  if (body.pastTalksUrl && !isValidUrl(body.pastTalksUrl.trim())) {
+    return 'URL des talks invalide (elle doit commencer par https://)'
   }
   return null
 }
@@ -55,4 +59,13 @@ const VALID_LOOKING_FOR: LookingForType[] = ['freelance', 'cdi', 'stage', 'alter
 
 export function validateLookingFor(lookingFor: string[]): LookingForType[] {
   return lookingFor.filter((type): type is LookingForType => VALID_LOOKING_FOR.includes(type as LookingForType))
+}
+
+const NAME_MAX_LENGTH = 80
+
+export function validateName(name: unknown): string | null {
+  if (typeof name !== 'string' || !name.trim()) return 'Le nom est requis'
+  if (name.trim().length > NAME_MAX_LENGTH) return `Le nom ne doit pas dépasser ${NAME_MAX_LENGTH} caractères`
+  if (/[<>\p{Cc}]/u.test(name)) return 'Le nom contient des caractères non autorisés'
+  return null
 }

@@ -23,7 +23,7 @@ export default defineEventHandler(async (event) => {
     }
   })
 
-  let results = developers.filter(dev => devIds.includes(dev.id))
+  let results = developers.filter(dev => dev.slug && devIds.includes(dev.id))
 
   if (query.location) {
     const locationFilter = (query.location as string).toLowerCase()

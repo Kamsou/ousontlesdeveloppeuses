@@ -1,12 +1,12 @@
-import { eq, count, countDistinct } from 'drizzle-orm'
+import { eq, count, countDistinct, isNotNull } from 'drizzle-orm'
 
 export default defineEventHandler(async () => {
   const db = useDrizzle()
 
   const [devResult, companyResult, locationResult, speakerResult] = await Promise.all([
-    db.select({ count: count() }).from(tables.developers),
+    db.select({ count: count() }).from(tables.developers).where(isNotNull(tables.developers.slug)),
     db.select({ count: count() }).from(tables.companies),
-    db.select({ count: countDistinct(tables.developers.location) }).from(tables.developers),
+    db.select({ count: countDistinct(tables.developers.location) }).from(tables.developers).where(isNotNull(tables.developers.slug)),
     db.select({ count: countDistinct(tables.developerOpenTo.developerId) })
       .from(tables.developerOpenTo)
       .where(eq(tables.developerOpenTo.type, 'conference'))

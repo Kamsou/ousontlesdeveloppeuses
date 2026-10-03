@@ -41,7 +41,7 @@ export default defineEventHandler(async (event) => {
   })
 
   // Shuffle seedé sur le jour — même ordre pour tous les visiteurs pendant 24h
-  let filtered = seededShuffle(developers, getDailySeed())
+  let filtered = seededShuffle(developers.filter(d => d.slug), getDailySeed())
 
   if (query.location) {
     const location = String(query.location).toLowerCase()

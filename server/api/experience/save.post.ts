@@ -1,5 +1,6 @@
 import { getServerSession } from '#auth'
 import { eq } from 'drizzle-orm'
+import { quizProfileTypes } from '#shared/utils/quiz'
 
 export default defineEventHandler(async (event) => {
   const session = await getServerSession(event)
@@ -21,31 +22,26 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 400, message: 'GitHub ID manquant' })
   }
 
+  if (!quizProfileTypes.includes(body.type) || typeof body.phrase !== 'string' || body.phrase.length > 200) {
+    throw createError({ statusCode: 400, message: 'Profil invalide' })
+  }
+
   const existingDev = await db.select()
     .from(tables.developers)
     .where(eq(tables.developers.githubId, githubId))
     .get()
 
-  if (existingDev) {
-    await db.update(tables.developers)
-      .set({
-        profileType: body.type,
-        profilePhrase: body.phrase,
-        updatedAt: new Date()
-      })
-      .where(eq(tables.developers.githubId, githubId))
-
-    return { success: true, updated: true }
-  } else {
-    await db.insert(tables.developers).values({
-      githubId,
-      name: session.user.name || 'Développeuse',
-      email: session.user.email,
-      avatarUrl: session.user.image,
-      profileType: body.type,
-      profilePhrase: body.phrase
-    })
-
-    return { success: true, created: true }
+  if (!existingDev) {
+    throw createError({ statusCode: 404, message: 'Crée ton profil pour enregistrer ton résultat' })
   }
+
+  await db.update(tables.developers)
+    .set({
+      profileType: body.type,
+      profilePhrase: body.phrase,
+      updatedAt: new Date()
+    })
+    .where(eq(tables.developers.githubId, githubId))
+
+  return { success: true, updated: true }
 })

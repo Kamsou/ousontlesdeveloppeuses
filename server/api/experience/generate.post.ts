@@ -1,23 +1,7 @@
 import Anthropic from '@anthropic-ai/sdk'
 import { jsonSchemaOutputFormat } from '@anthropic-ai/sdk/helpers/json-schema'
-import { quizQuestions } from '#shared/utils/quiz'
+import { quizProfileTypes as developerTypes, quizQuestions } from '#shared/utils/quiz'
 
-const developerTypes = [
-  'L\'Architecte',
-  'La Détective',
-  'La Speedrunner',
-  'La Perfectionniste',
-  'La Connectrice',
-  'L\'Exploratrice',
-  'La Gardienne',
-  'La Créative',
-  'La Mentore',
-  'L\'Automatrice',
-  'La Stratège',
-  'La Bidouilleuse',
-  'La Vulgarisatrice',
-  'L\'Endurante'
-]
 
 const typeDescriptions: Record<string, string> = {
   'L\'Architecte': 'Pense système avant code. Structure, vision long-terme.',

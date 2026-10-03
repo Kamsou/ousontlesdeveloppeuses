@@ -5,7 +5,7 @@ export default defineEventHandler(async () => {
 
   const offers = await db.query.offers.findMany({
     with: {
-      developer: true
+      developer: { columns: { id: true, name: true, avatarUrl: true } }
     },
     orderBy: [desc(tables.offers.createdAt)]
   })

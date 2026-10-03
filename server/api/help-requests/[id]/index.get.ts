@@ -32,7 +32,9 @@ export default defineEventHandler(async (event) => {
     where: eq(tables.helpRequests.id, Number(id)),
     with: {
       techs: true,
-      developer: true
+      developer: {
+        columns: { id: true, slug: true, name: true, avatarUrl: true }
+      }
     }
   })
 

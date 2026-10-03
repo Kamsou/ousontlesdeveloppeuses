@@ -245,7 +245,7 @@ async function sendContact() {
                   {{ dev.matchedSkills.slice(0, 2).join(', ') }}
                 </span>
                 <button
-                  v-if="dev.email"
+                  v-if="dev.canContact"
                   @click="openContactModal({ id: dev.id, name: dev.name })"
                   class="px-3 py-1 text-xs font-bold text-primary border border-primary/30 rounded-full hover:bg-primary/10 transition-colors"
                 >
