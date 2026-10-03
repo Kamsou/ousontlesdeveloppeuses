@@ -28,7 +28,7 @@ export default defineNuxtConfig({
       ]
     }
   },
-  modules: ['@nuxthub/core', '@sidebase/nuxt-auth', '@nuxtjs/seo', '@nuxtjs/tailwindcss', '@nuxt/fonts', '@nuxt/a11y', 'nuxt-posthog', '@vueuse/nuxt'],
+  modules: ['@nuxthub/core', '@sidebase/nuxt-auth', '@nuxtjs/seo', '@nuxtjs/tailwindcss', '@nuxt/fonts', '@nuxt/a11y', '@vueuse/nuxt'],
 
   css: ['@/assets/css/main.css'],
 
@@ -106,6 +106,9 @@ export default defineNuxtConfig({
     externals: {
       inline: ['unhead'],
     },
+    prerender: {
+      autoSubfolderIndex: false
+    },
   },
   routeRules: {
     '/**': {
@@ -130,6 +133,9 @@ export default defineNuxtConfig({
     '/qg-info': { prerender: true },
     '/legal': { prerender: true },
     '/coc': { prerender: true },
+    '/directory': { isr: 600, disableServerSideAuth: true },
+    '/directory/**': { isr: 600, disableServerSideAuth: true },
+    '/speakers': { isr: 600, disableServerSideAuth: true },
     '/qg/**': { ssr: false },
     '/qg': { ssr: false },
     '/admin/**': { ssr: false },

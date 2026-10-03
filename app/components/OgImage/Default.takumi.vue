@@ -50,7 +50,7 @@ const subtitle = computed(() => {
     <div class="flex-row" style="display: flex; flex-direction: row; flex-wrap: nowrap; justify-content: space-between; align-items: center; width: 100%;">
       <div class="flex-row" style="display: flex; flex-direction: row; flex-wrap: nowrap; align-items: center;">
         <span v-show="isSpeaker" class="flex-row" style="display: flex; flex-direction: row; flex-wrap: nowrap; padding: 8px 20px; margin-right: 20px; border-radius: 9999px; background-color: #f8fafc; color: #0a0a0f; font-size: 22px; font-weight: 700;">Speakeuse</span>
-        <span v-show="openTo?.length" style="font-family: 'JetBrains Mono'; font-size: 22px; color: #94a3b8;">dispo : {{ (openTo ?? []).slice(0, 3).join(' · ') }}</span>
+        <span v-show="openTo?.length" style="font-family: 'JetBrains Mono'; font-size: 22px; color: #94a3b8;">dispo : {{ (openTo ?? []).slice(0, 2).join(' · ') }}</span>
       </div>
       <span style="font-family: 'JetBrains Mono'; font-size: 22px; color: #94a3b8;">ousontlesdeveloppeuses.fr</span>
     </div>

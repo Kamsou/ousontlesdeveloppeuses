@@ -46,7 +46,10 @@ const { $clientPosthog } = useNuxtApp()
 const route = useRoute()
 const slug = queryString(route.params.slug)
 
-const { data: developer, error } = await useFetch<Developer>(`/api/developers/${slug}`)
+const [{ data: developer, error }, { data: related }] = await Promise.all([
+  useFetch<Developer>(`/api/developers/${slug}`),
+  useFetch<RelatedDevelopers>(`/api/developers/${slug}/related`)
+])
 
 if (error.value) {
   throw createError({ statusCode: 404, message: 'Profil non trouvé' })
@@ -56,7 +59,6 @@ if (developer.value && slug !== developer.value.slug) {
   await navigateTo(`/directory/${developer.value.slug}`, { redirectCode: 301 })
 }
 
-const { data: related } = await useFetch<RelatedDevelopers>(`/api/developers/${developer.value?.slug ?? slug}/related`)
 
 // SEO dynamique enrichi
 const seoTitle = computed(() => {
@@ -179,8 +181,10 @@ onMounted(() => {
           /directory
         </NuxtLink>
         <div class="flex items-center gap-4 mb-8">
+          <span v-if="!developer.avatarUrl" class="w-20 h-20 md:w-24 md:h-24 rounded-full bg-foreground/10 flex items-center justify-center font-display text-3xl" aria-hidden="true">{{ developer.name.charAt(0) }}</span>
           <img
-            :src="developer.avatarUrl || '/default-avatar.png'"
+            v-else
+            :src="optimizedAvatar(developer.avatarUrl, 192)"
             :alt="`Photo de profil de ${developer.name}, développeuse${developer.location ? ` basée à ${developer.location}` : ''}`"
             width="96"
             height="96"

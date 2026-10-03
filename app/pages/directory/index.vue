@@ -7,9 +7,11 @@ useSeoMeta({
   twitterCard: 'summary_large_image',
 })
 
-const { data: ogStats } = await useFetch('/api/stats', { key: 'og-stats' })
-const { data: landings } = await useFetch<{ cities: { slug: string, label: string, count: number }[], techs: { slug: string, label: string, count: number }[] }>('/api/landings', { key: 'landings' })
-const { data: ogAvatars } = await useFetch<string[]>('/api/developers/avatars', { key: 'og-avatars' })
+const [{ data: ogStats }, { data: landings }, { data: ogAvatars }] = await Promise.all([
+  useFetch('/api/stats', { key: 'og-stats' }),
+  useFetch<{ cities: { slug: string, label: string, count: number }[], techs: { slug: string, label: string, count: number }[] }>('/api/landings', { key: 'landings' }),
+  useFetch<string[]>('/api/developers/avatars', { key: 'og-avatars' })
+])
 defineOgImage('Listing', {
   label: 'annuaire',
   title: 'Annuaire des',
@@ -443,8 +445,10 @@ watch(() => filters.skill, () => { updateUrl(); trackSearch() })
             @pointermove="trackPointer"
           >
             <div class="flex items-start gap-4">
+              <span v-if="!dev.avatarUrl" class="w-12 h-12 shrink-0 rounded-full bg-foreground/10 flex items-center justify-center font-display" aria-hidden="true">{{ dev.name.charAt(0) }}</span>
               <img
-                :src="dev.avatarUrl || '/default-avatar.png'"
+                v-else
+                :src="optimizedAvatar(dev.avatarUrl, 96)"
                 :alt="`Photo de profil de ${dev.name}, développeuse${dev.location ? ` basée à ${dev.location}` : ''}`"
                 width="48"
                 height="48"

@@ -206,7 +206,7 @@ async function sendContact() {
         </p>
 
         <div v-if="!isOwner && request.developer" class="flex items-center gap-3 mb-8 p-4 rounded-xl border-2 border-border/15">
-          <img v-if="request.developer.avatarUrl" :src="request.developer.avatarUrl" :alt="request.developer.name" class="w-9 h-9 rounded-full object-cover ring-2 ring-border/20" />
+          <img v-if="request.developer.avatarUrl" :src="optimizedAvatar(request.developer.avatarUrl, 72)" :alt="request.developer.name" class="w-9 h-9 rounded-full object-cover ring-2 ring-border/20" />
           <div v-else class="w-9 h-9 rounded-full bg-foreground/[0.05] flex items-center justify-center text-foreground-muted text-xs ring-2 ring-border/20">{{ request.developer.name?.charAt(0) }}</div>
           <NuxtLink :to="`/directory/${request.developer.slug}`" class="text-sm font-bold hover:text-primary transition-colors">{{ request.developer.name }}</NuxtLink>
         </div>
@@ -231,7 +231,7 @@ async function sendContact() {
               >
                 <img
                   v-if="dev.avatarUrl"
-                  :src="dev.avatarUrl"
+                  :src="optimizedAvatar(dev.avatarUrl, 72)"
                   :alt="dev.name"
                   class="w-9 h-9 rounded-full object-cover ring-2 ring-border/20"
                 />

@@ -14,6 +14,9 @@ const reducedMotion = usePreferredReducedMotion()
 
 const sectionRef = ref<HTMLElement | null>(null)
 const wordRef = ref<HTMLElement | null>(null)
+const glowRef = ref<HTMLElement | null>(null)
+const fieldRef = ref<HTMLElement | null>(null)
+const wordFillRef = ref<HTMLElement | null>(null)
 const isOnScreen = ref(true)
 
 interface Box {
@@ -28,6 +31,9 @@ const CHIP_HEIGHT = 38
 const light = { x: 0, y: 0 }
 const target = { x: 0, y: 0 }
 const wordOffset = { x: 0, y: 0 }
+const WANDER_DURATION = 6000
+const POINTER_IDLE_DELAY = 3500
+let wanderUntil = 0
 let lastPointerAt = 0
 let rafId = 0
 
@@ -86,30 +92,47 @@ function measure() {
 }
 
 function paint() {
-  if (!sectionRef.value || !wordRef.value) return
-  sectionRef.value.style.setProperty('--lx', `${light.x}px`)
-  sectionRef.value.style.setProperty('--ly', `${light.y}px`)
-  wordRef.value.style.setProperty('--wx', `${light.x - wordOffset.x}px`)
-  wordRef.value.style.setProperty('--wy', `${light.y - wordOffset.y}px`)
+  for (const el of [glowRef.value, fieldRef.value]) {
+    el?.style.setProperty('--lx', `${light.x}px`)
+    el?.style.setProperty('--ly', `${light.y}px`)
+  }
+  wordFillRef.value?.style.setProperty('--wx', `${light.x - wordOffset.x}px`)
+  wordFillRef.value?.style.setProperty('--wy', `${light.y - wordOffset.y}px`)
+}
+
+function restOnWord() {
+  if (!wordRef.value) return
+  target.x = wordOffset.x + wordRef.value.offsetWidth * 0.55
+  target.y = wordOffset.y + wordRef.value.offsetHeight * 0.5
 }
 
 function tick(time: number) {
   const section = sectionRef.value
   if (!section) return
 
-  if (time - lastPointerAt > 3500) {
+  const pointerIdle = time - lastPointerAt > POINTER_IDLE_DELAY
+  if (pointerIdle && time < wanderUntil) {
     target.x = section.clientWidth * (0.45 + 0.4 * Math.sin(time / 2700))
     target.y = section.clientHeight * (0.48 + 0.3 * Math.sin(time / 1900 + 1.2))
+  } else if (pointerIdle) {
+    restOnWord()
   }
 
   light.x += (target.x - light.x) * 0.09
   light.y += (target.y - light.y) * 0.09
   paint()
+
+  const settled = Math.abs(target.x - light.x) < 0.5 && Math.abs(target.y - light.y) < 0.5
+  if (settled && pointerIdle && time >= wanderUntil) {
+    rafId = 0
+    return
+  }
   rafId = requestAnimationFrame(tick)
 }
 
 function start() {
   cancelAnimationFrame(rafId)
+  rafId = 0
   if (reducedMotion.value === 'reduce' || !isOnScreen.value) return
   rafId = requestAnimationFrame(tick)
 }
@@ -120,6 +143,7 @@ function handlePointerMove(e: PointerEvent) {
   target.x = e.clientX - rect.left
   target.y = e.clientY - rect.top
   lastPointerAt = performance.now()
+  if (!rafId) start()
 }
 
 function handlePointerLeave() {
@@ -143,6 +167,7 @@ onMounted(() => {
     light.y = target.y = wordOffset.y + wordRef.value.offsetHeight * 0.5
     lastPointerAt = performance.now() - 1000
   }
+  wanderUntil = performance.now() + WANDER_DURATION
   paint()
   start()
 })
@@ -160,10 +185,10 @@ onBeforeUnmount(() => {
     @pointerleave="handlePointerLeave"
   >
     <div aria-hidden="true" class="absolute inset-0 grid-lines [mask-image:radial-gradient(ellipse_at_center,#000_20%,transparent_75%)]"></div>
-    <div aria-hidden="true" class="hero-glow absolute inset-0 pointer-events-none"></div>
+    <div ref="glowRef" aria-hidden="true" class="hero-glow absolute inset-0 pointer-events-none"></div>
 
     <ClientOnly>
-      <div aria-hidden="true" class="hero-field absolute inset-0">
+      <div ref="fieldRef" aria-hidden="true" class="hero-field absolute inset-0">
         <NuxtLink
           v-for="item in placedDevelopers"
           :key="item.dev.id"
@@ -203,7 +228,7 @@ onBeforeUnmount(() => {
           <span class="block overflow-hidden pb-[0.08em]">
             <span ref="wordRef" data-hero-block class="relative inline-block animate-slide-up animation-delay-250" @animationend="measure">
               <span class="title-stroke">développeuses</span>
-              <span aria-hidden="true" class="word-fill absolute inset-0" data-text="développeuses"></span>
+              <span ref="wordFillRef" aria-hidden="true" class="word-fill absolute inset-0" data-text="développeuses"></span>
             </span>
           </span>
         </h1>

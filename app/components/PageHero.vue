@@ -8,12 +8,13 @@ defineProps<{
 const reducedMotion = usePreferredReducedMotion()
 
 const sectionRef = ref<HTMLElement | null>(null)
+const glowRef = ref<HTMLElement | null>(null)
 
 function handlePointerMove(e: PointerEvent) {
-  if (!sectionRef.value || reducedMotion.value === 'reduce') return
+  if (!sectionRef.value || !glowRef.value || reducedMotion.value === 'reduce') return
   const rect = sectionRef.value.getBoundingClientRect()
-  sectionRef.value.style.setProperty('--lx', `${e.clientX - rect.left}px`)
-  sectionRef.value.style.setProperty('--ly', `${e.clientY - rect.top}px`)
+  glowRef.value.style.setProperty('--lx', `${e.clientX - rect.left}px`)
+  glowRef.value.style.setProperty('--ly', `${e.clientY - rect.top}px`)
 }
 </script>
 
@@ -24,7 +25,7 @@ function handlePointerMove(e: PointerEvent) {
     @pointermove="handlePointerMove"
   >
     <div aria-hidden="true" class="absolute inset-0 grid-lines [mask-image:radial-gradient(ellipse_at_top_left,#000_15%,transparent_70%)]"></div>
-    <div aria-hidden="true" class="page-hero-glow absolute inset-0 pointer-events-none"></div>
+    <div ref="glowRef" aria-hidden="true" class="page-hero-glow absolute inset-0 pointer-events-none" style="--lx: 15%; --ly: 0%"></div>
     <div aria-hidden="true" class="grain absolute inset-0 pointer-events-none"></div>
 
     <div :class="['relative w-full mx-auto', narrow ? 'max-w-3xl' : 'max-w-7xl']">

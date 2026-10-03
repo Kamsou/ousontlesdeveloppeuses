@@ -144,3 +144,27 @@ body {
 html {
   scroll-padding-top: 80px;
 }
+
+@property --lx {
+  syntax: '<length-percentage>';
+  inherits: false;
+  initial-value: 70%;
+}
+
+@property --ly {
+  syntax: '<length-percentage>';
+  inherits: false;
+  initial-value: 40%;
+}
+
+@property --wx {
+  syntax: '<length>';
+  inherits: false;
+  initial-value: -999px;
+}
+
+@property --wy {
+  syntax: '<length>';
+  inherits: false;
+  initial-value: -999px;
+}

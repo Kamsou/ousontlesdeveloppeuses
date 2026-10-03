@@ -138,7 +138,7 @@ function formatDate(date: string) {
           <NuxtLink :to="`/directory/${comment.developer.slug}`">
             <img
               v-if="comment.developer.avatarUrl"
-              :src="comment.developer.avatarUrl"
+              :src="optimizedAvatar(comment.developer.avatarUrl, 72)"
               :alt="comment.developer.name"
               class="w-8 h-8 rounded-full object-cover shrink-0 ring-2 ring-border/20"
             />

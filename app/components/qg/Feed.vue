@@ -122,7 +122,7 @@ onMounted(() => {
           >
             <img
               v-if="request.developer?.avatarUrl"
-              :src="request.developer.avatarUrl"
+              :src="optimizedAvatar(request.developer.avatarUrl, 72)"
               :alt="request.developer.name"
               class="w-9 h-9 rounded-full object-cover ring-2 ring-border/10"
             />
@@ -194,7 +194,7 @@ onMounted(() => {
             >
               <img
                 v-if="request.developer?.avatarUrl"
-                :src="request.developer.avatarUrl"
+                :src="optimizedAvatar(request.developer.avatarUrl, 72)"
                 :alt="request.developer.name"
                 class="w-7 h-7 rounded-full object-cover"
               />

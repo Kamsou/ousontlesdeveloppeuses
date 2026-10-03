@@ -1,6 +1,6 @@
 import { eq, count, countDistinct, isNotNull } from 'drizzle-orm'
 
-export default defineEventHandler(async () => {
+export default defineCachedEventHandler(async () => {
   const db = useDrizzle()
 
   const [devResult, companyResult, locationResult, speakerResult] = await Promise.all([
@@ -18,4 +18,4 @@ export default defineEventHandler(async () => {
     locations: locationResult[0].count,
     speakers: speakerResult[0].count
   }
-})
+}, { name: 'stats', maxAge: 60 * 10 })

@@ -13,13 +13,7 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 400, message: 'Paramètre requis' })
   }
 
-  const db = useDrizzle()
-
-  const developers = await db.query.developers.findMany({
-    columns: { id: true, slug: true, name: true, title: true, location: true, avatarUrl: true },
-    with: { skills: { columns: { skillName: true } } }
-  })
-
+  const developers = await loadDevelopers()
   const current = developers.find(d => d.slug === slug)
 
   if (!current) {
@@ -27,13 +21,13 @@ export default defineEventHandler(async (event) => {
   }
 
   const city = cityOf(current.location)
-  const skills = new Set(current.skills.map(s => s.skillName.toLowerCase()))
+  const skills = new Set(current.skills.map(skill => skill.toLowerCase()))
 
   const related = developers
-    .filter(d => d.id !== current.id && d.slug)
+    .filter(d => d.slug !== current.slug)
     .map((d) => {
       const sameCity = !!city && cityOf(d.location)?.toLowerCase() === city.toLowerCase()
-      const sharedSkills = d.skills.filter(s => skills.has(s.skillName.toLowerCase())).length
+      const sharedSkills = d.skills.filter(skill => skills.has(skill.toLowerCase())).length
       return { developer: d, sameCity, score: (sameCity ? 3 : 0) + sharedSkills }
     })
     .filter(r => r.score > 0)

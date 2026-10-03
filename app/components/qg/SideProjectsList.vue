@@ -56,7 +56,7 @@ const isLoading = computed(() => status.value === 'pending')
           <div class="flex items-center gap-2.5 min-w-0">
             <img
               v-if="project.developer.avatarUrl"
-              :src="project.developer.avatarUrl"
+              :src="optimizedAvatar(project.developer.avatarUrl, 72)"
               :alt="project.developer.name"
               class="w-6 h-6 rounded-full object-cover shrink-0"
             />

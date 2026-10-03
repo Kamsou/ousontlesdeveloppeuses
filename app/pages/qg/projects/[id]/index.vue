@@ -140,7 +140,7 @@ function formatDate(date: string) {
         >
           <img
             v-if="project.developer.avatarUrl"
-            :src="project.developer.avatarUrl"
+            :src="optimizedAvatar(project.developer.avatarUrl, 72)"
             :alt="project.developer.name"
             class="w-10 h-10 rounded-full object-cover ring-2 ring-border/20"
           />

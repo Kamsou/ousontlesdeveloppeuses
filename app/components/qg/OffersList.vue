@@ -59,7 +59,7 @@ function formatDate(date: string) {
           <div class="flex items-center gap-2.5 mb-3">
             <img
               v-if="offer.developer.avatarUrl"
-              :src="offer.developer.avatarUrl"
+              :src="optimizedAvatar(offer.developer.avatarUrl, 72)"
               :alt="offer.developer.name"
               class="w-6 h-6 rounded-full shrink-0"
             />

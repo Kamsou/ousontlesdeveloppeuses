@@ -7,8 +7,10 @@ useSeoMeta({
   twitterCard: 'summary_large_image',
 })
 
-const { data: ogStats } = await useFetch('/api/stats', { key: 'og-stats' })
-const { data: ogAvatars } = await useFetch<string[]>('/api/developers/avatars', { key: 'og-speaker-avatars', query: { speakers: 'true' } })
+const [{ data: ogStats }, { data: ogAvatars }] = await Promise.all([
+  useFetch('/api/stats', { key: 'og-stats' }),
+  useFetch<string[]>('/api/developers/avatars', { key: 'og-speaker-avatars', query: { speakers: 'true' } })
+])
 defineOgImage('Listing', {
   label: 'speakeuses',
   title: 'Trouve ta',

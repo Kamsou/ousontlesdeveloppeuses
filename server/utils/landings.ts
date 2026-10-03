@@ -17,7 +17,7 @@ export interface LandingSummary {
   count: number
 }
 
-const loadDevelopers = defineCachedFunction(async (): Promise<LandingDeveloper[]> => {
+export const loadDevelopers = defineCachedFunction(async (): Promise<LandingDeveloper[]> => {
   const db = useDrizzle()
   const developers = await db.query.developers.findMany({
     columns: { slug: true, name: true, title: true, location: true, avatarUrl: true },

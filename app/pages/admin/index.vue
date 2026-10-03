@@ -155,7 +155,7 @@ function formatDate(date: string | Date | null) {
               <NuxtLink :to="`/profile/${dev.id}`" class="flex items-center gap-3 no-underline">
                 <img
                   v-if="dev.avatarUrl"
-                  :src="dev.avatarUrl"
+                  :src="optimizedAvatar(dev.avatarUrl, 80)"
                   :alt="dev.name"
                   class="w-10 h-10 rounded-full object-cover"
                 />

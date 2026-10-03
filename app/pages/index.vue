@@ -105,12 +105,12 @@ onMounted(() => {
 <template>
   <div>
     <HomeHero :developers="developers" :count="statsData?.developers ?? null" @join="handleCreateProfile" />
-    <HomeStats :stats="statsData ?? null" :developers="developers" />
-    <HomeMission />
-    <HomeDiscover />
-    <HomeProfile @join="handleCreateProfile" />
-    <HomeQuiz />
-    <HomeStory />
-    <HomeJoin @join="handleCreateProfile" />
+    <LazyHomeStats hydrate-on-visible :stats="statsData ?? null" :developers="developers" />
+    <LazyHomeMission hydrate-on-visible />
+    <LazyHomeDiscover hydrate-on-visible />
+    <LazyHomeProfile hydrate-on-visible @join="handleCreateProfile" />
+    <LazyHomeQuiz hydrate-on-visible />
+    <LazyHomeStory hydrate-on-visible />
+    <LazyHomeJoin hydrate-on-visible @join="handleCreateProfile" />
   </div>
 </template>

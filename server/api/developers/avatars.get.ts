@@ -2,7 +2,7 @@ import { and, desc, eq, isNotNull } from 'drizzle-orm'
 
 const AVATAR_LIMIT = 6
 
-export default defineEventHandler(async (event) => {
+export default defineCachedEventHandler(async (event) => {
   const { speakers } = getQuery(event)
   const db = useDrizzle()
 
@@ -20,4 +20,4 @@ export default defineEventHandler(async (event) => {
         .limit(AVATAR_LIMIT)
 
   return rows.map(row => row.avatarUrl).filter((url): url is string => !!url)
-})
+}, { name: 'og-avatars', maxAge: 60 * 10, getKey: event => String(getQuery(event).speakers ?? 'all') })
