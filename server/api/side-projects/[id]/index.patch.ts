@@ -40,6 +40,9 @@ export default defineEventHandler(async (event) => {
   }
 
   const body = await readBody(event)
+  if (['title', 'description', 'repoUrl', 'websiteUrl'].some(field => body[field] !== undefined)) {
+    assertQgOpen()
+  }
   const updates: Record<string, any> = {}
 
   if (body.title !== undefined) {

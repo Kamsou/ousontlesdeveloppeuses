@@ -2,7 +2,7 @@
 import type { SideProjectStatus } from '~/utils/sideProjectStatus'
 
 definePageMeta({
-  middleware: 'sidebase-auth'
+  middleware: ['sidebase-auth', 'qg-frozen']
 })
 
 useSeoMeta({

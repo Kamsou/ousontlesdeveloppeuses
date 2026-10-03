@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { QG_FROZEN } from '#shared/utils/qg'
+
 interface Comment {
   id: number
   content: string
@@ -171,7 +173,10 @@ function formatDate(date: string) {
         <p class="text-foreground-muted/60 text-sm">Aucun commentaire</p>
       </div>
 
-      <div v-if="isAuthenticated">
+      <p v-if="QG_FROZEN" class="text-center text-foreground-muted/50 text-sm py-4">
+        Les commentaires sont fermés
+      </p>
+      <div v-else-if="isAuthenticated">
         <textarea
           v-model="newComment"
           rows="2"

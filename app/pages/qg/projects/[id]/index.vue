@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { QG_FROZEN } from '#shared/utils/qg'
 import { statusLabels, statusColors, type SideProjectStatus } from '~/utils/sideProjectStatus'
 
 interface SideProject {
@@ -171,6 +172,7 @@ function formatDate(date: string) {
 
         <div v-if="isOwner" class="flex items-center gap-3 pt-6 border-t-2 border-border/15 mb-8">
           <NuxtLink
+            v-if="!QG_FROZEN"
             :to="`/qg/projects/${projectId}/edit`"
             class="px-4 py-2 text-sm font-medium border border-border/20 rounded-full hover:border-foreground-muted hover:text-foreground transition-colors text-foreground-muted"
           >

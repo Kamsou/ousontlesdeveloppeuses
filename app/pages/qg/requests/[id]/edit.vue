@@ -11,7 +11,7 @@ interface HelpRequest {
 }
 
 definePageMeta({
-  middleware: 'sidebase-auth'
+  middleware: ['sidebase-auth', 'qg-frozen']
 })
 
 const route = useRoute()

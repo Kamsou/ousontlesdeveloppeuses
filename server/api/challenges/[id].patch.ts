@@ -2,6 +2,8 @@ import { getServerSession } from '#auth'
 import { eq, and } from 'drizzle-orm'
 
 export default defineEventHandler(async (event) => {
+  assertQgOpen()
+
   const session = await getServerSession(event)
 
   if (!session?.user) {

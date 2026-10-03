@@ -3,6 +3,8 @@ import { eq } from 'drizzle-orm'
 import { sendAdminNewHelpRequest } from '../../utils/email'
 
 export default defineEventHandler(async (event) => {
+  assertQgOpen()
+
   useRateLimit(event, { windowMs: 60 * 60 * 1000, max: 5 })
 
   const session = await getServerSession(event)

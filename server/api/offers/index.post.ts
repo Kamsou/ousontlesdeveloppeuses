@@ -3,6 +3,8 @@ import { eq, count } from 'drizzle-orm'
 import { isValidUrl } from '../../utils/validation'
 
 export default defineEventHandler(async (event) => {
+  assertQgOpen()
+
   const session = await getServerSession(event)
 
   if (!session?.user) {

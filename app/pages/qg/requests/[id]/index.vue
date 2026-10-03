@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { QG_FROZEN } from '#shared/utils/qg'
+
 interface HelpRequest {
   id: number
   title: string
@@ -166,7 +168,7 @@ async function sendContact() {
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M19 12H5M12 19l-7-7 7-7" />
         </svg>
-        Mon QG
+        Mon espace
       </NuxtLink>
 
       <div v-if="requestStatus === 'pending'" class="animate-pulse space-y-4">
@@ -266,7 +268,7 @@ async function sendContact() {
           </div>
 
           <div class="flex items-center gap-3 pt-6 border-t-2 border-border/15">
-            <NuxtLink :to="`/qg/requests/${requestId}/edit`" class="px-4 py-2 text-sm font-medium border border-border/20 rounded-full hover:border-foreground-muted hover:text-foreground transition-colors text-foreground-muted">
+            <NuxtLink v-if="!QG_FROZEN" :to="`/qg/requests/${requestId}/edit`" class="px-4 py-2 text-sm font-medium border border-border/20 rounded-full hover:border-foreground-muted hover:text-foreground transition-colors text-foreground-muted">
               Modifier
             </NuxtLink>
             <button

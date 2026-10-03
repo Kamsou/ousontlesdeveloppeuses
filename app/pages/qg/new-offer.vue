@@ -1,6 +1,6 @@
 <script setup lang="ts">
 definePageMeta({
-  middleware: 'sidebase-auth'
+  middleware: ['sidebase-auth', 'qg-frozen']
 })
 
 useSeoMeta({

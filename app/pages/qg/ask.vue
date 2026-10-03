@@ -2,7 +2,7 @@
 import type { HelpType } from '~/types/qg'
 
 definePageMeta({
-  middleware: 'sidebase-auth'
+  middleware: ['sidebase-auth', 'qg-frozen']
 })
 
 useSeoMeta({
@@ -100,7 +100,7 @@ async function submit() {
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M19 12H5M12 19l-7-7 7-7" />
         </svg>
-        Mon QG
+        Mon espace
       </NuxtLink>
 
       <h1 class="font-display text-3xl md:text-4xl font-bold mb-3">
