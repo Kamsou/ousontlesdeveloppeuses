@@ -29,3 +29,4 @@ logs
 
 # SQLite database
 data.db
+.gstack/
