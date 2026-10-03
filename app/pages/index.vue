@@ -20,11 +20,14 @@ useSeoMeta({
 })
 
 const { data: ogStats } = await useFetch('/api/stats', { key: 'og-stats' })
+const { data: ogAvatars } = await useFetch<string[]>('/api/developers/avatars', { key: 'og-avatars' })
 defineOgImageComponent('OgImageListing', {
-  title: 'Où sont les développeuses ?',
-  subtitle: 'Se retrouver, se rendre visibles.',
+  label: 'annuaire',
+  title: 'Où sont les',
+  outline: 'développeuses',
   count: ogStats.value?.developers ?? null,
-  countLabel: 'développeuses référencées'
+  countLabel: 'développeuses référencées en France',
+  avatars: ogAvatars.value ?? []
 })
 
 useSchemaOrg([

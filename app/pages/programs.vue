@@ -4,8 +4,14 @@ useSeoMeta({
   description: 'Programmes de mentorat, communautés tech et formations pour les développeuses en France. Duchess, conférences, ressources et opportunités.',
   ogTitle: 'Programmes pour Développeuses',
   ogDescription: 'Mentorat, communautés tech, formations et conférences pour les développeuses en France.',
-  ogImage: 'https://ousontlesdeveloppeuses.fr/og-image.png',
   twitterCard: 'summary_large_image',
+})
+
+defineOgImageComponent('OgImageListing', {
+  label: 'ressources',
+  title: 'Programmes &',
+  outline: 'communautés',
+  subtitle: 'Mentorat, formations, communautés et conférences pour les développeuses.'
 })
 
 interface Program {

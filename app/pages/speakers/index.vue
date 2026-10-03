@@ -8,11 +8,14 @@ useSeoMeta({
 })
 
 const { data: ogStats } = await useFetch('/api/stats', { key: 'og-stats' })
+const { data: ogAvatars } = await useFetch<string[]>('/api/developers/avatars', { key: 'og-speaker-avatars', query: { speakers: 'true' } })
 defineOgImageComponent('OgImageListing', {
-  title: 'Speakeuses tech',
-  subtitle: 'Pour vos conférences et événements.',
+  label: 'speakeuses',
+  title: 'Trouve ta',
+  outline: 'speakeuse tech',
   count: ogStats.value?.speakers ?? null,
-  countLabel: 'speakeuses disponibles'
+  countLabel: 'speakeuses pour tes conférences',
+  avatars: ogAvatars.value ?? []
 })
 
 interface Speaker {

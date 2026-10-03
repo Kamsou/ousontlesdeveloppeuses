@@ -11,8 +11,14 @@ useSeoMeta({
   ogTitle: 'Quel type de dev es-tu ?',
   description: '5 questions pour découvrir ton profil de développeuse. Portrait personnalisé généré par IA.',
   ogDescription: '5 questions pour découvrir ton profil de développeuse. Portrait personnalisé généré par IA.',
-  ogImage: '/og-image.png',
   twitterCard: 'summary_large_image'
+})
+
+defineOgImageComponent('OgImageListing', {
+  label: 'quiz',
+  title: 'Quel dev',
+  outline: 'es-tu ?',
+  subtitle: '5 questions, un portrait généré par IA. Fun, rapide, et étonnamment juste.'
 })
 
 type Step = 'intro' | 'q1' | 'q2' | 'q3' | 'q4' | 'q5' | 'generating' | 'result'
