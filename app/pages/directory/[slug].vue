@@ -79,6 +79,14 @@ const seoDescription = computed(() => {
   return parts.join('. ').slice(0, 160) || 'Découvrez le profil de cette développeuse sur OSLD'
 })
 
+const heroMeta = computed(() => {
+  if (!developer.value) return ''
+  const experience = developer.value.yearsExperience !== null && developer.value.yearsExperience !== undefined
+    ? getExperienceLabel(developer.value.yearsExperience)
+    : null
+  return [developer.value.location, experience].filter(Boolean).join(' · ')
+})
+
 useSeoMeta({
   title: seoTitle,
   description: seoDescription,
@@ -125,128 +133,157 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="max-w-3xl mx-auto px-4 md:px-8 pb-16">
-    <div v-if="developer">
-      <header class="pb-8 border-b border-border/10 mb-8">
-        <NuxtLink to="/directory" class="inline-flex items-center gap-2 text-foreground-muted no-underline text-sm mb-8 transition-colors hover:text-foreground">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+  <div v-if="developer">
+    <PageHero label="développeuse" :title="developer.name">
+      <template #before>
+        <NuxtLink to="/directory" class="group inline-flex items-center gap-2 font-mono text-xs text-foreground-muted no-underline mb-10 md:mb-12 transition-colors hover:text-foreground">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" class="transition-transform group-hover:-translate-x-1 motion-reduce:transition-none">
             <path d="M19 12H5M12 19l-7-7 7-7"/>
           </svg>
-          Annuaire
+          /directory
         </NuxtLink>
-
-        <div class="flex flex-col md:flex-row items-center gap-6 mb-6 text-center md:text-left">
+        <div class="flex items-center gap-4 mb-8">
           <img
             :src="developer.avatarUrl || '/default-avatar.png'"
             :alt="`Photo de profil de ${developer.name}, développeuse${developer.location ? ` basée à ${developer.location}` : ''}`"
-            class="w-24 h-24 rounded-full object-cover"
+            width="96"
+            height="96"
+            class="w-20 h-20 md:w-24 md:h-24 rounded-full object-cover border border-border/15"
           />
-          <div>
-            <h1 class="font-display text-3xl md:text-5xl font-medium tracking-tight mb-2">{{ developer.name }}</h1>
-            <p v-if="developer.title" class="text-foreground-muted mb-2">{{ developer.title }}</p>
-            <div class="flex flex-col md:flex-row gap-2 md:gap-6 text-foreground-muted">
-              <span v-if="developer.location">{{ developer.location }}</span>
-              <span v-if="developer.yearsExperience !== null && developer.yearsExperience !== undefined">
-                {{ getExperienceLabel(developer.yearsExperience) }}
-              </span>
-            </div>
-          </div>
+          <span v-if="developer.speakerProfile" class="inline-flex items-center gap-1.5 px-3 py-1.5 border border-border/15 rounded-full font-mono text-xs text-foreground-muted">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
+              <path d="M19 10v2a7 7 0 0 1-14 0v-2M12 19v4"/>
+            </svg>
+            speakeuse
+          </span>
         </div>
+      </template>
 
-        <div class="flex flex-wrap justify-center md:justify-start gap-4">
-          <a v-if="developer.linkedinUrl" :href="developer.linkedinUrl" target="_blank" rel="noopener" class="flex items-center gap-2 px-5 py-3 bg-background-card border border-border/10 rounded-full text-foreground no-underline text-sm transition-all hover:bg-background-card-hover hover:border-foreground-muted">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+      <p v-if="developer.title" class="text-foreground">{{ developer.title }}</p>
+      <p v-if="heroMeta" :class="['font-mono text-sm', developer.title ? 'mt-2' : '']">{{ heroMeta }}</p>
+
+      <template v-if="developer.linkedinUrl || developer.githubUrl || developer.website" #after>
+        <div class="flex flex-wrap gap-2">
+          <a v-if="developer.linkedinUrl" :href="developer.linkedinUrl" target="_blank" rel="noopener" class="group inline-flex items-center gap-2 px-4 py-2.5 border border-border/15 rounded-full text-foreground no-underline text-sm transition-colors hover:border-foreground/40 hover:bg-foreground/[0.04]">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
               <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
             </svg>
             LinkedIn
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" class="text-foreground-muted transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 motion-reduce:transition-none">
+              <path d="M7 17L17 7M8 7h9v9"/>
+            </svg>
           </a>
-          <a v-if="developer.githubUrl" :href="developer.githubUrl" target="_blank" rel="noopener" class="flex items-center gap-2 px-5 py-3 bg-background-card border border-border/10 rounded-full text-foreground no-underline text-sm transition-all hover:bg-background-card-hover hover:border-foreground-muted">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+          <a v-if="developer.githubUrl" :href="developer.githubUrl" target="_blank" rel="noopener" class="group inline-flex items-center gap-2 px-4 py-2.5 border border-border/15 rounded-full text-foreground no-underline text-sm transition-colors hover:border-foreground/40 hover:bg-foreground/[0.04]">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
               <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
             </svg>
             GitHub
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" class="text-foreground-muted transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 motion-reduce:transition-none">
+              <path d="M7 17L17 7M8 7h9v9"/>
+            </svg>
           </a>
-          <a v-if="developer.website" :href="developer.website" target="_blank" rel="noopener" class="flex items-center gap-2 px-5 py-3 bg-background-card border border-border/10 rounded-full text-foreground no-underline text-sm transition-all hover:bg-background-card-hover hover:border-foreground-muted">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <a v-if="developer.website" :href="developer.website" target="_blank" rel="noopener" class="group inline-flex items-center gap-2 px-4 py-2.5 border border-border/15 rounded-full text-foreground no-underline text-sm transition-colors hover:border-foreground/40 hover:bg-foreground/[0.04]">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
               <circle cx="12" cy="12" r="10"/>
               <path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
             </svg>
             Site
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" class="text-foreground-muted transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 motion-reduce:transition-none">
+              <path d="M7 17L17 7M8 7h9v9"/>
+            </svg>
           </a>
         </div>
-      </header>
+      </template>
+    </PageHero>
 
-      <section v-if="developer.bio" class="py-8 border-b border-border/10">
-        <h2 class="font-display text-sm font-medium uppercase tracking-widest text-foreground-muted mb-4">Bio</h2>
-        <p class="text-lg leading-relaxed whitespace-pre-line">{{ developer.bio }}</p>
-      </section>
+    <section class="px-4 md:px-16 py-12 md:py-16 border-t border-border/10">
+      <div class="w-full max-w-7xl mx-auto grid lg:grid-cols-[minmax(0,1fr)_380px] gap-12 lg:gap-16 items-start">
+        <div class="flex flex-col gap-12">
+          <section v-if="developer.bio">
+            <h2 class="font-mono text-xs text-foreground-muted mb-4"># bio</h2>
+            <p class="text-lg md:text-xl leading-relaxed whitespace-pre-line max-w-3xl">{{ developer.bio }}</p>
+          </section>
 
-      <section v-if="developer.skills?.length" class="py-8 border-b border-border/10">
-        <h2 class="font-display text-sm font-medium uppercase tracking-widest text-foreground-muted mb-4">Compétences</h2>
-        <div class="flex flex-wrap gap-3">
-          <span v-for="skill in developer.skills" :key="skill" class="px-5 py-2 bg-background-card border border-border/10 rounded-full text-sm">
-            {{ skill }}
-          </span>
-        </div>
-      </section>
-
-      <section v-if="developer.lookingFor?.length" class="py-8 border-b border-border/10">
-        <h2 class="font-display text-sm font-medium uppercase tracking-widest text-foreground-muted mb-4">En recherche active</h2>
-        <div class="flex flex-wrap gap-3">
-          <span v-for="tag in developer.lookingFor" :key="tag" class="px-5 py-2.5 bg-foreground text-background rounded-full text-sm font-medium">
-            {{ lookingForLabels[tag] || tag }}
-          </span>
-        </div>
-      </section>
-
-      <section v-if="developer.openTo?.length" class="py-8 border-b border-border/10">
-        <h2 class="font-display text-sm font-medium uppercase tracking-widest text-foreground-muted mb-4">Échanges</h2>
-        <div class="flex flex-wrap gap-3">
-          <span v-for="tag in developer.openTo" :key="tag" class="px-5 py-2.5 bg-foreground/10 border border-foreground/20 text-foreground rounded-full text-sm">
-            {{ openToLabels[tag] || tag }}
-          </span>
-        </div>
-      </section>
-
-      <section v-if="developer.speakerProfile" class="py-8">
-        <div class="inline-flex items-center gap-3 px-6 py-3 bg-background-card border border-border/10 rounded-full text-sm font-medium mb-6">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
-            <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
-            <line x1="12" y1="19" x2="12" y2="23"/>
-            <line x1="8" y1="23" x2="16" y2="23"/>
-          </svg>
-          Speakeuse
+          <section v-if="developer.skills?.length" :class="developer.bio ? 'pt-12 border-t border-border/10' : ''">
+            <h2 class="font-mono text-xs text-foreground-muted mb-4"># compétences</h2>
+            <div class="flex flex-wrap gap-2">
+              <span v-for="skill in developer.skills" :key="skill" class="px-4 py-2 border border-border/15 rounded-full text-sm">
+                {{ skill }}
+              </span>
+            </div>
+          </section>
         </div>
 
-        <h2 class="font-display text-sm font-medium uppercase tracking-widest text-foreground-muted mb-4">Profil Speakeuse</h2>
+        <div v-if="developer.lookingFor?.length || developer.openTo?.length || developer.speakerProfile" class="flex flex-col gap-3 md:gap-4">
+          <section v-if="developer.lookingFor?.length" class="spotlight-card p-6 rounded-3xl border border-border/10 bg-background-card" @pointermove="trackPointer">
+            <h2 class="font-mono text-xs text-foreground-muted mb-4"># en-recherche-active</h2>
+            <div class="flex flex-wrap gap-2">
+              <span v-for="tag in developer.lookingFor" :key="tag" class="px-4 py-2 bg-foreground text-background rounded-full text-sm font-medium">
+                {{ lookingForLabels[tag] || tag }}
+              </span>
+            </div>
+          </section>
 
-        <div v-if="developer.speakerProfile.topics?.length" class="flex flex-wrap items-center gap-3 mb-4">
-          <span class="text-sm text-foreground-muted">Sujets :</span>
-          <span v-for="topic in developer.speakerProfile.topics" :key="topic" class="px-4 py-2 bg-background-card border border-border/10 rounded-full text-sm">
-            {{ topic }}
-          </span>
+          <section v-if="developer.openTo?.length" class="spotlight-card p-6 rounded-3xl border border-border/10 bg-background-card" @pointermove="trackPointer">
+            <h2 class="font-mono text-xs text-foreground-muted mb-4"># échanges</h2>
+            <div class="flex flex-wrap gap-2">
+              <span v-for="tag in developer.openTo" :key="tag" class="px-4 py-2 border border-border/20 rounded-full text-sm">
+                {{ openToLabels[tag] || tag }}
+              </span>
+            </div>
+          </section>
+
+          <section v-if="developer.speakerProfile" class="spotlight-card p-6 rounded-3xl border border-border/10 bg-background-card" @pointermove="trackPointer">
+            <div class="flex items-start justify-between gap-4 mb-5">
+              <h2 class="font-mono text-xs text-foreground-muted"># profil-speakeuse</h2>
+              <span class="w-9 h-9 shrink-0 rounded-xl bg-foreground text-background flex items-center justify-center" aria-hidden="true">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
+                  <path d="M19 10v2a7 7 0 0 1-14 0v-2M12 19v4"/>
+                </svg>
+              </span>
+            </div>
+
+            <div v-if="developer.speakerProfile.topics?.length" class="mb-5">
+              <p class="text-sm text-foreground-muted mb-2.5">Sujets</p>
+              <div class="flex flex-wrap gap-1.5">
+                <span v-for="topic in developer.speakerProfile.topics" :key="topic" class="px-3 py-1.5 bg-foreground/[0.06] rounded-full text-sm">
+                  {{ topic }}
+                </span>
+              </div>
+            </div>
+
+            <ul v-if="developer.speakerProfile.remoteOk || developer.speakerProfile.travelWilling" class="flex flex-wrap gap-x-5 gap-y-2 mb-5">
+              <li v-if="developer.speakerProfile.remoteOk" class="inline-flex items-center gap-2 text-sm text-foreground-muted">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>
+                Remote possible
+              </li>
+              <li v-if="developer.speakerProfile.travelWilling" class="inline-flex items-center gap-2 text-sm text-foreground-muted">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>
+                Se déplace
+              </li>
+            </ul>
+
+            <a
+              v-if="developer.speakerProfile.pastTalksUrl"
+              :href="developer.speakerProfile.pastTalksUrl"
+              target="_blank"
+              rel="noopener"
+              class="group inline-flex items-center gap-2 pt-4 w-full border-t border-border/10 text-sm text-foreground underline underline-offset-4 decoration-foreground/30 hover:decoration-foreground transition-colors"
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <polygon points="23 7 16 12 23 17 23 7"/>
+                <rect x="1" y="5" width="15" height="14" rx="2" ry="2"/>
+              </svg>
+              Voir ses talks passés
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" class="ml-auto text-foreground-muted transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 motion-reduce:transition-none">
+                <path d="M7 17L17 7M8 7h9v9"/>
+              </svg>
+            </a>
+          </section>
         </div>
-
-        <div class="flex gap-4 mb-4">
-          <span v-if="developer.speakerProfile.remoteOk" class="text-sm text-foreground-muted">Remote possible</span>
-          <span v-if="developer.speakerProfile.travelWilling" class="text-sm text-foreground-muted">Se déplace</span>
-        </div>
-
-        <a
-          v-if="developer.speakerProfile.pastTalksUrl"
-          :href="developer.speakerProfile.pastTalksUrl"
-          target="_blank"
-          rel="noopener"
-          class="inline-flex items-center gap-2 px-5 py-3 bg-background-card border border-border/10 rounded-full text-foreground no-underline text-sm transition-all hover:bg-background-card-hover hover:border-foreground-muted"
-        >
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <polygon points="23 7 16 12 23 17 23 7"/>
-            <rect x="1" y="5" width="15" height="14" rx="2" ry="2"/>
-          </svg>
-          Voir ses talks passés
-        </a>
-      </section>
-    </div>
+      </div>
+    </section>
   </div>
 </template>
