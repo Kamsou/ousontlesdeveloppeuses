@@ -120,7 +120,7 @@ function pad(value: number) {
 
               <div :class="['flex items-end gap-4 p-4', podcast.imageUrl ? 'absolute inset-x-0 bottom-0 bg-gradient-to-t from-background via-background/70 to-transparent pt-12' : 'relative h-36']">
                 <span class="w-11 h-11 shrink-0 rounded-full border border-border/20 bg-background/80 flex items-center justify-center transition-colors group-hover:bg-foreground group-hover:text-background group-hover:border-foreground" aria-hidden="true">
-                  <svg class="w-4 h-4 translate-x-px" viewBox="0 0 24 24" fill="currentColor">
+                  <svg class="w-4 h-4 translate-x-px" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
                     <path d="M7 4.5v15a1 1 0 0 0 1.5.86l12.5-7.5a1 1 0 0 0 0-1.72L8.5 3.64A1 1 0 0 0 7 4.5z"/>
                   </svg>
                 </span>
@@ -156,7 +156,7 @@ function pad(value: number) {
               <div class="mt-auto pt-4 border-t border-border/10 flex items-center justify-between gap-4">
                 <span class="font-mono text-xs text-foreground-muted">{{ formatDate(podcast.publishedAt) ?? 'épisode' }}</span>
                 <span class="inline-flex items-center gap-1.5 text-sm font-medium">
-                  Écouter
+                  Écouter<span class="sr-only"> (nouvel onglet)</span>
                   <svg class="w-4 h-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                     <path d="M7 17L17 7M8 7h9v9"/>
                   </svg>

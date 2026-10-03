@@ -7,6 +7,8 @@ const props = defineProps<{
   developers: HomeDeveloper[]
 }>()
 
+const reducedMotion = usePreferredReducedMotion()
+
 const sectionRef = ref<HTMLElement | null>(null)
 const visible = useRevealOnce(sectionRef, 0.25)
 
@@ -16,7 +18,7 @@ const targets = computed(() => {
 })
 
 const animated = useTransition(targets, {
-  duration: 1800,
+  duration: computed(() => reducedMotion.value === 'reduce' ? 0 : 1800),
   transition: TransitionPresets.easeOutExpo
 })
 
@@ -44,7 +46,7 @@ function pluralize(count: number, singular: string, plural: string) {
     <div class="w-full max-w-7xl mx-auto">
       <div class="mb-10 flex flex-col md:flex-row md:items-end md:justify-between gap-4">
         <div>
-          <a href="#stats" class="inline-block font-mono text-xs text-foreground-muted mb-3 no-underline hover:text-foreground transition-colors"># en-direct</a>
+          <p class="inline-block font-mono text-xs text-foreground-muted mb-3"># en-direct</p>
           <h2 class="font-display text-4xl md:text-6xl font-medium tracking-tight">
             Partout en France.
           </h2>

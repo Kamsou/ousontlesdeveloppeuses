@@ -20,7 +20,7 @@ const people = Array.from({ length: 22 }, (_, i) => i === 6 || i === 15)
           :style="{ transitionDelay: isWoman ? '900ms' : `${i * 30}ms` }"
           viewBox="0 0 24 36"
           fill="currentColor"
-        >
+         aria-hidden="true">
           <circle cx="12" cy="7" r="6"/>
           <path d="M2 36v-9a10 10 0 0 1 20 0v9z"/>
         </svg>

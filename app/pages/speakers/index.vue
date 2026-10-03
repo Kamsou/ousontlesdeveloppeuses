@@ -64,6 +64,8 @@ const { data: speakers, status, refresh } = useLazyFetch<Speaker[]>('/api/speake
   watch: [queryParams]
 })
 
+const resultsAnnouncement = ref('')
+
 const isLoading = computed(() => status.value === 'pending')
 
 function updateUrl() {
@@ -102,6 +104,11 @@ watch(() => filters.location, () => { updateUrl(); trackSearch() })
 watch(() => filters.topic, () => { updateUrl(); trackSearch() })
 watch(() => filters.remote, () => { updateUrl(); trackSearch() })
 watch(() => filters.travel, () => { updateUrl(); trackSearch() })
+watchDebounced(speakers, () => {
+  if (!speakers.value) return
+  const total = speakers.value.length
+  resultsAnnouncement.value = total ? `${total} ${total > 1 ? 'speakeuses trouvées' : 'speakeuse trouvée'}` : 'Aucune speakeuse trouvée'
+}, { debounce: 400 })
 </script>
 
 <template>
@@ -112,11 +119,11 @@ watch(() => filters.travel, () => { updateUrl(); trackSearch() })
     </PageHero>
 
     <section class="px-4 md:px-16 py-8 border-t border-border/10">
-      <div class="w-full max-w-7xl mx-auto flex flex-col lg:flex-row lg:items-end gap-5 lg:gap-6">
-        <div class="grid sm:grid-cols-2 gap-4 lg:w-[34rem] lg:shrink-0">
+      <div class="w-full max-w-7xl mx-auto flex flex-col lg:flex-row lg:flex-wrap lg:items-end gap-5 lg:gap-6">
+        <div class="grid sm:grid-cols-2 gap-4 min-w-0 lg:flex-[0_1_34rem]">
           <div>
             <label for="speaker-location" class="block font-mono text-xs text-foreground-muted mb-2">ville</label>
-            <div class="flex items-center gap-3 px-4 rounded-2xl border border-border/15 bg-background/60 transition-colors focus-within:border-foreground/60">
+            <div class="flex items-center gap-3 px-4 rounded-2xl border border-border/15 bg-background/60 transition-colors focus-within:border-foreground/60 focus-within:ring-2 focus-within:ring-foreground/70">
               <svg class="w-4 h-4 shrink-0 text-foreground-muted" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                 <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>
               </svg>
@@ -132,7 +139,7 @@ watch(() => filters.travel, () => { updateUrl(); trackSearch() })
 
           <div>
             <label for="speaker-topic" class="block font-mono text-xs text-foreground-muted mb-2">sujet</label>
-            <div class="flex items-center gap-3 px-4 rounded-2xl border border-border/15 bg-background/60 transition-colors focus-within:border-foreground/60">
+            <div class="flex items-center gap-3 px-4 rounded-2xl border border-border/15 bg-background/60 transition-colors focus-within:border-foreground/60 focus-within:ring-2 focus-within:ring-foreground/70">
               <svg class="w-4 h-4 shrink-0 text-foreground-muted" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                 <circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/>
               </svg>
@@ -147,7 +154,7 @@ watch(() => filters.travel, () => { updateUrl(); trackSearch() })
           </div>
         </div>
 
-        <fieldset class="flex flex-wrap items-center gap-2">
+        <fieldset class="min-w-0 flex flex-wrap items-center gap-2">
           <legend class="sr-only">Format</legend>
           <label
             :class="[
@@ -177,7 +184,7 @@ watch(() => filters.travel, () => { updateUrl(); trackSearch() })
 
           <button
             v-if="filters.location || filters.topic || filters.remote || filters.travel"
-            class="inline-flex items-center gap-1.5 px-4 py-3 rounded-full font-mono text-xs text-foreground-muted cursor-pointer transition-colors hover:text-foreground"
+            class="inline-flex items-center gap-1.5 px-4 py-3 rounded-full font-mono text-xs text-foreground-muted cursor-pointer transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground/70"
             @click="clearFilters"
           >
             <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
@@ -191,6 +198,7 @@ watch(() => filters.travel, () => { updateUrl(); trackSearch() })
 
     <section class="px-4 md:px-16 pt-4 pb-16 md:pb-24">
       <div class="w-full max-w-7xl mx-auto">
+        <p role="status" class="sr-only">{{ resultsAnnouncement }}</p>
         <div v-if="isLoading" class="grid grid-cols-1 lg:grid-cols-2 gap-3 md:gap-4" aria-busy="true">
           <div v-for="i in 4" :key="i" class="flex flex-col gap-5 p-6 md:p-8 rounded-3xl border border-border/10 bg-background-card animate-pulse">
             <div class="flex items-center gap-4">
@@ -233,7 +241,7 @@ watch(() => filters.travel, () => { updateUrl(); trackSearch() })
             <div class="flex items-center gap-4">
               <img
                 :src="optimizedAvatar(speaker.avatarUrl, 128) || '/default-avatar.png'"
-                :alt="`Photo de ${speaker.name}, speaker tech${speaker.location ? ` basée à ${speaker.location}` : ''}`"
+                alt=""
                 width="64"
                 height="64"
                 loading="lazy"
@@ -245,7 +253,7 @@ watch(() => filters.travel, () => { updateUrl(); trackSearch() })
                 <p v-if="speaker.location" class="font-mono text-xs text-foreground-muted mt-1 truncate">{{ speaker.location }}</p>
               </div>
               <span aria-hidden="true" class="shrink-0 flex items-center justify-center w-10 h-10 rounded-full border border-border/15 text-foreground-muted transition-all duration-300 group-hover:bg-foreground group-hover:text-background group-hover:border-foreground group-hover:-rotate-45">
-                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                   <path d="M5 12h14M12 5l7 7-7 7"/>
                 </svg>
               </span>
@@ -275,7 +283,7 @@ watch(() => filters.travel, () => { updateUrl(); trackSearch() })
                 <svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
                 talks dispo
               </span>
-              <span v-if="speaker.skills?.length" class="ml-auto truncate max-w-full text-foreground-muted/70">
+              <span v-if="speaker.skills?.length" class="ml-auto truncate max-w-full text-foreground-muted">
                 {{ speaker.skills.slice(0, 3).join(' · ') }}<template v-if="speaker.skills.length > 3"> · +{{ speaker.skills.length - 3 }}</template>
               </span>
             </div>

@@ -31,7 +31,7 @@ const CHIP_HEIGHT = 38
 const light = { x: 0, y: 0 }
 const target = { x: 0, y: 0 }
 const wordOffset = { x: 0, y: 0 }
-const WANDER_DURATION = 6000
+const WANDER_DURATION = 5000
 const POINTER_IDLE_DELAY = 3500
 let wanderUntil = 0
 let lastPointerAt = 0
@@ -180,7 +180,7 @@ onBeforeUnmount(() => {
 <template>
   <section
     ref="sectionRef"
-    :class="['hero relative min-h-[calc(100svh-80px)] flex flex-col justify-center px-4 md:px-16 py-16 md:py-8 overflow-hidden', reducedMotion === 'reduce' ? 'hero-static' : '']"
+    class="hero relative min-h-[calc(100svh-80px)] flex flex-col justify-center px-4 md:px-16 py-16 md:py-8 overflow-hidden"
     @pointermove="handlePointerMove"
     @pointerleave="handlePointerLeave"
   >
@@ -219,7 +219,7 @@ onBeforeUnmount(() => {
     <div class="relative z-10 w-full max-w-7xl mx-auto pointer-events-none">
       <div class="max-w-5xl">
 
-        <h1 class="font-display text-5xl md:text-[clamp(3.5rem,10vw,8.5rem)] font-medium leading-[0.95] tracking-tight mb-8">
+        <h1 class="font-display text-[clamp(2rem,12vw,3rem)] md:text-[clamp(3.5rem,10vw,8.5rem)] font-medium leading-[0.95] tracking-tight mb-8">
           <span class="block overflow-hidden">
             <span data-hero-block class="inline-block animate-slide-up animation-delay-100">Où</span>{{ ' ' }}
             <span data-hero-block class="inline-block animate-slide-up animation-delay-150">sont</span>{{ ' ' }}
@@ -242,7 +242,7 @@ onBeforeUnmount(() => {
           <NuxtLink to="/directory" class="group flex items-center gap-4 px-6 py-4 bg-foreground border border-b-[3px] border-foreground border-b-foreground-muted/50 text-background rounded-full text-sm font-medium cursor-pointer transition-all hover:gap-6 hover:pr-5 hover:-translate-y-0.5 hover:shadow-glow active:translate-y-px active:border-b active:shadow-none no-underline">
             <span>Découvrir les développeuses</span>
             <span class="flex transition-transform group-hover:translate-x-1">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                 <path d="M5 12h14M12 5l7 7-7 7"/>
               </svg>
             </span>
@@ -254,8 +254,8 @@ onBeforeUnmount(() => {
       </div>
     </div>
 
-    <p aria-hidden="true" data-hero-block class="hidden md:flex absolute bottom-8 right-28 items-center gap-2 font-mono text-[0.7rem] text-foreground-muted/70">
-      <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <p aria-hidden="true" data-hero-block class="hidden md:flex absolute bottom-8 right-28 items-center gap-2 font-mono text-[0.7rem] text-foreground-muted">
+      <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
         <path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-4 12.7V17h8v-2.3A7 7 0 0 0 12 2z"/>
       </svg>
       Promène ta souris : elles sont déjà là.
@@ -305,15 +305,17 @@ onBeforeUnmount(() => {
   mask-image: radial-gradient(circle calc(var(--r) * 0.75) at var(--wx, -999px) var(--wy, -999px), #000 25%, transparent 70%);
 }
 
-.hero-static .hero-field {
-  -webkit-mask-image: none;
-  mask-image: none;
-  opacity: 0.25;
-}
+@media (prefers-reduced-motion: reduce) {
+  .hero-field {
+    -webkit-mask-image: none;
+    mask-image: none;
+    opacity: 0.25;
+  }
 
-.hero-static .hero-glow,
-.hero-static .word-fill {
-  display: none;
+  .hero-glow,
+  .word-fill {
+    display: none;
+  }
 }
 
 @keyframes scroll-down {
@@ -322,7 +324,7 @@ onBeforeUnmount(() => {
 }
 
 .scroll-line {
-  animation: scroll-down 1.5s ease-in-out infinite;
+  animation: scroll-down 1.5s ease-in-out 3;
 }
 
 @keyframes slide-up {

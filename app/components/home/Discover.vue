@@ -8,6 +8,8 @@ const visible = useRevealOnce(sectionRef, 0.15)
 
 const queries = ['React · Lyon', 'Mentoring · Remote', 'Python · Nantes', 'Speakeuse · Paris', 'Coffee chat', 'Rust · Bordeaux']
 const queryIndex = ref(0)
+const isTyping = ref(false)
+const TYPED_QUERIES = 2
 const typed = ref('')
 let typingTimer: ReturnType<typeof setTimeout> | undefined
 
@@ -31,10 +33,14 @@ function typeNext(charIndex = 0) {
     typingTimer = setTimeout(() => typeNext(charIndex + 1), 70)
     return
   }
+  if (queryIndex.value >= TYPED_QUERIES - 1) {
+    isTyping.value = false
+    return
+  }
   typingTimer = setTimeout(() => {
-    queryIndex.value = (queryIndex.value + 1) % queries.length
+    queryIndex.value++
     typeNext(0)
-  }, 1800)
+  }, 1200)
 }
 
 watch(visible, (isVisible) => {
@@ -43,6 +49,7 @@ watch(visible, (isVisible) => {
     typed.value = queries[0] ?? ''
     return
   }
+  isTyping.value = true
   typeNext()
 })
 
@@ -56,7 +63,7 @@ onBeforeUnmount(() => {
     <div class="w-full max-w-7xl mx-auto">
       <div class="mb-10 lg:mb-8 flex flex-col md:flex-row md:items-end md:justify-between gap-4">
         <div>
-          <a href="#discover" class="inline-block font-mono text-xs text-foreground-muted mb-3 no-underline hover:text-foreground transition-colors"># découvre</a>
+          <p class="inline-block font-mono text-xs text-foreground-muted mb-3"># découvre</p>
           <h2 class="font-display text-4xl md:text-5xl lg:text-6xl font-medium leading-[1.05] tracking-tight">
             Ce que tu trouves sur OSLD
           </h2>
@@ -77,12 +84,12 @@ onBeforeUnmount(() => {
           </div>
           <div>
             <div class="flex items-center gap-3 px-4 py-3.5 rounded-2xl border border-border/15 bg-background/60 font-mono text-sm">
-              <svg class="w-4 h-4 text-foreground-muted shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <svg class="w-4 h-4 text-foreground-muted shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                 <circle cx="11" cy="11" r="7"/>
                 <path d="M21 21l-4.3-4.3"/>
               </svg>
               <span class="truncate">{{ typed }}</span>
-              <span class="caret -ml-2 w-[2px] h-4 bg-foreground"></span>
+              <span :class="['-ml-2 w-[2px] h-4 bg-foreground', isTyping ? 'caret' : '']" aria-hidden="true"></span>
             </div>
             <div class="flex flex-wrap gap-2 mt-3">
               <span v-for="tag in ['Freelance', 'CDI', 'Mentoring', 'Coffee chat', 'Pair programming']" :key="tag" class="px-2.5 py-1 text-xs border border-border/15 rounded-full text-foreground-muted group-hover:text-foreground group-hover:border-foreground/30 transition-colors">{{ tag }}</span>
@@ -95,7 +102,7 @@ onBeforeUnmount(() => {
             <span class="w-px h-6 bg-foreground/30"></span>
             <div class="w-20 h-[5.5rem] rounded-xl border border-border/20 bg-background flex flex-col items-center justify-center gap-1.5 shadow-[0_20px_40px_-20px_rgb(0_0_0/0.8)]">
               <span class="w-4 h-1 rounded-full bg-foreground/20"></span>
-              <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+              <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
                 <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
                 <path d="M19 10v2a7 7 0 0 1-14 0v-2M12 19v4"/>
               </svg>
@@ -153,7 +160,7 @@ onBeforeUnmount(() => {
           <div>
             <h3 class="font-display text-2xl font-medium mb-2 flex items-center gap-2">
               Open Source
-              <svg class="w-4 h-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <svg class="w-4 h-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                 <path d="M7 17L17 7M8 7h9v9"/>
               </svg>
             </h3>

@@ -20,7 +20,7 @@ function answer(value: string) {
 
         <div class="relative flex items-center justify-between gap-4 mb-10">
           <span class="inline-flex items-center gap-2 font-mono text-xs text-foreground-muted">
-            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
               <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
             </svg>
             Quiz IA · 2 min
@@ -44,7 +44,7 @@ function answer(value: string) {
             @click="answer(option.value)"
           >
             {{ option.label }}
-            <svg class="h-3.5 w-0 -ml-1 opacity-0 transition-all group-hover:ml-0 group-hover:w-3.5 group-hover:opacity-100" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <svg class="h-3.5 w-0 -ml-1 opacity-0 transition-all group-hover:ml-0 group-hover:w-3.5 group-hover:opacity-100" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
               <path d="M5 12h14M12 5l7 7-7 7"/>
             </svg>
           </button>

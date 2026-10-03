@@ -50,9 +50,9 @@ onMounted(updateProgress)
 <template>
   <section id="mission" class="py-16 md:py-40 lg:py-14 lg:min-h-[calc(100svh-80px)] lg:flex lg:flex-col lg:justify-center px-4 md:px-16 border-t border-border/10">
     <div class="w-full max-w-7xl mx-auto">
-      <a href="#mission" class="inline-block font-mono text-xs text-foreground-muted mb-6 lg:mb-4 no-underline hover:text-foreground transition-colors">
+      <p class="inline-block font-mono text-xs text-foreground-muted mb-6 lg:mb-4">
         # mission
-      </a>
+      </p>
       <h2 class="sr-only">Pourquoi OSLD ?</h2>
 
       <div class="grid lg:grid-cols-[1.5fr_1fr] gap-10 md:gap-16 lg:gap-20 items-center">

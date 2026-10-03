@@ -31,7 +31,7 @@ function handlePointerMove(e: PointerEvent) {
     <div :class="['relative w-full mx-auto', narrow ? 'max-w-3xl' : 'max-w-7xl']">
       <slot name="before" />
       <p class="font-mono text-xs text-foreground-muted mb-4"># {{ label }}</p>
-      <h1 class="font-display text-5xl md:text-7xl lg:text-8xl font-medium tracking-tight leading-[0.95]">
+      <h1 class="font-display text-[clamp(2.25rem,12vw,3rem)] md:text-7xl lg:text-8xl font-medium tracking-tight leading-[0.95] break-words">
         {{ title }}
       </h1>
       <div v-if="$slots.default" class="mt-6 text-foreground-muted text-base md:text-lg max-w-2xl leading-relaxed">

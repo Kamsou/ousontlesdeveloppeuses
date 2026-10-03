@@ -144,7 +144,7 @@ defineOgImage('Listing', {
   <div v-if="landing">
     <PageHero :label="`annuaire / ${type} / ${slug}`" :title="heroTitle">
       <template #before>
-        <NuxtLink to="/directory" class="group inline-flex items-center gap-2 mb-8 font-mono text-xs text-foreground-muted no-underline hover:text-foreground transition-colors">
+        <NuxtLink to="/directory" class="group inline-flex items-center gap-2 min-h-6 py-1 mb-8 font-mono text-xs text-foreground-muted no-underline hover:text-foreground transition-colors">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="transition-transform group-hover:-translate-x-0.5 motion-reduce:transition-none" aria-hidden="true">
             <path d="M19 12H5M12 19l-7-7 7-7"/>
           </svg>
@@ -161,8 +161,8 @@ defineOgImage('Listing', {
           <span class="font-mono text-xs text-foreground-muted">{{ landing.count }} profils</span>
         </div>
 
-        <ul class="grid sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
-          <li v-for="dev in landing.developers" :key="dev.slug">
+        <ul class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
+          <li v-for="dev in landing.developers" :key="dev.slug" class="min-w-0">
             <NuxtLink
               :to="`/directory/${dev.slug}`"
               class="spotlight-card group flex h-full flex-col gap-5 p-5 md:p-6 rounded-3xl border border-border/10 bg-background-card no-underline text-foreground"
@@ -172,13 +172,13 @@ defineOgImage('Listing', {
                 <img
                   v-if="dev.avatarUrl"
                   :src="optimizedAvatar(dev.avatarUrl, 112)"
-                  :alt="dev.name"
+                  alt=""
                   width="56"
                   height="56"
                   loading="lazy"
-                  class="w-14 h-14 rounded-full object-cover grayscale group-hover:grayscale-0 transition-[filter] duration-500 motion-reduce:transition-none"
+                  class="w-14 h-14 shrink-0 rounded-full object-cover grayscale group-hover:grayscale-0 transition-[filter] duration-500 motion-reduce:transition-none"
                 />
-                <span v-else class="w-14 h-14 rounded-full bg-foreground/10 flex items-center justify-center font-display text-lg" aria-hidden="true">{{ dev.name.charAt(0) }}</span>
+                <span v-else class="w-14 h-14 shrink-0 rounded-full bg-foreground/10 flex items-center justify-center font-display text-lg" aria-hidden="true">{{ dev.name.charAt(0) }}</span>
                 <span class="min-w-0 flex-1">
                   <span class="block font-display text-lg font-medium truncate">{{ dev.name }}</span>
                   <span class="block font-mono text-xs text-foreground-muted truncate">{{ dev.location || 'France' }}</span>

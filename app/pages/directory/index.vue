@@ -68,6 +68,7 @@ const page = ref(1)
 const isLoadingMore = ref(false)
 const lastLoadedHasMore = ref<boolean | null>(null)
 const loadMoreRef = ref<HTMLElement | null>(null)
+const resultsAnnouncement = ref('')
 
 const initialQuery = computed(() => {
   const params: Record<string, string> = {}
@@ -210,7 +211,7 @@ function clearFilters() {
 
 function pillClass(active: boolean) {
   return [
-    'px-3.5 py-1.5 border rounded-full text-sm cursor-pointer transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground/40',
+    'px-3.5 py-1.5 border rounded-full text-sm cursor-pointer transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground/70',
     active
       ? 'bg-foreground border-foreground text-background'
       : 'bg-transparent border-border/15 text-foreground-muted hover:border-foreground/30 hover:text-foreground'
@@ -242,6 +243,11 @@ function trackSearch() {
 
 watch(() => filters.location, () => { updateUrl(); trackSearch() })
 watch(() => filters.skill, () => { updateUrl(); trackSearch() })
+watchDebounced(data, () => {
+  if (!data.value) return
+  const total = totalCount.value
+  resultsAnnouncement.value = total ? `${total} ${total > 1 ? 'profils trouvés' : 'profil trouvé'}` : 'Aucun profil trouvé'
+}, { debounce: 400 })
 </script>
 
 <template>
@@ -268,7 +274,7 @@ watch(() => filters.skill, () => { updateUrl(); trackSearch() })
             Filtrer
             <span v-if="activeFilterCount" class="px-1.5 py-0.5 bg-foreground text-background rounded-full text-xs font-medium leading-none tabular-nums">{{ activeFilterCount }}</span>
           </button>
-          <button v-if="activeFilterCount" class="font-mono text-xs text-foreground-muted underline underline-offset-4 hover:text-foreground transition-colors" @click="clearFilters">
+          <button v-if="activeFilterCount" class="inline-flex items-center min-h-6 py-1 font-mono text-xs text-foreground-muted underline underline-offset-4 hover:text-foreground transition-colors" @click="clearFilters">
             effacer
           </button>
         </div>
@@ -278,7 +284,7 @@ watch(() => filters.skill, () => { updateUrl(); trackSearch() })
             <div class="grid sm:grid-cols-2 lg:grid-cols-1 gap-5 content-start">
               <div>
                 <label for="filter-location" class="block font-mono text-xs text-foreground-muted mb-2"># ville</label>
-                <div class="flex items-center gap-3 px-4 rounded-2xl border border-border/15 bg-background/60 transition-colors focus-within:border-foreground/40">
+                <div class="flex items-center gap-3 px-4 rounded-2xl border border-border/15 bg-background/60 transition-colors focus-within:border-foreground/40 focus-within:ring-2 focus-within:ring-foreground/70">
                   <svg class="w-4 h-4 text-foreground-muted shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                     <path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z" />
                     <circle cx="12" cy="9.5" r="2.5" />
@@ -295,7 +301,7 @@ watch(() => filters.skill, () => { updateUrl(); trackSearch() })
 
               <div>
                 <label for="filter-skill" class="block font-mono text-xs text-foreground-muted mb-2"># techno</label>
-                <div class="flex items-center gap-3 px-4 rounded-2xl border border-border/15 bg-background/60 transition-colors focus-within:border-foreground/40">
+                <div class="flex items-center gap-3 px-4 rounded-2xl border border-border/15 bg-background/60 transition-colors focus-within:border-foreground/40 focus-within:ring-2 focus-within:ring-foreground/70">
                   <svg class="w-4 h-4 text-foreground-muted shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                     <circle cx="11" cy="11" r="7" />
                     <path d="M21 21l-4.3-4.3" />
@@ -312,7 +318,7 @@ watch(() => filters.skill, () => { updateUrl(); trackSearch() })
 
               <button
                 v-if="activeFilterCount"
-                class="hidden md:inline-flex items-center gap-2 justify-self-start font-mono text-xs text-foreground-muted underline underline-offset-4 hover:text-foreground transition-colors"
+                class="hidden md:inline-flex items-center gap-2 min-h-6 py-1 justify-self-start font-mono text-xs text-foreground-muted underline underline-offset-4 hover:text-foreground transition-colors"
                 @click="clearFilters"
               >
                 effacer les filtres ({{ activeFilterCount }})
@@ -320,8 +326,8 @@ watch(() => filters.skill, () => { updateUrl(); trackSearch() })
             </div>
 
             <div class="flex flex-col gap-6">
-              <div class="grid md:grid-cols-[7.5rem_1fr] gap-3 md:items-baseline">
-                <span class="font-mono text-xs text-foreground-muted"># en-recherche</span>
+              <div role="group" aria-labelledby="filter-group-looking-for" class="grid md:grid-cols-[7.5rem_1fr] gap-3 md:items-baseline">
+                <span id="filter-group-looking-for" class="font-mono text-xs text-foreground-muted"><span aria-hidden="true"># en-recherche</span><span class="sr-only">En recherche</span></span>
                 <div class="flex flex-wrap gap-2">
                   <button
                     v-for="option in lookingForOptions"
@@ -335,8 +341,8 @@ watch(() => filters.skill, () => { updateUrl(); trackSearch() })
                 </div>
               </div>
 
-              <div class="grid md:grid-cols-[7.5rem_1fr] gap-3 md:items-baseline">
-                <span class="font-mono text-xs text-foreground-muted"># expérience</span>
+              <div role="group" aria-labelledby="filter-group-experience" class="grid md:grid-cols-[7.5rem_1fr] gap-3 md:items-baseline">
+                <span id="filter-group-experience" class="font-mono text-xs text-foreground-muted"><span aria-hidden="true"># expérience</span><span class="sr-only">Expérience</span></span>
                 <div class="flex flex-wrap gap-2">
                   <button
                     v-for="option in experienceFilterOptions"
@@ -350,8 +356,8 @@ watch(() => filters.skill, () => { updateUrl(); trackSearch() })
                 </div>
               </div>
 
-              <div class="grid md:grid-cols-[7.5rem_1fr] gap-3 md:items-baseline">
-                <span class="font-mono text-xs text-foreground-muted"># échanges</span>
+              <div role="group" aria-labelledby="filter-group-open-to" class="grid md:grid-cols-[7.5rem_1fr] gap-3 md:items-baseline">
+                <span id="filter-group-open-to" class="font-mono text-xs text-foreground-muted"><span aria-hidden="true"># échanges</span><span class="sr-only">Échanges</span></span>
                 <div class="flex flex-wrap items-center gap-2">
                   <template v-if="showMoreFilters">
                     <button
@@ -369,7 +375,7 @@ watch(() => filters.skill, () => { updateUrl(); trackSearch() })
                       v-for="tag in openToTags"
                       :key="tag.value"
                       :aria-label="`Retirer le filtre ${tag.label}`"
-                      class="px-3.5 py-1.5 bg-foreground border border-foreground rounded-full text-sm text-background cursor-pointer transition-opacity hover:opacity-80 flex items-center gap-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground/40"
+                      class="px-3.5 py-1.5 bg-foreground border border-foreground rounded-full text-sm text-background cursor-pointer transition-opacity hover:opacity-80 flex items-center gap-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground/70"
                       @click="removeOpenTo(tag.value)"
                     >
                       {{ tag.label }}
@@ -378,7 +384,7 @@ watch(() => filters.skill, () => { updateUrl(); trackSearch() })
                   </template>
                   <button
                     :aria-expanded="showMoreFilters"
-                    class="px-3.5 py-1.5 border border-dashed border-border/20 rounded-full text-sm text-foreground-muted cursor-pointer transition-colors hover:border-foreground/30 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground/40"
+                    class="px-3.5 py-1.5 border border-dashed border-border/20 rounded-full text-sm text-foreground-muted cursor-pointer transition-colors hover:border-foreground/30 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground/70"
                     @click="showMoreFilters = !showMoreFilters"
                   >
                     {{ showMoreFilters ? '− Réduire' : '+ Conférence, mentoring…' }}
@@ -404,6 +410,7 @@ watch(() => filters.skill, () => { updateUrl(); trackSearch() })
           <h2 class="font-mono text-xs text-foreground-muted"># profils</h2>
           <span v-if="!isLoading" class="font-mono text-xs text-foreground-muted tabular-nums">{{ allDevelopers.length }} / {{ totalCount }}</span>
         </div>
+        <p role="status" class="sr-only">{{ resultsAnnouncement }}</p>
 
         <div v-if="isLoading" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4" aria-hidden="true">
           <div v-for="i in 6" :key="i" class="flex flex-col gap-5 p-6 rounded-3xl border border-border/10 bg-background-card">
@@ -449,7 +456,7 @@ watch(() => filters.skill, () => { updateUrl(); trackSearch() })
               <img
                 v-else
                 :src="optimizedAvatar(dev.avatarUrl, 96)"
-                :alt="`Photo de profil de ${dev.name}, développeuse${dev.location ? ` basée à ${dev.location}` : ''}`"
+                alt=""
                 width="48"
                 height="48"
                 loading="lazy"

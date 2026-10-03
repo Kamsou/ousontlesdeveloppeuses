@@ -25,7 +25,7 @@ const visible = useRevealOnce(iciRef, 0.6)
       <button @click="emit('join')" class="group inline-flex items-center gap-4 px-8 py-5 bg-foreground border border-b-[3px] border-foreground border-b-foreground-muted/50 text-background rounded-full text-base font-medium cursor-pointer transition-all hover:gap-6 hover:-translate-y-0.5 hover:shadow-glow active:translate-y-px active:border-b active:shadow-none">
         <span>Crée ton profil</span>
         <span class="flex transition-transform group-hover:translate-x-1">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
             <path d="M5 12h14M12 5l7 7-7 7"/>
           </svg>
         </span>
@@ -53,7 +53,7 @@ const visible = useRevealOnce(iciRef, 0.6)
   display: inline-block;
   color: rgb(var(--foreground));
   -webkit-text-stroke: 0;
-  animation: dot-blink 1.2s steps(1) infinite;
+  animation: dot-blink 1.2s steps(1) 4;
 }
 
 @keyframes dot-blink {

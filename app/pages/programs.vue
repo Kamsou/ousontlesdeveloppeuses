@@ -101,7 +101,7 @@ function pad(value: number) {
               ]"
             >
               {{ cat.label }}
-              <span :class="['font-mono text-[11px]', activeCategory === cat.key ? 'text-background/60' : 'text-foreground-muted/70']">
+              <span :class="['font-mono text-[11px]', activeCategory === cat.key ? 'text-background/60' : 'text-foreground-muted']">
                 {{ categoryCounts[cat.key] ?? 0 }}
               </span>
             </button>
@@ -144,7 +144,7 @@ function pad(value: number) {
                 </svg>
                 Recommandé
               </span>
-              <span v-else class="font-mono text-xs text-foreground-muted/70" aria-hidden="true">{{ pad(i + 1) }}</span>
+              <span v-else class="font-mono text-xs text-foreground-muted" aria-hidden="true">{{ pad(i + 1) }}</span>
             </div>
 
             <h2 class="font-display text-2xl md:text-[1.75rem] font-medium tracking-tight leading-tight mb-3">
@@ -157,11 +157,12 @@ function pad(value: number) {
             <div class="mt-auto pt-5 border-t border-border/10 flex items-center justify-between gap-4">
               <span class="font-mono text-xs text-foreground-muted truncate">{{ displayHost(program.url) }}</span>
               <span class="w-9 h-9 shrink-0 rounded-full border border-border/15 flex items-center justify-center transition-colors group-hover:bg-foreground group-hover:text-background group-hover:border-foreground" aria-hidden="true">
-                <svg class="w-4 h-4 transition-transform group-hover:translate-x-px group-hover:-translate-y-px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <svg class="w-4 h-4 transition-transform group-hover:translate-x-px group-hover:-translate-y-px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                   <path d="M7 17L17 7M8 7h9v9"/>
                 </svg>
               </span>
             </div>
+            <span class="sr-only"> (nouvel onglet)</span>
           </a>
         </div>
 

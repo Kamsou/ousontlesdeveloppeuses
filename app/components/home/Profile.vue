@@ -37,7 +37,7 @@ onBeforeUnmount(() => {
 
     <div class="w-full max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 lg:gap-24 items-center relative">
       <div>
-        <a href="#profil" class="inline-block font-mono text-xs text-foreground-muted mb-3 no-underline hover:text-foreground transition-colors"># ton-profil</a>
+        <p class="inline-block font-mono text-xs text-foreground-muted mb-3"># ton-profil</p>
         <h2 class="font-display text-4xl md:text-6xl font-medium leading-[1.05] tracking-tight mb-10">
           Sois trouvée.
         </h2>
@@ -59,7 +59,7 @@ onBeforeUnmount(() => {
             class="group inline-flex items-center gap-3 text-foreground hover:gap-4 transition-all no-underline"
           >
             <span>Modifier mon profil</span>
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="transition-transform group-hover:translate-x-1">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="transition-transform group-hover:translate-x-1" aria-hidden="true">
               <path d="M5 12h14M12 5l7 7-7 7"/>
             </svg>
           </NuxtLink>
@@ -68,7 +68,7 @@ onBeforeUnmount(() => {
             @click="emit('join')"
             class="group inline-flex items-center gap-3 px-5 py-3 bg-[#24292e] border border-b-[3px] border-[#24292e] border-b-[#1a1e22] text-white rounded-full text-sm font-medium transition-all hover:-translate-y-0.5 hover:shadow-glow active:translate-y-px active:border-b active:shadow-none"
           >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
               <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
             </svg>
             <span>Crée ton profil avec GitHub</span>
@@ -106,7 +106,7 @@ onBeforeUnmount(() => {
         <Transition name="notif">
           <div v-if="showNotification" class="absolute bottom-0 right-0 left-6 md:left-auto md:w-[22rem] flex items-start gap-3 p-4 rounded-2xl border border-border/20 bg-background/95 backdrop-blur-md shadow-[0_24px_48px_-24px_rgb(0_0_0/0.9)]">
             <span class="w-9 h-9 shrink-0 rounded-xl bg-foreground text-background flex items-center justify-center">
-              <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                 <rect x="2" y="4" width="20" height="16" rx="2"/>
                 <path d="M22 6l-10 7L2 6"/>
               </svg>

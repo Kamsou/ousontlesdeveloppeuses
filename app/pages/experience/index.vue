@@ -25,10 +25,16 @@ type Step = 'intro' | 'q1' | 'q2' | 'q3' | 'q4' | 'q5' | 'generating' | 'result'
 
 const step = ref<Step>('intro')
 const isTransitioning = ref(false)
+const introHeading = ref<HTMLElement | null>(null)
+const questionHeading = ref<HTMLElement | null>(null)
+const q4Heading = ref<HTMLElement | null>(null)
+const generatingHeading = ref<HTMLElement | null>(null)
+const resultHeading = ref<HTMLElement | null>(null)
 const currentQuestion = computed(() => {
   const match = step.value.match(/^q(\d)$/)
   return match?.[1] ? parseInt(match[1]) : 0
 })
+const visibleStep = computed(() => isTransitioning.value ? null : step.value)
 
 const answers = reactive({
   q1: '',
@@ -177,6 +183,20 @@ function shareProfile() {
   }
 }
 
+function focusScreenHeading(screen: Step) {
+  const headings: Record<Step, typeof introHeading> = {
+    intro: introHeading,
+    q1: questionHeading,
+    q2: questionHeading,
+    q3: questionHeading,
+    q4: q4Heading,
+    q5: questionHeading,
+    generating: generatingHeading,
+    result: resultHeading
+  }
+  headings[screen].value?.focus({ preventScroll: true })
+}
+
 function restart() {
   answers.q1 = ''
   answers.q2 = ''
@@ -187,6 +207,12 @@ function restart() {
   loadingMessageIndex.value = 0
   transitionTo('intro')
 }
+
+watch(visibleStep, async (screen) => {
+  if (!screen) return
+  await nextTick()
+  focusScreenHeading(screen)
+}, { flush: 'post' })
 
 onMounted(() => {
   const prefill = route.query.q1
@@ -209,7 +235,7 @@ onMounted(() => {
           <div>
             <p class="font-mono text-xs text-foreground-muted mb-4 animate-slide-up"># quiz</p>
             <div class="overflow-hidden pb-[0.08em]">
-              <h1 class="font-display text-5xl md:text-7xl lg:text-8xl font-medium tracking-tight leading-[0.95] animate-slide-up animation-delay-100">
+              <h1 ref="introHeading" tabindex="-1" class="outline-none focus-visible:outline-none font-display text-5xl md:text-7xl lg:text-8xl font-medium tracking-tight leading-[0.95] animate-slide-up animation-delay-100">
                 Découvre<br/>ton profil
               </h1>
             </div>
@@ -238,7 +264,7 @@ onMounted(() => {
             <div class="relative flex items-center justify-center w-[26rem] h-[26rem]">
               <span class="absolute inset-0 rounded-full border border-border/10"></span>
               <span class="absolute inset-12 rounded-full border border-border/10"></span>
-              <span class="absolute inset-24 rounded-full border border-dashed border-border/15 orbit"></span>
+              <span class="absolute inset-24 rounded-full border border-dashed border-border/15 orbit-settle"></span>
               <span class="intro-five font-display text-[280px] font-medium leading-none select-none">5</span>
               <span class="absolute bottom-16 font-mono text-xs text-foreground-muted">questions</span>
             </div>
@@ -256,7 +282,8 @@ onMounted(() => {
 
             <div class="relative flex items-center justify-between gap-4 mb-10">
               <button
-                class="inline-flex items-center gap-2 font-mono text-xs text-foreground-muted cursor-pointer bg-transparent border-none transition-colors hover:text-foreground"
+                type="button"
+                class="inline-flex items-center gap-2 min-h-6 py-1 font-mono text-xs text-foreground-muted cursor-pointer bg-transparent border-none transition-colors hover:text-foreground"
                 @click="previousStep"
               >
                 <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
@@ -272,9 +299,9 @@ onMounted(() => {
             </div>
 
             <p class="relative font-mono text-xs text-foreground-muted mb-3">question {{ String(currentQuestion).padStart(2, '0') }}</p>
-            <h2 class="relative font-display text-3xl md:text-5xl font-medium tracking-tight leading-tight mb-8 md:mb-10 max-w-3xl">
+            <h1 ref="questionHeading" tabindex="-1" class="outline-none focus-visible:outline-none relative font-display text-3xl md:text-5xl font-medium tracking-tight leading-tight mb-8 md:mb-10 max-w-3xl">
               {{ questions[step as keyof typeof questions].title }}
-            </h2>
+            </h1>
 
             <div class="relative flex flex-wrap gap-2 md:gap-3">
               <button
@@ -304,7 +331,8 @@ onMounted(() => {
 
             <div class="relative flex items-center justify-between gap-4 mb-10">
               <button
-                class="inline-flex items-center gap-2 font-mono text-xs text-foreground-muted cursor-pointer bg-transparent border-none transition-colors hover:text-foreground"
+                type="button"
+                class="inline-flex items-center gap-2 min-h-6 py-1 font-mono text-xs text-foreground-muted cursor-pointer bg-transparent border-none transition-colors hover:text-foreground"
                 @click="previousStep"
               >
                 <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
@@ -320,9 +348,9 @@ onMounted(() => {
             </div>
 
             <p class="relative font-mono text-xs text-foreground-muted mb-3">question 04</p>
-            <h2 id="quiz-q4-title" class="relative font-display text-3xl md:text-5xl font-medium tracking-tight leading-tight mb-8 md:mb-10 max-w-3xl">
+            <h1 id="quiz-q4-title" ref="q4Heading" tabindex="-1" class="outline-none focus-visible:outline-none relative font-display text-3xl md:text-5xl font-medium tracking-tight leading-tight mb-8 md:mb-10 max-w-3xl">
               {{ questions.q4.title }}
-            </h2>
+            </h1>
 
             <div class="relative">
               <textarea
@@ -330,7 +358,7 @@ onMounted(() => {
                 :placeholder="questions.q4.placeholder"
                 maxlength="200"
                 aria-labelledby="quiz-q4-title"
-                class="block w-full px-5 py-4 md:px-6 md:py-5 bg-background/60 border border-border/15 rounded-2xl text-foreground text-lg md:text-xl leading-relaxed resize-none min-h-[150px] transition-colors focus:outline-none focus:border-foreground/60 placeholder:text-foreground-muted/60"
+                class="block w-full px-5 py-4 md:px-6 md:py-5 bg-background/60 border border-border/15 rounded-2xl text-foreground text-lg md:text-xl leading-relaxed resize-none min-h-[150px] transition-colors focus:outline-none focus:border-foreground/60 placeholder:text-foreground-muted"
               ></textarea>
               <div class="mt-5 flex justify-between items-center gap-4">
                 <span class="font-mono text-xs text-foreground-muted">{{ answers.q4.length }} / 200</span>
@@ -353,12 +381,13 @@ onMounted(() => {
 
     <Transition name="fade">
       <div v-if="step === 'generating'" class="relative flex-1 flex items-center justify-center px-4 md:px-16 py-16">
+        <h1 ref="generatingHeading" tabindex="-1" class="sr-only">Génération de ton profil</h1>
         <div class="text-center max-w-lg w-full" role="status" aria-live="polite">
           <div aria-hidden="true" class="relative mx-auto mb-12 w-28 h-28 flex items-center justify-center">
             <span class="absolute inset-0 rounded-full border border-border/10"></span>
             <span class="absolute inset-0 rounded-full border border-transparent border-t-foreground spin"></span>
             <span class="absolute inset-5 rounded-full border border-dashed border-border/20 orbit"></span>
-            <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
               <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
             </svg>
           </div>
@@ -396,9 +425,9 @@ onMounted(() => {
 
             <p class="relative text-base md:text-lg text-foreground-muted mb-3">Tu es...</p>
             <div class="relative overflow-hidden pb-[0.08em] mb-8 md:mb-10">
-              <h3 class="font-display text-5xl md:text-7xl font-medium tracking-tight leading-[0.95] animate-slide-up">
+              <h1 ref="resultHeading" tabindex="-1" class="outline-none focus-visible:outline-none font-display text-5xl md:text-7xl font-medium tracking-tight leading-[0.95] animate-slide-up">
                 {{ generatedProfile.type }}
-              </h3>
+              </h1>
             </div>
 
             <blockquote class="relative max-w-2xl pl-5 border-l border-foreground mb-8 animate-slide-up animation-delay-100">
@@ -526,6 +555,16 @@ onMounted(() => {
   animation: spin 24s linear infinite;
 }
 
+@keyframes orbit-settle {
+  to {
+    transform: rotate(120deg);
+  }
+}
+
+.orbit-settle {
+  animation: orbit-settle 5s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
 @keyframes scan {
   from {
     transform: translateX(-100%);
@@ -555,6 +594,7 @@ onMounted(() => {
   .animate-slide-up,
   .spin,
   .orbit,
+  .orbit-settle,
   .scan,
   .dots::after {
     animation: none;
