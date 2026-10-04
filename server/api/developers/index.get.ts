@@ -20,7 +20,9 @@ function getDailySeed(): number {
   return seed
 }
 
-export default defineEventHandler(async (event) => {
+// Cached here rather than with a route rule: a route rule also wraps POST /api/developers
+// and strips its cookies, which breaks profile creation.
+export default defineCachedEventHandler(async (event) => {
   useRateLimit(event, { windowMs: 60 * 1000, max: 60 })
 
   const db = useDrizzle()
@@ -115,4 +117,4 @@ export default defineEventHandler(async (event) => {
       hasMore: offset + limit < total
     }
   }
-})
+}, { maxAge: 300, swr: true })

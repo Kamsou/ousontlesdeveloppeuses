@@ -151,7 +151,6 @@ export default defineNuxtConfig({
     '/admin': { ssr: false },
     '/profile': { ssr: false },
     '/feedback/**': { ssr: false },
-    '/api/developers': { swr: 300 },
     // 301 redirects from old French URLs
     '/annuaire': { redirect: { to: '/directory', statusCode: 301 } },
     '/entreprises': { redirect: { to: '/companies', statusCode: 301 } },
