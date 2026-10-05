@@ -24,7 +24,11 @@ export default defineNuxtConfig({
       htmlAttrs: { lang: 'fr' },
       title: 'Où Sont Les Développeuses',
       link: [
-        { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
+        { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
+        // Google needs a square icon of at least 48px to show it in search results
+        { rel: 'icon', type: 'image/png', sizes: '48x48', href: '/favicon-48.png' },
+        { rel: 'icon', type: 'image/png', sizes: '192x192', href: '/icon-192.png' },
+        { rel: 'apple-touch-icon', href: '/apple-touch-icon.png' }
       ]
     }
   },
@@ -50,7 +54,7 @@ export default defineNuxtConfig({
 
   site: {
     url: 'https://ousontlesdeveloppeuses.fr',
-    name: 'Où Sont Les Développeuses',
+    name: 'Où sont les développeuses',
     description: 'Annuaire des développeuses tech en France. Profils, speakeuses pour vos conférences, programmes et ressources tech.',
     defaultLocale: 'fr',
   },
@@ -62,11 +66,19 @@ export default defineNuxtConfig({
   schemaOrg: {
     identity: {
       type: 'Organization',
-      name: 'Où Sont Les Développeuses',
-      alternateName: 'OSLD',
+      name: 'Où sont les développeuses',
+      alternateName: ['OSLD', 'Où sont les développeuses ?'],
       url: 'https://ousontlesdeveloppeuses.fr',
-      logo: 'https://ousontlesdeveloppeuses.fr/og-image.png',
-      description: 'Annuaire des développeuses tech en France. Profils, speakeuses, programmes et ressources tech.',
+      logo: 'https://ousontlesdeveloppeuses.fr/icon-512.png',
+      description: 'Annuaire gratuit et open source des développeuses tech en France. Profils, speakeuses, mentoring, programmes et ressources tech.',
+      areaServed: 'FR',
+      knowsAbout: ['Développeuses', 'Femmes dans la tech', 'Speakeuses tech', 'Mentorat', 'Diversité dans la tech'],
+      founder: {
+        '@type': 'Person',
+        'name': 'Camille Coutens',
+        'jobTitle': 'Développeuse',
+        'sameAs': ['https://linkedin.com/in/camillecoutens']
+      },
       sameAs: [
         'https://github.com/Kamsou/ousontlesdevs',
       ],

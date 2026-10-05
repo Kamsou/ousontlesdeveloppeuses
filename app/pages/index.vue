@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { homeFaq } from '#shared/utils/faq'
 import type { HomeDeveloper, HomeStats } from '~/utils/home'
 
 const { $clientPosthog } = useNuxtApp()
@@ -9,7 +10,7 @@ useHead({
 })
 
 useSeoMeta({
-  title: 'Où Sont Les Développeuses (OSLD) - Annuaire des développeuses tech en France',
+  title: 'Annuaire des développeuses tech en France | OSLD',
   description: 'Annuaire des développeuses tech en France : profils, speakeuses pour vos conférences, programmes, podcasts et quiz IA. Crée ton profil et sois trouvée.',
   ogTitle: 'Où sont les développeuses ? Ici.',
   ogDescription: 'Se rendre visibles, se trouver. Annuaire de développeuses, speakeuses et ressources tech en France.',
@@ -21,6 +22,12 @@ useSeoMeta({
 
 const { data: ogStats } = await useFetch('/api/stats', { key: 'og-stats' })
 const { data: ogAvatars } = await useFetch<string[]>('/api/developers/avatars', { key: 'og-avatars' })
+const { data: landingIndex } = await useFetch<{ cities: { slug: string, label: string, count: number }[], techs: { slug: string, label: string, count: number }[] }>('/api/landings', {
+  key: 'home-landings',
+  default: () => ({ cities: [], techs: [] })
+})
+
+const faqItems = homeFaq(ogStats.value)
 defineOgImage('Listing', {
   label: 'annuaire',
   title: 'Où sont les',
@@ -32,43 +39,22 @@ defineOgImage('Listing', {
 
 useSchemaOrg([
   defineWebSite({
-    name: 'Où Sont Les Développeuses',
-    alternateName: 'OSLD',
+    name: 'Où sont les développeuses',
+    alternateName: ['OSLD', 'Où sont les développeuses ?'],
     description: 'Annuaire et communauté des développeuses tech en France',
     inLanguage: 'fr-FR',
   }),
   defineWebPage({
-    name: 'Où Sont Les Développeuses - Annuaire des développeuses tech en France',
+    name: 'Annuaire des développeuses tech en France',
     description: 'Annuaire des développeuses tech en France : profils, speakeuses, programmes, podcasts et quiz IA.',
   }),
   {
     '@type': 'FAQPage',
-    'mainEntity': [
-      {
-        '@type': 'Question',
-        'name': 'Pourquoi OSLD ?',
-        'acceptedAnswer': {
-          '@type': 'Answer',
-          'text': 'Les développeuses représentent moins de 20% de la tech. OSLD rend visibles les développeuses en France, leur permet de se trouver entre elles (mentorat, coffee chat, pair programming), et montre aux prochaines générations que c\'est possible.'
-        }
-      },
-      {
-        '@type': 'Question',
-        'name': 'Comment être visible sur OSLD ?',
-        'acceptedAnswer': {
-          '@type': 'Answer',
-          'text': 'Crée ton profil gratuitement avec ton compte GitHub : stack, ville, expérience et disponibilités (conférence, mentoring, coffee chat, pair programming). Les orgas d\'événements, les recruteurs et les autres développeuses te trouvent dans l\'annuaire et peuvent te contacter.'
-        }
-      },
-      {
-        '@type': 'Question',
-        'name': 'Comment trouver une speakeuse tech ?',
-        'acceptedAnswer': {
-          '@type': 'Answer',
-          'text': 'L\'annuaire OSLD référence des speakeuses tech disponibles pour vos conférences et événements. Filtrez par sujet, disponibilité remote/présentiel et localisation sur ousontlesdeveloppeuses.fr/speakers.'
-        }
-      }
-    ]
+    'mainEntity': faqItems.map(item => ({
+      '@type': 'Question',
+      'name': item.question,
+      'acceptedAnswer': { '@type': 'Answer', 'text': item.answer }
+    }))
   }
 ])
 
@@ -111,6 +97,7 @@ onMounted(() => {
     <LazyHomeProfile hydrate-on-visible @join="handleCreateProfile" />
     <LazyHomeQuiz hydrate-on-visible />
     <LazyHomeStory hydrate-on-visible />
+    <LazyHomeFaq hydrate-on-visible :items="faqItems" :cities="landingIndex.cities.slice(0, 8)" :techs="landingIndex.techs.slice(0, 10)" />
     <LazyHomeJoin hydrate-on-visible @join="handleCreateProfile" />
   </div>
 </template>
