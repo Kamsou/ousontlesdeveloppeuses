@@ -175,3 +175,13 @@ html {
     outline-offset: 2px;
   }
 }
+
+/* iOS Safari zooms into any field under 16px on focus. Keep 16px on touch screens
+   instead of disabling zoom (pinch-to-zoom must stay available). */
+@media (hover: none) and (pointer: coarse) {
+  input:not([type='checkbox']):not([type='radio']):not([type='range']),
+  select,
+  textarea {
+    font-size: max(16px, 1em) !important;
+  }
+}
