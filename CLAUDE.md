@@ -31,7 +31,8 @@ app/
 │   │   ├── new-project.vue → Create side project
 │   │   ├── requests/     → Help request detail + edit
 │   │   └── projects/     → Side project detail + edit
-│   ├── profile/          → Auth redirect (animated loading → QG)
+│   ├── join.vue          → Sign-up flow (3 steps + success screen, auth required)
+│   ├── profile/          → Auth redirect → /join (no profile yet) or /qg
 │   ├── feedback/         → Contact feedback (token-based)
 │   ├── admin/            → Admin dashboard (layout: admin)
 │   │   ├── index.vue     → Admin developers list
@@ -45,9 +46,12 @@ app/
 │   ├── default.vue       → Empty layout (pass-through)
 │   └── admin.vue         → Admin layout (header, nav tabs)
 ├── components/
+│   ├── profile/          → Profile form steps (StepIdentity, StepStack, StepContact),
+│   │                        CardPreview, Field, Chip. Shared by /join and the QG edit form
 │   └── qg/               → QG components (Feed, Comments, ProfileForm,
 │                            RequestsList, OffersList, SideProjectsList, etc.)
 ├── composables/
+│   ├── useProfileForm.ts → Profile form state, validation, save (provide/inject)
 │   └── useToast.ts       → Toast notification composable
 ├── app.vue               → Root layout (public header/footer, theme handling)
 server/
@@ -360,6 +364,7 @@ primary          → Accent blue (#3B82F6) - QG only, not on public pages
 
 - **Public pages** (homepage, annuaire, speakers, entreprises, programmes, podcasts, legal, coc): neutral colors only (`foreground`, `foreground-muted`, `border`). No `primary`/blue.
 - **QG (private)**: blue accent (`primary`) for tabs, CTAs, card hovers, header.
+- **Profile forms** (`/join` and the Mon espace edit form, `app/components/profile/`): neutral palette like public pages, no `primary`.
 
 ### Fonts
 

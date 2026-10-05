@@ -16,6 +16,7 @@ const route = useRoute()
 const router = useRouter()
 const { $clientPosthog } = useNuxtApp()
 const { data: session } = useAuth()
+const noProfileCheckedAt = useState<number>('no-profile-checked-at', () => 0)
 const { isDark, toggle: toggleTheme } = useQgTheme()
 const themeLabel = computed(() => {
   if (isDark.value) return 'Passer en mode clair'
@@ -25,9 +26,14 @@ const { data: requests, status: requestsStatus, refresh: refreshRequests } = use
 const { data: activity, status: activityStatus, refresh: refreshActivity } = useLazyFetch<QgActivity>('/api/qg/activity')
 const { data: myProjects, status: projectsStatus, refresh: refreshProjects } = useLazyFetch<any[]>('/api/side-projects/mine', { immediate: !QG_FROZEN })
 const { data: offers, status: offersStatus, refresh: refreshOffers } = useLazyFetch<Offer[]>('/api/offers', { immediate: !QG_FROZEN })
-const { data: profile, refresh: refreshProfile } = await useFetch<QgProfile | null>('/api/developers/me', {
+const { data: profile, error: profileError, refresh: refreshProfile } = await useFetch<QgProfile | null>('/api/developers/me', {
   default: () => null
 })
+
+if (!profile.value && !profileError.value) {
+  noProfileCheckedAt.value = Date.now()
+  await navigateTo('/join', { replace: true })
+}
 const { data: isAdmin } = useLazyFetch('/api/admin/check', {
   default: () => false
 })
@@ -82,7 +88,6 @@ const closedRequests = computed(() =>
 const myOffers = computed(() =>
   offers.value?.filter(o => o.developer?.id === profile.value?.id) || []
 )
-const isNewProfile = computed(() => !profile.value)
 
 const lookingForDaysLeft = computed(() => {
   if (!profile.value?.lookingForSince || !profile.value?.lookingFor?.length) return null
@@ -137,12 +142,13 @@ async function handleMarkResolved(requestId: number) {
   }
 }
 
+async function retryProfile() {
+  await refreshProfile()
+  if (!profile.value && !profileError.value) await navigateTo('/join', { replace: true })
+}
+
 async function handleProfileSaved() {
-  const wasNew = isNewProfile.value
   await Promise.all([refreshProfile(), refreshActivity()])
-  if (wasNew && !QG_FROZEN) {
-    activeTab.value = TABS.ENTRAIDE
-  }
 }
 
 async function handleMarkProjectCompleted(projectId: number) {
@@ -455,18 +461,25 @@ onMounted(() => {
         </div>
       </div>
 
-      <div v-if="activeTab === TABS.PROFIL" class="max-w-3xl">
+      <div v-if="activeTab === TABS.PROFIL" class="max-w-6xl">
+        <div v-if="profileError" role="alert" class="max-w-3xl p-6 rounded-2xl border border-border/15">
+          <p class="font-display text-xl font-medium">On n'arrive pas à charger ton profil.</p>
+          <p class="mt-2 text-sm text-foreground-muted">Ce n'est pas de ton fait : réessaie dans un instant.</p>
+          <button type="button" class="mt-5 px-5 py-2.5 rounded-full border border-border/20 text-sm cursor-pointer hover:border-foreground/50 transition-colors" @click="retryProfile">
+            Réessayer
+          </button>
+        </div>
         <QgProfileSummary
           v-if="QG_FROZEN && profile"
           :profile="profile"
           :activity="activity ?? null"
           :looking-for-days-left="lookingForDaysLeft"
-          class="mb-10"
+          class="mb-10 max-w-3xl"
           @renew="renewLookingFor"
         />
         <QgProfileForm
-          :profile="profile ?? null"
-          :session-user-name="session?.user?.name || undefined"
+          v-if="profile"
+          :profile="profile"
           @saved="handleProfileSaved"
         />
       </div>

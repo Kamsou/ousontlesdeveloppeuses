@@ -40,6 +40,7 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 400, message: nameError })
   }
   const slug = await generateUniqueSlug(name)
+  const emailOptIn = body.emailOptIn === true
 
   const result = await db.insert(tables.developers).values({
     githubId,
@@ -50,11 +51,13 @@ export default defineEventHandler(async (event) => {
     bio: body.bio || null,
     title: body.title || null,
     location: body.location || null,
-    yearsExperience: body.yearsExperience || null,
+    yearsExperience: typeof body.yearsExperience === 'number' ? body.yearsExperience : null,
     website: body.website || null,
     githubUrl: githubLogin ? `https://github.com/${githubLogin}` : null,
     linkedinUrl: body.linkedinUrl || null,
     twitterUrl: body.twitterUrl || null,
+    emailOptIn,
+    emailOptInDate: new Date(),
     cocAcceptedAt: new Date()
   }).onConflictDoNothing({ target: tables.developers.githubId }).returning()
 
@@ -113,5 +116,10 @@ export default defineEventHandler(async (event) => {
     await sendWelcomeEmail(session.user.email, developer.name).catch(console.error)
   }
 
-  return { id: developer.id, message: 'Profil créé' }
+  if (emailOptIn) {
+    await syncBrevoContact(developer.email, developer.name, true)
+      .catch(err => console.error('[brevo]', err))
+  }
+
+  return { id: developer.id, slug: developer.slug, message: 'Profil créé' }
 })

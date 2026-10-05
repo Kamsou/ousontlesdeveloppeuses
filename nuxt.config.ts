@@ -75,11 +75,11 @@ export default defineNuxtConfig({
 
   sitemap: {
     sources: ['/api/__sitemap__/urls'],
-    exclude: ['/profile', '/profile/**', '/qg', '/qg/**', '/admin', '/admin/**', '/mission', '/discover', '/stats', '/qg-info', '/companies'],
+    exclude: ['/join', '/profile', '/profile/**', '/qg', '/qg/**', '/admin', '/admin/**', '/mission', '/discover', '/stats', '/qg-info', '/companies'],
   },
 
   robots: {
-    disallow: ['/profile', '/qg', '/api/', '/admin'],
+    disallow: ['/join', '/profile', '/qg', '/api/', '/admin'],
     allow: ['/directory/*'],
     blockNonSeoBots: false,
   },
@@ -150,6 +150,7 @@ export default defineNuxtConfig({
     '/admin/**': { ssr: false },
     '/admin': { ssr: false },
     '/profile': { ssr: false },
+    '/join': { ssr: false },
     '/feedback/**': { ssr: false },
     // 301 redirects from old French URLs
     '/annuaire': { redirect: { to: '/directory', statusCode: 301 } },
