@@ -66,6 +66,7 @@ const filters = reactive({
 const extraDevelopers = ref<Developer[]>([])
 const page = ref(1)
 const isLoadingMore = ref(false)
+const loadMoreFailed = ref(false)
 const lastLoadedHasMore = ref<boolean | null>(null)
 const loadMoreRef = ref<HTMLElement | null>(null)
 const resultsAnnouncement = ref('')
@@ -101,12 +102,14 @@ const isLoading = computed(() => !data.value)
 watch(data, () => {
   extraDevelopers.value = []
   lastLoadedHasMore.value = null
+  loadMoreFailed.value = false
   page.value = 1
 })
 
 async function loadMore() {
   if (isLoadingMore.value || !hasMore.value) return
   isLoadingMore.value = true
+  loadMoreFailed.value = false
   page.value++
   try {
     const params: Record<string, string> = {}
@@ -121,14 +124,19 @@ async function loadMore() {
     lastLoadedHasMore.value = result.pagination.hasMore
   } catch {
     page.value--
+    loadMoreFailed.value = true
   } finally {
     isLoadingMore.value = false
   }
 }
 
-useIntersectionObserver(loadMoreRef, (entries) => {
-  if (entries[0]?.isIntersecting) loadMore()
-}, { rootMargin: '200px' })
+// Watch visibility, not intersection events: after a page loads, scroll anchoring can keep
+// the loader on screen, and an intersection observer would never fire again.
+const isLoadMoreVisible = useElementVisibility(loadMoreRef, { rootMargin: '200px' })
+
+watch([isLoadMoreVisible, isLoadingMore], ([visible, loading]) => {
+  if (visible && !loading && !loadMoreFailed.value) loadMore()
+})
 
 const experienceFilterOptions = experienceOptions.map(o => ({ ...o, key: String(o.value) }))
 
@@ -502,9 +510,14 @@ watchDebounced(data, () => {
           </NuxtLink>
         </div>
 
-        <div v-if="hasMore" ref="loadMoreRef" class="flex items-center justify-center gap-3 py-10">
-          <span class="w-4 h-4 border-2 border-foreground-muted border-t-transparent rounded-full motion-safe:animate-spin" aria-hidden="true"></span>
-          <span class="font-mono text-xs text-foreground-muted">chargement…</span>
+        <div v-if="hasMore" ref="loadMoreRef" class="flex items-center justify-center gap-3 py-10 [overflow-anchor:none]">
+          <button v-if="loadMoreFailed" type="button" class="px-5 py-2.5 rounded-full border border-border/20 text-sm text-foreground cursor-pointer hover:border-foreground/50 transition-colors" @click="loadMore">
+            Le chargement a échoué, réessayer
+          </button>
+          <template v-else>
+            <span class="w-4 h-4 border-2 border-foreground-muted border-t-transparent rounded-full motion-safe:animate-spin" aria-hidden="true"></span>
+            <span class="font-mono text-xs text-foreground-muted">chargement…</span>
+          </template>
         </div>
       </div>
     </section>
